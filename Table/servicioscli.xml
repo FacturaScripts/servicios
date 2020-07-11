@@ -100,6 +100,14 @@
         <type>time without time zone</type>
     </column>
     <column>
+        <name>idcontactoenv</name>
+        <type>integer</type>
+    </column>
+    <column>
+        <name>idcontactofact</name>
+        <type>integer</type>
+    </column>
+    <column>
         <name>idempresa</name>
         <type>integer</type>
     </column>
@@ -120,6 +128,10 @@
     <column>
         <name>material_estado</name>
         <type>text</type>
+    </column>
+    <column>
+        <name>nick</name>
+        <type>character varying(50)</type>
     </column>
     <column>
         <name>nombrecliente</name>
@@ -151,16 +163,20 @@
         <type>PRIMARY KEY (idservicio)</type>
     </constraint>
     <constraint>
-        <name>ca_servicios_clientes</name>
+        <name>ca_servicioscli_clientes</name>
         <type>FOREIGN KEY (codcliente) REFERENCES clientes (codcliente) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_servicios_empresas</name>
+        <name>ca_servicioscli_empresas</name>
         <type>FOREIGN KEY (idempresa) REFERENCES empresas (idempresa) ON DELETE CASCADE ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_servicios_estados</name>
+        <name>ca_servicioscli_estados</name>
         <type>FOREIGN KEY (idestado) REFERENCES servicioscli_estados (id) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_servicioscli_users</name>
+        <type>FOREIGN KEY (nick) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
         <name>uniq_codigo_servicioscli</name>

@@ -119,4 +119,16 @@ class EstadoServicio extends Base\ModelClass
         $this->nombre = $this->toolBox()->utils()->noHtml($this->nombre);
         return parent::test();
     }
+    
+    /**
+     * 
+     * @param string $type
+     * @param string $list
+     *
+     * @return string
+     */
+    public function url(string $type = 'auto', string $list = 'ListServicioCliente?activetab=List'): string
+    {
+        return parent::url($type, $list);
+    }
 }

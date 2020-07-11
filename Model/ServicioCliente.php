@@ -172,6 +172,18 @@ class ServicioCliente extends Base\ModelClass
      *
      * @var int
      */
+    public $idcontactoenv;
+
+    /**
+     *
+     * @var int
+     */
+    public $idcontactofact;
+
+    /**
+     *
+     * @var int
+     */
     public $idempresa;
 
     /**
@@ -197,6 +209,12 @@ class ServicioCliente extends Base\ModelClass
      * @var string
      */
     public $material_estado;
+
+    /**
+     *
+     * @var string
+     */
+    public $nick;
 
     /**
      *
