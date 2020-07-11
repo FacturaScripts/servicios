@@ -1,0 +1,5 @@
+id;nombre;predeterminado;editable;generadoc
+1;Nuevo;true;true;NULL
+2;Procesando;false;true;NULL
+3;Completado;false;false;NULL
+4;Rechazado;false;false;NULL

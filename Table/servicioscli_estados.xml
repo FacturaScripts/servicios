@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : servicioscli_estados.xml
+    Description:
+        Estructura de la tabla servicioscli_estadoss.
+-->
+<table>
+    <column>
+        <name>editable</name>
+        <type>boolean</type>
+    </column>
+    <column>
+        <name>generadoc</name>
+        <type>character varying(30)</type>
+    </column>
+    <column>
+        <name>id</name>
+        <type>serial</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>nombre</name>
+        <type>character varying(50)</type>
+    </column>
+    <column>
+        <name>predeterminado</name>
+        <type>boolean</type>
+    </column>
+    <constraint>
+        <name>servicioscli_estados_pkey</name>
+        <type>PRIMARY KEY (id)</type>
+    </constraint>
+</table>
