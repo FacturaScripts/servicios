@@ -22,11 +22,11 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 
 /**
- * Description of EstadoServicio
+ * Description of EstadoServicioCliente
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EstadoServicio extends Base\ModelClass
+class EstadoServicioCliente extends Base\ModelClass
 {
 
     use Base\ModelTrait;
@@ -107,7 +107,7 @@ class EstadoServicio extends Base\ModelClass
      */
     public static function tableName(): string
     {
-        return 'servicioscli_estados';
+        return 'nservicioscli_estados';
     }
 
     /**

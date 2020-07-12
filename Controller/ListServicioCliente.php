@@ -37,7 +37,7 @@ class ListServicioCliente extends ListController
         $data = parent::getPageData();
         $data['menu'] = 'sales';
         $data['title'] = 'services';
-        $data['icon'] = 'fas fa-copy';
+        $data['icon'] = 'fas fa-headset';
 
         return $data;
     }
@@ -54,15 +54,27 @@ class ListServicioCliente extends ListController
      */
     protected function createViewsServices(string $viewName = 'ListServicioCliente')
     {
-        $this->addView($viewName, 'ServicioCliente', 'services', 'fas fa-copy');
+        $this->addView($viewName, 'ServicioCliente', 'services', 'fas fa-headset');
+        $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
+        $this->addOrderBy($viewName, ['prioridad'], 'priority');
+        $this->addOrderBy($viewName, ['idservicio'], 'code');
+        $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'observaciones']);
+
+        /// filters
+        $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
+        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nomnbre');
+
+        $status = $this->codeModel->all('nservicioscli_estados', 'id', 'nombre');
+        $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);
     }
 
     /**
      * 
      * @param string $viewName
      */
-    protected function createViewsStatus(string $viewName = 'ListEstadoServicio')
+    protected function createViewsStatus(string $viewName = 'ListEstadoServicioCliente')
     {
-        $this->addView($viewName, 'EstadoServicio', 'states', 'fas fa-tags');
+        $this->addView($viewName, 'EstadoServicioCliente', 'states', 'fas fa-tags');
+        $this->addOrderBy($viewName, ['nombre'], 'name', 1);
     }
 }

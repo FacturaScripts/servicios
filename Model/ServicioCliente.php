@@ -34,30 +34,6 @@ class ServicioCliente extends Base\ModelClass
      *
      * @var string
      */
-    public $accesorios;
-
-    /**
-     *
-     * @var string
-     */
-    public $apartado;
-
-    /**
-     *
-     * @var string
-     */
-    public $cifnif;
-
-    /**
-     *
-     * @var string
-     */
-    public $ciudad;
-
-    /**
-     *
-     * @var string
-     */
     public $codagente;
 
     /**
@@ -76,43 +52,7 @@ class ServicioCliente extends Base\ModelClass
      *
      * @var string
      */
-    public $coddivisa;
-
-    /**
-     *
-     * @var string
-     */
-    public $codigo;
-
-    /**
-     *
-     * @var string
-     */
-    public $codpago;
-
-    /**
-     *
-     * @var string
-     */
-    public $codpais;
-
-    /**
-     *
-     * @var string
-     */
-    public $codpostal;
-
-    /**
-     *
-     * @var string
-     */
     public $descripcion;
-
-    /**
-     *
-     * @var string
-     */
-    public $direccion;
 
     /**
      *
@@ -142,18 +82,6 @@ class ServicioCliente extends Base\ModelClass
      *
      * @var string
      */
-    public $femail;
-
-    /**
-     *
-     * @var bool
-     */
-    public $garantia;
-
-    /**
-     *
-     * @var string
-     */
     public $hora;
 
     /**
@@ -167,18 +95,6 @@ class ServicioCliente extends Base\ModelClass
      * @var string
      */
     public $horainicio;
-
-    /**
-     *
-     * @var int
-     */
-    public $idcontactoenv;
-
-    /**
-     *
-     * @var int
-     */
-    public $idcontactofact;
 
     /**
      *
@@ -202,25 +118,7 @@ class ServicioCliente extends Base\ModelClass
      *
      * @var string
      */
-    public $material;
-
-    /**
-     *
-     * @var string
-     */
-    public $material_estado;
-
-    /**
-     *
-     * @var string
-     */
     public $nick;
-
-    /**
-     *
-     * @var string
-     */
-    public $nombrecliente;
 
     /**
      *
@@ -234,28 +132,41 @@ class ServicioCliente extends Base\ModelClass
      */
     public $prioridad;
 
-    /**
-     *
-     * @var string
-     */
-    public $provincia;
-
-    /**
-     *
-     * @var string
-     */
-    public $solucion;
-
-    /**
-     *
-     * @var float
-     */
-    public $tasaconv;
-
     public function clear()
     {
         parent::clear();
         $this->fecha = \date(self::DATE_STYLE);
+        $this->hora = \date(self::HOUR_STYLE);
+
+        /// set default status
+        foreach ($this->getAvailableStatus() as $status) {
+            if ($status->predeterminado) {
+                $this->idestado = $status->id;
+                $this->editable = $status->editable;
+                break;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @return EstadoServicioCliente[]
+     */
+    public function getAvailableStatus()
+    {
+        $status = new EstadoServicioCliente();
+        return $status->all([], [], 0, 0);
+    }
+
+    /**
+     * 
+     * @return EstadoServicioCliente
+     */
+    public function getStatus()
+    {
+        $status = new EstadoServicioCliente();
+        $status->loadFromCode($this->idestado);
+        return $status;
     }
 
     /**
@@ -265,7 +176,7 @@ class ServicioCliente extends Base\ModelClass
     public function install()
     {
         /// neede dependencies
-        new EstadoServicio();
+        new EstadoServicioCliente();
 
         return parent::install();
     }
@@ -285,7 +196,7 @@ class ServicioCliente extends Base\ModelClass
      */
     public static function tableName(): string
     {
-        return 'servicioscli';
+        return 'nservicioscli';
     }
 
     /**
@@ -295,9 +206,7 @@ class ServicioCliente extends Base\ModelClass
     public function test()
     {
         $utils = $this->toolBox()->utils();
-        $fields = ['accesorios', 'apartado', 'cifnif', 'ciudad', 'codigo', 'codpostal'
-            , 'descripcion', 'direccion', 'material', 'material_estado', 'nombrecliente'
-            , 'observaciones', 'provincia', 'solucion'];
+        $fields = ['descripcion', 'observaciones'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }
