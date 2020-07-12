@@ -45,7 +45,7 @@ class ListServicioAT extends ListController
     protected function createViews()
     {
         $this->createViewsServices();
-        $this->createViewsEquipements();
+        $this->createViewsMachines();
         $this->createViewsStatus();
     }
 
@@ -53,18 +53,18 @@ class ListServicioAT extends ListController
      * 
      * @param string $viewName
      */
-    protected function createViewsEquipements(string $viewName = 'ListEquipoServicioAT')
+    protected function createViewsMachines(string $viewName = 'ListMaquinaServicioAT')
     {
-        $this->addView($viewName, 'EquipoServicioAT', 'equipments', 'fas fa-laptop-medical');
-        $this->addOrderBy($viewName, ['idequipo'], 'code', 2);
+        $this->addView($viewName, 'MaquinaServicioAT', 'machines', 'fas fa-laptop-medical');
+        $this->addOrderBy($viewName, ['idmaquina'], 'code', 2);
         $this->addOrderBy($viewName, ['fecha'], 'date');
         $this->addOrderBy($viewName, ['nombre'], 'name');
         $this->addOrderBy($viewName, ['referencia'], 'reference');
-        $this->addSearchFields($viewName, ['idequipo', 'nombre', 'numserie', 'referencia']);
+        $this->addSearchFields($viewName, ['idmaquina', 'nombre', 'numserie', 'referencia']);
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
-        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nomnbre');
+        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
@@ -84,7 +84,7 @@ class ListServicioAT extends ListController
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
-        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nomnbre');
+        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
 
         $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);

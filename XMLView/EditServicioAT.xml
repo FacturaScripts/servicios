@@ -26,9 +26,9 @@
                     <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="equipment" order="110">
-                <widget type="autocomplete" fieldname="idequipo" onclick="EditEquipoServicioAT">
-                    <values source="serviciosat_equipos" fieldcode="idequipo" fieldtitle="nombre" />
+            <column name="machine" order="110">
+                <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaServicioAT">
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
                 </widget>
             </column>
             <column name="date" numcolumns="2" order="120">

@@ -42,7 +42,7 @@
         <null>NO</null>
     </column>
     <column>
-        <name>idequipo</name>
+        <name>idmaquina</name>
         <type>integer</type>
     </column>
     <column>
@@ -80,8 +80,8 @@
         <type>FOREIGN KEY (codcliente) REFERENCES clientes (codcliente) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_serviciosat_equipos</name>
-        <type>FOREIGN KEY (idequipo) REFERENCES serviciosat_equipos (idequipo) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+        <name>ca_serviciosat_maquinas</name>
+        <type>FOREIGN KEY (idmaquina) REFERENCES serviciosat_maquinas (idmaquina) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
         <name>ca_serviciosat_empresas</name>

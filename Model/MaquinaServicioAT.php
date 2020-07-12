@@ -21,11 +21,11 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Model\Base;
 
 /**
- * Description of EquipoServicioAT
+ * Description of MaquinaServicioAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EquipoServicioAT extends Base\ModelClass
+class MaquinaServicioAT extends Base\ModelClass
 {
 
     use Base\ModelTrait;
@@ -64,7 +64,7 @@ class EquipoServicioAT extends Base\ModelClass
      *
      * @var int
      */
-    public $idequipo;
+    public $idmaquina;
 
     /**
      *
@@ -96,7 +96,7 @@ class EquipoServicioAT extends Base\ModelClass
      */
     public static function primaryColumn(): string
     {
-        return 'idequipo';
+        return 'idmaquina';
     }
 
     /**
@@ -105,7 +105,7 @@ class EquipoServicioAT extends Base\ModelClass
      */
     public static function tableName(): string
     {
-        return 'serviciosat_equipos';
+        return 'serviciosat_maquinas';
     }
 
     /**

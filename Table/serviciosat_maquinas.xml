@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Document   : serviciosat_estados.xml
+    Document   : serviciosat_maquinas.xml
     Description:
-        Estructura de la tabla serviciosat_equipos.
+        Estructura de la tabla serviciosat_maquinas.
 -->
 <table>
     <column>
@@ -26,7 +26,7 @@
         <type>date</type>
     </column>
     <column>
-        <name>idequipo</name>
+        <name>idmaquina</name>
         <type>serial</type>
         <null>NO</null>
     </column>
@@ -43,15 +43,15 @@
         <type>character varying(30)</type>
     </column>
     <constraint>
-        <name>serviciosat_equipos_pkey</name>
-        <type>PRIMARY KEY (idequipo)</type>
+        <name>serviciosat_maquinas_pkey</name>
+        <type>PRIMARY KEY (idmaquina)</type>
     </constraint>
     <constraint>
-        <name>ca_serviciosat_equipos_clientes</name>
+        <name>ca_serviciosat_maquinas_clientes</name>
         <type>FOREIGN KEY (codcliente) REFERENCES clientes (codcliente) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_serviciosat_equipos_fabricantes</name>
+        <name>ca_serviciosat_maquinas_fabricantes</name>
         <type>FOREIGN KEY (codfabricante) REFERENCES fabricantes (codfabricante) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
 </table>

@@ -82,7 +82,7 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @var int
      */
-    public $idequipo;
+    public $idmaquina;
 
     /**
      *
@@ -158,7 +158,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     public function install()
     {
         /// neede dependencies
-        new EquipoServicioAT();
+        new MaquinaServicioAT();
         new EstadoServicioAT();
 
         return parent::install();

@@ -31,20 +31,20 @@ class EditCliente
     protected function createViews()
     {
         return function() {
-            $this->createViewsEquipements();
+            $this->createViewsMachines();
             $this->createViewsServices();
         };
     }
 
-    protected function createViewsEquipements()
+    protected function createViewsMachines()
     {
-        return function($viewName = 'ListEquipoServicioAT') {
-            $this->addListView($viewName, 'EquipoServicioAT', 'equipments', 'fas fa-laptop-medical');
-            $this->views[$viewName]->addOrderBy(['idequipo'], 'code', 2);
+        return function($viewName = 'ListMaquinaServicioAT') {
+            $this->addListView($viewName, 'MaquinaServicioAT', 'machines', 'fas fa-laptop-medical');
+            $this->views[$viewName]->addOrderBy(['idmaquina'], 'code', 2);
             $this->views[$viewName]->addOrderBy(['fecha'], 'date');
             $this->views[$viewName]->addOrderBy(['nombre'], 'name');
             $this->views[$viewName]->addOrderBy(['referencia'], 'reference');
-            $this->views[$viewName]->searchFields = ['idequipo', 'nombre', 'numserie', 'referencia'];
+            $this->views[$viewName]->searchFields = ['idmaquina', 'nombre', 'numserie', 'referencia'];
 
             /// disable customer column
             $this->views[$viewName]->disableColumn('customer');
@@ -69,7 +69,7 @@ class EditCliente
     {
         return function($viewName, $view) {
             switch ($viewName) {
-                case 'ListEquipoServicioAT':
+                case 'ListMaquinaServicioAT':
                 case 'ListServicioAT':
                     $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
                     $where = [new DataBaseWhere('codcliente', $codcliente)];

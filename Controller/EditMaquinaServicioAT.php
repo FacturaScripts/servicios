@@ -23,11 +23,11 @@ use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 
 /**
- * Description of EditEquipoServicioAT
+ * Description of EditMaquinaServicioAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EditEquipoServicioAT extends EditController
+class EditMaquinaServicioAT extends EditController
 {
 
     /**
@@ -36,7 +36,7 @@ class EditEquipoServicioAT extends EditController
      */
     public function getModelClassName()
     {
-        return 'EquipoServicioAT';
+        return 'MaquinaServicioAT';
     }
 
     /**
@@ -47,7 +47,7 @@ class EditEquipoServicioAT extends EditController
     {
         $data = parent::getPageData();
         $data['menu'] = 'sales';
-        $data['title'] = 'equipment';
+        $data['title'] = 'machine';
         $data['icon'] = 'fas fa-laptop-medical';
         $data['showonmenu'] = false;
 
@@ -89,8 +89,8 @@ class EditEquipoServicioAT extends EditController
 
         switch ($viewName) {
             case 'ListServicioAT':
-                $idequipo = $this->getViewModelValue($mainViewName, 'idequipo');
-                $where = [new DataBaseWhere('idequipo', $idequipo)];
+                $idmaquina = $this->getViewModelValue($mainViewName, 'idmaquina');
+                $where = [new DataBaseWhere('idmaquina', $idmaquina)];
                 $view->loadData('', $where);
                 break;
 

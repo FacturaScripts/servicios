@@ -22,7 +22,7 @@
     <columns>
         <group name="data" numcolumns="12">
             <column name="code" display="none" order="100">
-                <widget type="text" fieldname="idequipo" />
+                <widget type="text" fieldname="idmaquina" />
             </column>
             <column name="reference" order="110">
                 <widget type="text" fieldname="referencia" icon="fas fa-hashtag" />
