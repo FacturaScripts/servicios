@@ -53,9 +53,9 @@ class ListServicioAT extends ListController
      * 
      * @param string $viewName
      */
-    protected function createViewsMachines(string $viewName = 'ListMaquinaServicioAT')
+    protected function createViewsMachines(string $viewName = 'ListMaquinaAT')
     {
-        $this->addView($viewName, 'MaquinaServicioAT', 'machines', 'fas fa-laptop-medical');
+        $this->addView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
         $this->addOrderBy($viewName, ['idmaquina'], 'code', 2);
         $this->addOrderBy($viewName, ['fecha'], 'date');
         $this->addOrderBy($viewName, ['nombre'], 'name');
@@ -97,9 +97,9 @@ class ListServicioAT extends ListController
      * 
      * @param string $viewName
      */
-    protected function createViewsStatus(string $viewName = 'ListEstadoServicioAT')
+    protected function createViewsStatus(string $viewName = 'ListEstadoAT')
     {
-        $this->addView($viewName, 'EstadoServicioAT', 'states', 'fas fa-tags');
+        $this->addView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
         $this->addOrderBy($viewName, ['nombre'], 'name', 1);
     }
 }

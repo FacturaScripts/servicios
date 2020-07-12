@@ -21,11 +21,11 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 
 /**
- * Description of EditEstadoServicioAT
+ * Description of EditEstadoAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EditEstadoServicioAT extends EditController
+class EditEstadoAT extends EditController
 {
 
     /**
@@ -34,7 +34,7 @@ class EditEstadoServicioAT extends EditController
      */
     public function getModelClassName()
     {
-        return 'EstadoServicioAT';
+        return 'EstadoAT';
     }
 
     /**

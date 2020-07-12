@@ -66,9 +66,9 @@ class EditServicioAT extends EditController
      * 
      * @param string $viewName
      */
-    protected function createViewsWorks(string $viewName = 'EditTrabajoServicioAT')
+    protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
     {
-        $this->addEditListView($viewName, 'TrabajoServicioAT', 'work', 'fas fa-stethoscope');
+        $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
         $this->views[$viewName]->disableColumn('service');
     }
 
@@ -108,7 +108,7 @@ class EditServicioAT extends EditController
                 }
                 break;
 
-            case 'EditTrabajoServicioAT':
+            case 'EditTrabajoAT':
                 $idservicio = $this->getViewModelValue($mainViewName, 'idservicio');
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
                 $view->loadData('', $where);

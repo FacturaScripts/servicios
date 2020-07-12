@@ -38,8 +38,8 @@ class EditCliente
 
     protected function createViewsMachines()
     {
-        return function($viewName = 'ListMaquinaServicioAT') {
-            $this->addListView($viewName, 'MaquinaServicioAT', 'machines', 'fas fa-laptop-medical');
+        return function($viewName = 'ListMaquinaAT') {
+            $this->addListView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
             $this->views[$viewName]->addOrderBy(['idmaquina'], 'code', 2);
             $this->views[$viewName]->addOrderBy(['fecha'], 'date');
             $this->views[$viewName]->addOrderBy(['nombre'], 'name');
@@ -69,7 +69,7 @@ class EditCliente
     {
         return function($viewName, $view) {
             switch ($viewName) {
-                case 'ListMaquinaServicioAT':
+                case 'ListMaquinaAT':
                 case 'ListServicioAT':
                     $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
                     $where = [new DataBaseWhere('codcliente', $codcliente)];

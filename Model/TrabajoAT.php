@@ -21,11 +21,11 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Model\Base;
 
 /**
- * Description of MaquinaServicioAT
+ * Description of TrabajoAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class MaquinaServicioAT extends Base\ModelClass
+class TrabajoAT extends Base\ModelClass
 {
 
     use Base\ModelTrait;
@@ -40,54 +40,56 @@ class MaquinaServicioAT extends Base\ModelClass
      *
      * @var string
      */
-    public $codcliente;
-
-    /**
-     *
-     * @var string
-     */
-    public $codfabricante;
-
-    /**
-     *
-     * @var string
-     */
     public $descripcion;
 
     /**
      *
      * @var string
      */
-    public $fecha;
+    public $fechafin;
+
+    /**
+     *
+     * @var string
+     */
+    public $fechainicio;
+
+    /**
+     *
+     * @var string
+     */
+    public $horafin;
+
+    /**
+     *
+     * @var string
+     */
+    public $horainicio;
 
     /**
      *
      * @var int
      */
-    public $idmaquina;
+    public $idservicio;
 
     /**
      *
-     * @var string
+     * @var int
      */
-    public $nombre;
+    public $idtrabajo;
 
     /**
      *
-     * @var string
+     * @var float
      */
-    public $numserie;
-
-    /**
-     *
-     * @var string
-     */
-    public $referencia;
+    public $numhoras;
 
     public function clear()
     {
         parent::clear();
-        $this->fecha = \date(self::DATE_STYLE);
+        $this->fechainicio = \date(self::DATE_STYLE);
+        $this->horainicio = \date(self::HOUR_STYLE);
+        $this->numhoras = 0.0;
     }
 
     /**
@@ -96,7 +98,7 @@ class MaquinaServicioAT extends Base\ModelClass
      */
     public static function primaryColumn(): string
     {
-        return 'idmaquina';
+        return 'idtrabajo';
     }
 
     /**
@@ -105,33 +107,6 @@ class MaquinaServicioAT extends Base\ModelClass
      */
     public static function tableName(): string
     {
-        return 'serviciosat_maquinas';
-    }
-
-    /**
-     * 
-     * @return bool
-     */
-    public function test()
-    {
-        $utils = $this->toolBox()->utils();
-        $fields = ['descripcion', 'nombre', 'numserie', 'referencia'];
-        foreach ($fields as $key) {
-            $this->{$key} = $utils->noHtml($this->{$key});
-        }
-
-        return parent::test();
-    }
-    
-    /**
-     * 
-     * @param string $type
-     * @param string $list
-     *
-     * @return string
-     */
-    public function url(string $type = 'auto', string $list = 'ListServicioAT?activetab=List'): string
-    {
-        return parent::url($type, $list);
+        return 'serviciosat_trabajos';
     }
 }

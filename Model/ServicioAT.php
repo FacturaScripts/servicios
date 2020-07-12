@@ -132,21 +132,21 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     /**
      * 
-     * @return EstadoServicioAT[]
+     * @return EstadoAT[]
      */
     public function getAvailableStatus()
     {
-        $status = new EstadoServicioAT();
+        $status = new EstadoAT();
         return $status->all([], [], 0, 0);
     }
 
     /**
      * 
-     * @return EstadoServicioAT
+     * @return EstadoAT
      */
     public function getStatus()
     {
-        $status = new EstadoServicioAT();
+        $status = new EstadoAT();
         $status->loadFromCode($this->idestado);
         return $status;
     }
@@ -158,8 +158,8 @@ class ServicioAT extends Base\ModelOnChangeClass
     public function install()
     {
         /// neede dependencies
-        new MaquinaServicioAT();
-        new EstadoServicioAT();
+        new MaquinaAT();
+        new EstadoAT();
 
         return parent::install();
     }

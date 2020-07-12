@@ -18,36 +18,53 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 
 /**
- * Description of EstadoServicioAT
+ * Description of MaquinaAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EstadoServicioAT extends Base\ModelClass
+class MaquinaAT extends Base\ModelClass
 {
 
     use Base\ModelTrait;
 
     /**
      *
-     * @var bool
+     * @var string
      */
-    public $editable;
+    public $codagente;
 
     /**
      *
      * @var string
      */
-    public $generadoc;
+    public $codcliente;
+
+    /**
+     *
+     * @var string
+     */
+    public $codfabricante;
+
+    /**
+     *
+     * @var string
+     */
+    public $descripcion;
+
+    /**
+     *
+     * @var string
+     */
+    public $fecha;
 
     /**
      *
      * @var int
      */
-    public $id;
+    public $idmaquina;
 
     /**
      *
@@ -57,15 +74,20 @@ class EstadoServicioAT extends Base\ModelClass
 
     /**
      *
-     * @var bool
+     * @var string
      */
-    public $predeterminado;
+    public $numserie;
+
+    /**
+     *
+     * @var string
+     */
+    public $referencia;
 
     public function clear()
     {
         parent::clear();
-        $this->editable = true;
-        $this->predeterminado = false;
+        $this->fecha = \date(self::DATE_STYLE);
     }
 
     /**
@@ -74,31 +96,7 @@ class EstadoServicioAT extends Base\ModelClass
      */
     public static function primaryColumn(): string
     {
-        return 'id';
-    }
-
-    /**
-     * 
-     * @return bool
-     */
-    public function save()
-    {
-        if (false === parent::save()) {
-            return false;
-        }
-
-        if ($this->predeterminado) {
-            $where = [
-                new DataBaseWhere('predeterminado', true),
-                new DataBaseWhere('id', $this->id, '!=')
-            ];
-            foreach ($this->all($where) as $status) {
-                $status->predeterminado = false;
-                $status->save();
-            }
-        }
-
-        return true;
+        return 'idmaquina';
     }
 
     /**
@@ -107,7 +105,7 @@ class EstadoServicioAT extends Base\ModelClass
      */
     public static function tableName(): string
     {
-        return 'serviciosat_estados';
+        return 'serviciosat_maquinas';
     }
 
     /**
@@ -116,7 +114,12 @@ class EstadoServicioAT extends Base\ModelClass
      */
     public function test()
     {
-        $this->nombre = $this->toolBox()->utils()->noHtml($this->nombre);
+        $utils = $this->toolBox()->utils();
+        $fields = ['descripcion', 'nombre', 'numserie', 'referencia'];
+        foreach ($fields as $key) {
+            $this->{$key} = $utils->noHtml($this->{$key});
+        }
+
         return parent::test();
     }
     

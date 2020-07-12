@@ -27,7 +27,7 @@
                 </widget>
             </column>
             <column name="machine" order="110">
-                <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaServicioAT">
+                <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaAT">
                     <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
                 </widget>
             </column>

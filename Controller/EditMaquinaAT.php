@@ -23,11 +23,11 @@ use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 
 /**
- * Description of EditMaquinaServicioAT
+ * Description of EditMaquinaAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EditMaquinaServicioAT extends EditController
+class EditMaquinaAT extends EditController
 {
 
     /**
@@ -36,7 +36,7 @@ class EditMaquinaServicioAT extends EditController
      */
     public function getModelClassName()
     {
-        return 'MaquinaServicioAT';
+        return 'MaquinaAT';
     }
 
     /**
