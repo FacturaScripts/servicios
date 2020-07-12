@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 
@@ -57,6 +58,18 @@ class EditServicioAT extends EditController
     {
         parent::createViews();
         $this->setTabsPosition('top');
+
+        $this->createViewsWorks();
+    }
+
+    /**
+     * 
+     * @param string $viewName
+     */
+    protected function createViewsWorks(string $viewName = 'EditTrabajoServicioAT')
+    {
+        $this->addEditListView($viewName, 'TrabajoServicioAT', 'work', 'fas fa-stethoscope');
+        $this->views[$viewName]->disableColumn('service');
     }
 
     /**
@@ -95,8 +108,10 @@ class EditServicioAT extends EditController
                 }
                 break;
 
-            default:
-                parent::loadData($viewName, $view);
+            case 'EditTrabajoServicioAT':
+                $idservicio = $this->getViewModelValue($mainViewName, 'idservicio');
+                $where = [new DataBaseWhere('idservicio', $idservicio)];
+                $view->loadData('', $where);
                 break;
         }
     }
