@@ -25,7 +25,7 @@ use FacturaScripts\Core\Model\Base;
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class ServicioCliente extends Base\ModelClass
+class ServicioCliente extends Base\ModelOnChangeClass
 {
 
     use Base\ModelTrait;
@@ -224,5 +224,32 @@ class ServicioCliente extends Base\ModelClass
         }
 
         return parent::test();
+    }
+
+    /**
+     * 
+     * @param string $field
+     *
+     * @return bool
+     */
+    protected function onChange($field)
+    {
+        switch ($field) {
+            case 'idestado':
+                $this->editable = $this->getStatus()->editable;
+                return true;
+        }
+
+        return parent::onChange($field);
+    }
+
+    /**
+     * 
+     * @param array $fields
+     */
+    protected function setPreviousData(array $fields = [])
+    {
+        $more = ['idestado'];
+        parent::setPreviousData(\array_merge($more, $fields));
     }
 }

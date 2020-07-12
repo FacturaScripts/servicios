@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
+use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 
 /**
@@ -56,5 +57,47 @@ class EditServicioCliente extends EditController
     {
         parent::createViews();
         $this->setTabsPosition('top');
+    }
+
+    /**
+     * 
+     * @param BaseView $view
+     */
+    protected function disableServiceColumns(&$view)
+    {
+        foreach ($view->getColumns() as $group) {
+            foreach ($group->columns as $col) {
+                if ($col->name !== 'status') {
+                    $view->disableColumn($col->name, false, 'true');
+                }
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param string   $viewName
+     * @param BaseView $view
+     */
+    protected function loadData($viewName, $view)
+    {
+        $mainViewName = $this->getMainViewName();
+
+        switch ($viewName) {
+            case $mainViewName:
+                parent::loadData($viewName, $view);
+                if (false === $view->model->exists()) {
+                    $view->model->codalmacen = $this->user->codalmacen;
+                    $view->model->idempresa = $this->user->idempresa;
+                    $view->model->nick = $this->user->nick;
+                } elseif (false === $view->model->editable) {
+                    $this->disableServiceColumns($view);
+                }
+                break;
+
+            default:
+                parent::loadData($viewName, $view);
+                break;
+        }
     }
 }

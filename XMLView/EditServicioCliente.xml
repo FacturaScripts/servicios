@@ -60,6 +60,11 @@
                     <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto" />
                 </widget>
             </column>
+            <column name="user" numcolumns="2" order="190">
+                <widget type="select" fieldname="nick" readonly="true" required="true">
+                    <values source="users" fieldcode="nick" />
+                </widget>
+            </column>
         </group>
         <group name="notes" numcolumns="12">
             <column name="description" order="100">
