@@ -18,6 +18,8 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 
 /**
@@ -46,9 +48,55 @@ class EditEquipoServicioAT extends EditController
         $data = parent::getPageData();
         $data['menu'] = 'sales';
         $data['title'] = 'equipment';
-        $data['icon'] = 'fas fa-computer-medical';
+        $data['icon'] = 'fas fa-laptop-medical';
         $data['showonmenu'] = false;
 
         return $data;
+    }
+
+    protected function createViews()
+    {
+        parent::createViews();
+        $this->setTabsPosition('bottom');
+
+        $this->createViewsServices();
+    }
+
+    /**
+     * 
+     * @param string $viewName
+     */
+    protected function createViewsServices(string $viewName = 'ListServicioAT')
+    {
+        $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
+        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
+        $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
+        $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
+        $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
+
+        /// disable customer column
+        $this->views[$viewName]->disableColumn('customer');
+    }
+
+    /**
+     * 
+     * @param string   $viewName
+     * @param BaseView $view
+     */
+    protected function loadData($viewName, $view)
+    {
+        $mainViewName = $this->getMainViewName();
+
+        switch ($viewName) {
+            case 'ListServicioAT':
+                $idequipo = $this->getViewModelValue($mainViewName, 'idequipo');
+                $where = [new DataBaseWhere('idequipo', $idequipo)];
+                $view->loadData('', $where);
+                break;
+
+            default:
+                parent::loadData($viewName, $view);
+                break;
+        }
     }
 }

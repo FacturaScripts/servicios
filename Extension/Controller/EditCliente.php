@@ -28,28 +28,53 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 class EditCliente
 {
 
-    public function createViews()
+    protected function createViews()
     {
         return function() {
-            $viewName = 'ListServicioAT';
+            $this->createViewsEquipements();
+            $this->createViewsServices();
+        };
+    }
+
+    protected function createViewsEquipements()
+    {
+        return function($viewName = 'ListEquipoServicioAT') {
+            $this->addListView($viewName, 'EquipoServicioAT', 'equipments', 'fas fa-laptop-medical');
+            $this->views[$viewName]->addOrderBy(['idequipo'], 'code', 2);
+            $this->views[$viewName]->addOrderBy(['fecha'], 'date');
+            $this->views[$viewName]->addOrderBy(['nombre'], 'name');
+            $this->views[$viewName]->addOrderBy(['referencia'], 'reference');
+            $this->views[$viewName]->searchFields = ['idequipo', 'nombre', 'numserie', 'referencia'];
+
+            /// disable customer column
+            $this->views[$viewName]->disableColumn('customer');
+        };
+    }
+
+    protected function createViewsServices()
+    {
+        return function($viewName = 'ListServicioAT') {
             $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
             $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
             $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
             $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
-            $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'numserie', 'observaciones', 'referencia'];
+            $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
 
             /// disable customer column
-            $this->views['ListServicioAT']->disableColumn('customer');
+            $this->views[$viewName]->disableColumn('customer');
         };
     }
 
-    public function loadData()
+    protected function loadData()
     {
         return function($viewName, $view) {
-            if ($viewName === 'ListServicioAT') {
-                $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
-                $where = [new DataBaseWhere('codcliente', $codcliente)];
-                $view->loadData('', $where);
+            switch ($viewName) {
+                case 'ListEquipoServicioAT':
+                case 'ListServicioAT':
+                    $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
+                    $where = [new DataBaseWhere('codcliente', $codcliente)];
+                    $view->loadData('', $where);
+                    break;
             }
         };
     }

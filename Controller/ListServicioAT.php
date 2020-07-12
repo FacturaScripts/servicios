@@ -56,7 +56,18 @@ class ListServicioAT extends ListController
     protected function createViewsEquipements(string $viewName = 'ListEquipoServicioAT')
     {
         $this->addView($viewName, 'EquipoServicioAT', 'equipments', 'fas fa-laptop-medical');
-        $this->addOrderBy($viewName, ['nombre'], 'name', 1);
+        $this->addOrderBy($viewName, ['idequipo'], 'code', 2);
+        $this->addOrderBy($viewName, ['fecha'], 'date');
+        $this->addOrderBy($viewName, ['nombre'], 'name');
+        $this->addOrderBy($viewName, ['referencia'], 'reference');
+        $this->addSearchFields($viewName, ['idequipo', 'nombre', 'numserie', 'referencia']);
+
+        /// filters
+        $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
+        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nomnbre');
+
+        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
     }
 
     /**
@@ -69,7 +80,7 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
         $this->addOrderBy($viewName, ['prioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
-        $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'numserie', 'observaciones', 'referencia']);
+        $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'observaciones']);
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
