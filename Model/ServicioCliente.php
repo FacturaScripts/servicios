@@ -124,6 +124,12 @@ class ServicioCliente extends Base\ModelClass
      *
      * @var string
      */
+    public $numserie;
+
+    /**
+     *
+     * @var string
+     */
     public $observaciones;
 
     /**
@@ -131,6 +137,12 @@ class ServicioCliente extends Base\ModelClass
      * @var int
      */
     public $prioridad;
+
+    /**
+     *
+     * @var string
+     */
+    public $referencia;
 
     public function clear()
     {
@@ -206,7 +218,7 @@ class ServicioCliente extends Base\ModelClass
     public function test()
     {
         $utils = $this->toolBox()->utils();
-        $fields = ['descripcion', 'observaciones'];
+        $fields = ['descripcion', 'numserie', 'observaciones', 'referencia'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }

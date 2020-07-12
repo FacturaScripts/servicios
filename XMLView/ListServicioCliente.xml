@@ -38,21 +38,27 @@
                 <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
             </widget>
         </column>
-        <column name="description" order="140">
+        <column name="product" order="140">
+            <widget type="text" fieldname="referencia" />
+        </column>
+        <column name="serial-number" order="150">
+            <widget type="text" fieldname="numserie" />
+        </column>
+        <column name="description" order="160">
             <widget type="textarea" fieldname="descripcion" />
         </column>
-        <column name="observations" order="150">
+        <column name="observations" order="170">
             <widget type="textarea" fieldname="observaciones" />
         </column>
-        <column name="status" order="160">
+        <column name="status" order="180">
             <widget type="select" fieldname="idestado">
                 <values source="nservicioscli_estados" fieldcode="id" fieldtitle="nombre" />
             </widget>
         </column>
-        <column name="priority" display="right" order="170">
+        <column name="priority" display="right" order="190">
             <widget type="number" fieldname="prioridad" decimal="0" />
         </column>
-        <column name="date" display="right" order="170">
+        <column name="date" display="right" order="200">
             <widget type="date" fieldname="fecha" />
         </column>
     </columns>

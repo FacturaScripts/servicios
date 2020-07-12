@@ -36,7 +36,7 @@ class EditCliente
             $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
             $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
             $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
-            $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
+            $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'numserie', 'observaciones', 'referencia'];
 
             /// disable customer column
             $this->views['ListServicioCliente']->disableColumn('customer');

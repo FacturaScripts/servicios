@@ -58,7 +58,7 @@ class ListServicioCliente extends ListController
         $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
         $this->addOrderBy($viewName, ['prioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
-        $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'observaciones']);
+        $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'numserie', 'observaciones', 'referencia']);
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
