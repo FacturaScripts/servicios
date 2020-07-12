@@ -206,6 +206,15 @@ class ServicioCliente extends Base\ModelOnChangeClass
      * 
      * @return string
      */
+    public function primaryDescriptionColumn(): string
+    {
+        return 'idservicio';
+    }
+
+    /**
+     * 
+     * @return string
+     */
     public static function tableName(): string
     {
         return 'nservicioscli';

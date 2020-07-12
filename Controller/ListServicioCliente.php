@@ -66,6 +66,9 @@ class ListServicioCliente extends ListController
 
         $status = $this->codeModel->all('nservicioscli_estados', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);
+
+        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
     }
 
     /**
