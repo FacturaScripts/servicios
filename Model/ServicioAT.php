@@ -21,11 +21,11 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Model\Base;
 
 /**
- * Description of ServicioCliente
+ * Description of ServicioAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class ServicioCliente extends Base\ModelOnChangeClass
+class ServicioAT extends Base\ModelOnChangeClass
 {
 
     use Base\ModelTrait;
@@ -70,37 +70,19 @@ class ServicioCliente extends Base\ModelOnChangeClass
      *
      * @var string
      */
-    public $fechafin;
-
-    /**
-     *
-     * @var string
-     */
-    public $fechainicio;
-
-    /**
-     *
-     * @var string
-     */
     public $hora;
-
-    /**
-     *
-     * @var string
-     */
-    public $horafin;
-
-    /**
-     *
-     * @var string
-     */
-    public $horainicio;
 
     /**
      *
      * @var int
      */
     public $idempresa;
+
+    /**
+     *
+     * @var int
+     */
+    public $idequipo;
 
     /**
      *
@@ -124,12 +106,6 @@ class ServicioCliente extends Base\ModelOnChangeClass
      *
      * @var string
      */
-    public $numserie;
-
-    /**
-     *
-     * @var string
-     */
     public $observaciones;
 
     /**
@@ -137,12 +113,6 @@ class ServicioCliente extends Base\ModelOnChangeClass
      * @var int
      */
     public $prioridad;
-
-    /**
-     *
-     * @var string
-     */
-    public $referencia;
 
     public function clear()
     {
@@ -162,21 +132,21 @@ class ServicioCliente extends Base\ModelOnChangeClass
 
     /**
      * 
-     * @return EstadoServicioCliente[]
+     * @return EstadoServicioAT[]
      */
     public function getAvailableStatus()
     {
-        $status = new EstadoServicioCliente();
+        $status = new EstadoServicioAT();
         return $status->all([], [], 0, 0);
     }
 
     /**
      * 
-     * @return EstadoServicioCliente
+     * @return EstadoServicioAT
      */
     public function getStatus()
     {
-        $status = new EstadoServicioCliente();
+        $status = new EstadoServicioAT();
         $status->loadFromCode($this->idestado);
         return $status;
     }
@@ -188,7 +158,8 @@ class ServicioCliente extends Base\ModelOnChangeClass
     public function install()
     {
         /// neede dependencies
-        new EstadoServicioCliente();
+        new EquipoServicioAT();
+        new EstadoServicioAT();
 
         return parent::install();
     }
@@ -217,7 +188,7 @@ class ServicioCliente extends Base\ModelOnChangeClass
      */
     public static function tableName(): string
     {
-        return 'nservicioscli';
+        return 'serviciosat';
     }
 
     /**
@@ -227,7 +198,7 @@ class ServicioCliente extends Base\ModelOnChangeClass
     public function test()
     {
         $utils = $this->toolBox()->utils();
-        $fields = ['descripcion', 'numserie', 'observaciones', 'referencia'];
+        $fields = ['descripcion', 'observaciones'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }

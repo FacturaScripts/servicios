@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Document   : nservicioscli.xml
+    Document   : serviciosat.xml
     Description:
-        Estructura de la tabla nservicioscli.
+        Estructura de la tabla serviciosat.
 -->
 <table>
     <column>
@@ -12,6 +12,7 @@
     <column>
         <name>codalmacen</name>
         <type>character varying(4)</type>
+        <null>NO</null>
     </column>
     <column>
         <name>codcliente</name>
@@ -32,27 +33,16 @@
         <null>NO</null>
     </column>
     <column>
-        <name>fechafin</name>
-        <type>date</type>
-    </column>
-    <column>
-        <name>fechainicio</name>
-        <type>date</type>
-    </column>
-    <column>
         <name>hora</name>
         <type>time without time zone</type>
     </column>
     <column>
-        <name>horafin</name>
-        <type>time without time zone</type>
-    </column>
-    <column>
-        <name>horainicio</name>
-        <type>time without time zone</type>
-    </column>
-    <column>
         <name>idempresa</name>
+        <type>integer</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>idequipo</name>
         <type>integer</type>
     </column>
     <column>
@@ -70,10 +60,6 @@
         <type>character varying(50)</type>
     </column>
     <column>
-        <name>numserie</name>
-        <type>character varying(50)</type>
-    </column>
-    <column>
         <name>observaciones</name>
         <type>text</type>
     </column>
@@ -81,28 +67,32 @@
         <name>prioridad</name>
         <type>integer</type>
     </column>
-    <column>
-        <name>referencia</name>
-        <type>character varying(30)</type>
-    </column>
     <constraint>
-        <name>nservicioscli_pkey</name>
+        <name>serviciosat_pkey</name>
         <type>PRIMARY KEY (idservicio)</type>
     </constraint>
     <constraint>
-        <name>ca_nservicioscli_clientes</name>
+        <name>ca_serviciosat_almacenes</name>
+        <type>FOREIGN KEY (codalmacen) REFERENCES almacenes (codaLmacen) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_clientes</name>
         <type>FOREIGN KEY (codcliente) REFERENCES clientes (codcliente) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_nservicioscli_empresas</name>
+        <name>ca_serviciosat_equipos</name>
+        <type>FOREIGN KEY (idequipo) REFERENCES serviciosat_equipos (idequipo) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_empresas</name>
         <type>FOREIGN KEY (idempresa) REFERENCES empresas (idempresa) ON DELETE CASCADE ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_nservicioscli_estados</name>
-        <type>FOREIGN KEY (idestado) REFERENCES nservicioscli_estados (id) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+        <name>ca_serviciosat_estados</name>
+        <type>FOREIGN KEY (idestado) REFERENCES serviciosat_estados (id) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_nservicioscli_users</name>
+        <name>ca_serviciosat_users</name>
         <type>FOREIGN KEY (nick) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
 </table>

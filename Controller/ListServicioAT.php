@@ -21,11 +21,11 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
 
 /**
- * Description of ListServicioCliente
+ * Description of ListServicioAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class ListServicioCliente extends ListController
+class ListServicioAT extends ListController
 {
 
     /**
@@ -45,6 +45,7 @@ class ListServicioCliente extends ListController
     protected function createViews()
     {
         $this->createViewsServices();
+        $this->createViewsEquipements();
         $this->createViewsStatus();
     }
 
@@ -52,9 +53,19 @@ class ListServicioCliente extends ListController
      * 
      * @param string $viewName
      */
-    protected function createViewsServices(string $viewName = 'ListServicioCliente')
+    protected function createViewsEquipements(string $viewName = 'ListEquipoServicioAT')
     {
-        $this->addView($viewName, 'ServicioCliente', 'services', 'fas fa-headset');
+        $this->addView($viewName, 'EquipoServicioAT', 'equipments', 'fas fa-laptop-medical');
+        $this->addOrderBy($viewName, ['nombre'], 'name', 1);
+    }
+
+    /**
+     * 
+     * @param string $viewName
+     */
+    protected function createViewsServices(string $viewName = 'ListServicioAT')
+    {
+        $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
         $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
         $this->addOrderBy($viewName, ['prioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
@@ -64,7 +75,7 @@ class ListServicioCliente extends ListController
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
         $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nomnbre');
 
-        $status = $this->codeModel->all('nservicioscli_estados', 'id', 'nombre');
+        $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
@@ -75,9 +86,9 @@ class ListServicioCliente extends ListController
      * 
      * @param string $viewName
      */
-    protected function createViewsStatus(string $viewName = 'ListEstadoServicioCliente')
+    protected function createViewsStatus(string $viewName = 'ListEstadoServicioAT')
     {
-        $this->addView($viewName, 'EstadoServicioCliente', 'states', 'fas fa-tags');
+        $this->addView($viewName, 'EstadoServicioAT', 'states', 'fas fa-tags');
         $this->addOrderBy($viewName, ['nombre'], 'name', 1);
     }
 }

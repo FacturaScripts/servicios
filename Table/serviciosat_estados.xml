@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Document   : nservicioscli_estados.xml
+    Document   : serviciosat_estados.xml
     Description:
-        Estructura de la tabla nservicioscli_estadoss.
+        Estructura de la tabla serviciosat_estados.
 -->
 <table>
     <column>
@@ -27,7 +27,7 @@
         <type>boolean</type>
     </column>
     <constraint>
-        <name>nservicioscli_estados_pkey</name>
+        <name>serviciosat_estados_pkey</name>
         <type>PRIMARY KEY (id)</type>
     </constraint>
 </table>

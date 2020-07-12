@@ -31,22 +31,22 @@ class EditCliente
     public function createViews()
     {
         return function() {
-            $viewName = 'ListServicioCliente';
-            $this->addListView($viewName, 'ServicioCliente', 'services', 'fas fa-headset');
+            $viewName = 'ListServicioAT';
+            $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
             $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
             $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
             $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
             $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'numserie', 'observaciones', 'referencia'];
 
             /// disable customer column
-            $this->views['ListServicioCliente']->disableColumn('customer');
+            $this->views['ListServicioAT']->disableColumn('customer');
         };
     }
 
     public function loadData()
     {
         return function($viewName, $view) {
-            if ($viewName === 'ListServicioCliente') {
+            if ($viewName === 'ListServicioAT') {
                 $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
                 $where = [new DataBaseWhere('codcliente', $codcliente)];
                 $view->loadData('', $where);

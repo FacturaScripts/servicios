@@ -26,20 +26,20 @@
                     <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="product" numcolumns="2" order="110">
-                <widget type="autocomplete" fieldname="referencia">
-                    <values source="Variante" fieldcode="referencia" />
+            <column name="equipment" order="110">
+                <widget type="autocomplete" fieldname="idequipo" onclick="EditEquipoServicioAT">
+                    <values source="serviciosat_equipos" fieldcode="idequipo" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="serial-number" numcolumns="2" order="120">
-                <widget type="text" fieldname="numserie" />
-            </column>
-            <column name="date" numcolumns="2" order="130">
+            <column name="date" numcolumns="2" order="120">
                 <widget type="date" fieldname="fecha" required="true" />
+            </column>
+            <column name="hour" numcolumns="2" order="130">
+                <widget type="time" fieldname="hora" required="true" />
             </column>
             <column name="status" numcolumns="2" order="140">
                 <widget type="select" fieldname="idestado" required="true">
-                    <values source="nservicioscli_estados" fieldcode="id" fieldtitle="nombre" />
+                    <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre" />
                 </widget>
             </column>
             <column name="priority" numcolumns="2" order="150">
