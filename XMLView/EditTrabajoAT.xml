@@ -29,7 +29,7 @@
                     <values source="serviciosat" fieldcode="idservicio" />
                 </widget>
             </column>
-            <column name="agent" titleurl="ListAgente" numcolumns="2" order="120">
+            <column name="agent" titleurl="ListAgente" order="120">
                 <widget type="select" fieldname="codagente" onclick="EditAgente">
                     <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />
                 </widget>
@@ -46,8 +46,23 @@
             <column name="end-hour" numcolumns="2" order="160">
                 <widget type="time" fieldname="horafin" />
             </column>
-            <column name="number-hour" numcolumns="2" order="170">
-                <widget type="number" fieldname="numhoras" />
+        </group>
+        <group name="work" numcolumns="12">
+            <column name="reference" numcolumns="8" order="100">
+                <widget type="autocomplete" fieldname="referencia">
+                    <values source="Variante" fieldcode="referencia" />
+                </widget>
+            </column>
+            <column name="quantity" numcolumns="4" order="110">
+                <widget type="number" fieldname="cantidad" />
+            </column>
+        </group>
+        <group name="notes" numcolumns="12">
+            <column name="description" order="100">
+                <widget type="textarea" fieldname="descripcion" />
+            </column>
+            <column name="observations" order="110">
+                <widget type="textarea" fieldname="observaciones" />
             </column>
         </group>
     </columns>

@@ -40,8 +40,20 @@
         <null>NO</null>
     </column>
     <column>
-        <name>numhoras</name>
+        <name>cantidad</name>
         <type>double precision</type>
+    </column>
+    <column>
+        <name>referencia</name>
+        <type>character varying(30)</type>
+    </column>
+    <column>
+        <name>descripcion</name>
+        <type>text</type>
+    </column>
+    <column>
+        <name>observaciones</name>
+        <type>text</type>
     </column>
     <constraint>
         <name>serviciosat_trabajos_pkey</name>
@@ -50,5 +62,9 @@
     <constraint>
         <name>ca_serviciosat_servicios</name>
         <type>FOREIGN KEY (idservicio) REFERENCES serviciosat (idservicio) ON DELETE CASCADE ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_variantes</name>
+        <type>FOREIGN KEY (referencia) REFERENCES variantes (referencia) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
 </table>

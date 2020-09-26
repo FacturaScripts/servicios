@@ -32,6 +32,12 @@ class TrabajoAT extends Base\ModelClass
 
     /**
      *
+     * @var float
+     */
+    public $cantidad;
+    
+    /**
+     *
      * @var string
      */
     public $codagente;
@@ -80,16 +86,19 @@ class TrabajoAT extends Base\ModelClass
 
     /**
      *
-     * @var float
+     * @var string
      */
-    public $numhoras;
-
+    public $observaciones;
+    
+    /**
+     * Reset the values of all model properties.
+     */
     public function clear()
     {
         parent::clear();
         $this->fechainicio = \date(self::DATE_STYLE);
         $this->horainicio = \date(self::HOUR_STYLE);
-        $this->numhoras = 0.0;
+        $this->cantidad = 0;
     }
 
     /**
