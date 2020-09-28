@@ -39,12 +39,6 @@ class EstadoAT extends Base\ModelClass
 
     /**
      *
-     * @var string
-     */
-    public $generadoc;
-
-    /**
-     *
      * @var int
      */
     public $id;
@@ -119,7 +113,7 @@ class EstadoAT extends Base\ModelClass
         $this->nombre = $this->toolBox()->utils()->noHtml($this->nombre);
         return parent::test();
     }
-    
+
     /**
      * 
      * @param string $type

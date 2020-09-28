@@ -27,16 +27,10 @@
             <column name="name" order="110">
                 <widget type="text" fieldname="nombre" required="true" />
             </column>
-            <column name="generate-doc-type" order="120">
-                <widget type="select" fieldname="generadoc" translate="true">
-                    <values title="customer-delivery-note">AlbaranCliente</values>
-                    <values title="customer-invoice">FacturaCliente</values>
-                </widget>
-            </column>
-            <column name="editable" order="130">
+            <column name="editable" order="120">
                 <widget type="checkbox" fieldname="editable" />
             </column>
-            <column name="default" order="140">
+            <column name="default" order="130">
                 <widget type="checkbox" fieldname="predeterminado" />
             </column>
         </group>

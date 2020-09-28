@@ -48,10 +48,6 @@
         <type>character varying(30)</type>
     </column>
     <column>
-        <name>descripcion</name>
-        <type>text</type>
-    </column>
-    <column>
         <name>observaciones</name>
         <type>text</type>
     </column>

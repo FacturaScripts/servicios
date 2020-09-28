@@ -51,7 +51,6 @@ class EditServicioAT extends EditController
         $data['title'] = 'service';
         $data['icon'] = 'fas fa-edit';
         $data['showonmenu'] = false;
-
         return $data;
     }
 
@@ -62,7 +61,6 @@ class EditServicioAT extends EditController
     {
         parent::createViews();
         $this->setTabsPosition('top');
-
         $this->createViewsWorks();
     }
 
@@ -74,8 +72,6 @@ class EditServicioAT extends EditController
     {
         $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
         $this->views[$viewName]->disableColumn('service');
-        
-        
     }
 
     /**
@@ -100,18 +96,18 @@ class EditServicioAT extends EditController
      *
      * @return bool
      */
-    protected function execPreviousAction($action) {
+    protected function execPreviousAction($action)
+    {
         switch ($action) {
             case 'auto-quantity':
                 $this->calculateQuantity();
                 return true;
-                
+
             default:
                 return parent::execPreviousAction($action);
-        }        
+        }
     }
-    
-    
+
     /**
      * Loads the data to display.
      * 
@@ -136,30 +132,21 @@ class EditServicioAT extends EditController
 
             case 'EditTrabajoAT':
                 $idservicio = $this->getViewModelValue($mainViewName, 'idservicio');
-                $this->loadEditTrabajoAT($view, $idservicio);
+                $where = [new DataBaseWhere('idservicio', $idservicio)];
+                $view->loadData('', $where);
+                if ($view->count > 0) {
+                    $this->addButton('EditTrabajoAT', [
+                        'action' => 'auto-quantity',
+                        'icon' => 'fas fa-calculator',
+                        'label' => 'calculate-hours',
+                        'type' => 'action',
+                        'color' => 'info',
+                    ]);
+                }
                 break;
         }
     }
-    
-    /**
-     * 
-     * @param BaseView $view
-     * @param int $idservicio
-     */
-    protected function loadEditTrabajoAT(&$view, $idservicio) {
-        $where = [new DataBaseWhere('idservicio', $idservicio)];
-        $view->loadData('', $where);
-        if ($view->count > 0) {
-            $this->addButton('EditTrabajoAT', [
-                'action' => 'auto-quantity',
-                'icon' => 'fas fa-calculator',
-                'label' => 'calculate-hours',
-                'type' => 'action',
-                'color' => 'info',
-            ]);
-        }        
-    }
-    
+
     /**
      * Calculate the number of hours worked.
      * 
@@ -167,11 +154,11 @@ class EditServicioAT extends EditController
      */
     private function calculateQuantity()
     {
-        if (!$this->permissions->allowUpdate) {
+        if (false === $this->permissions->allowUpdate) {
             $this->toolBox()->i18nLog()->warning('not-allowed-modify');
             return;
         }
-        
+
         $code = $this->request->request->get('code', '');
         $model = new TrabajoAT();
         if ($model->loadFromCode($code)) {
@@ -179,18 +166,19 @@ class EditServicioAT extends EditController
             $hours = $this->TimeDifferenceInHours($model->horainicio, $model->horafin);
             $model->cantidad = ($days * 24) + $hours;
             if ($model->save()) {
-                $this->toolBox()->i18nLog()->notice('record-updated-correctly');                
+                $this->toolBox()->i18nLog()->notice('record-updated-correctly');
             }
-        }        
+        }
     }
-    
+
     /**
      * Calculate number days between two dates
      *
      * @param string $start
      * @param string $end
-     * @param boolean $increment
-     * @return integer
+     * @param bool   $increment
+     *
+     * @return int
      */
     private function daysBetween($start, $end, $increment = false): int
     {
@@ -211,6 +199,7 @@ class EditServicioAT extends EditController
      *
      * @param string $start
      * @param string $end
+     *
      * @return float
      */
     private function TimeDifferenceInHours(string $start, string $end): float
@@ -219,13 +208,13 @@ class EditServicioAT extends EditController
             return 0;
         }
 
-        $startHour = date_parse_from_format('H:i:s', $start);
-        $endHour = date_parse_from_format('H:i:s', $end);
+        $startHour = \date_parse_from_format('H:i:s', $start);
+        $endHour = \date_parse_from_format('H:i:s', $end);
 
         $ini = ($startHour['hour'] * 3600) + ($startHour['minute'] * 60) + $startHour['second'];
         $fin = ($endHour['hour'] * 3600) + ($endHour['minute'] * 60) + $endHour['second'];
 
         $dif = ($fin - $ini) / 3600;
-        return round($dif, 4);
-    }    
+        return \round($dif, 4);
+    }
 }

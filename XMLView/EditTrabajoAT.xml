@@ -34,16 +34,16 @@
                     <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="start-date" numcolumns="2" order="130">
+            <column name="from-date" numcolumns="2" order="130">
                 <widget type="date" fieldname="fechainicio" required="true" />
             </column>
-            <column name="start-hour" numcolumns="2" order="140">
+            <column name="from-hour" numcolumns="2" order="140">
                 <widget type="time" fieldname="horainicio" required="true" />
             </column>
-            <column name="end-date" numcolumns="2" order="150">
+            <column name="until-date" numcolumns="2" order="150">
                 <widget type="date" fieldname="fechafin" />
             </column>
-            <column name="end-hour" numcolumns="2" order="160">
+            <column name="until-hour" numcolumns="2" order="160">
                 <widget type="time" fieldname="horafin" />
             </column>
         </group>

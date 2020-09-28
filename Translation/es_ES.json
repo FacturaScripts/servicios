@@ -1,6 +1,8 @@
 {
-    "calculate-hours": "Calcular horas",
+    "from-hour": "Hora inicio",
     "machine": "Equipamiento",
     "machines": "Equipamientos",
-    "services": "Servicios"
+    "services": "Servicios",
+    "until-hour": "Hasta hora",
+    "work": "Trabajo"
 }

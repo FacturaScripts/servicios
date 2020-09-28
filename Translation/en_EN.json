@@ -1,6 +1,8 @@
 {
-    "calculate-hours": "Calculate hours",
+    "from-hour": "From hour",
     "machine": "Machine",
     "machines": "Machines",
-    "services": "Services"
+    "services": "Services",
+    "until-hour": "Until hour",
+    "work": "Work"
 }
