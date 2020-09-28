@@ -36,37 +36,41 @@
             <div class="row">
                 <div class="col-sm">
                     {{ _self.machineList(fsc, i18n) }}
-                    {{ _self.noMachineForm(fsc, i18n) }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <div class="card shadow mt-5 mb-5">
+                    <div class="card shadow mt-3 mb-5">
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="findm-tab" data-toggle="tab" href="#findm" role="tab" aria-controls="findm" aria-selected="true">
-                                        {{ i18n.trans('search') }}
+                                    <a class="nav-link active" id="newm-tab" data-toggle="tab" href="#newm" role="tab" aria-controls="newm" aria-selected="false">
+                                        {{ i18n.trans('new-machine') }}
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="newm-tab" data-toggle="tab" href="#newm" role="tab" aria-controls="newm" aria-selected="false">
-                                        {{ i18n.trans('new-machine') }}
+                                    <a class="nav-link" id="findm-tab" data-toggle="tab" href="#findm" role="tab" aria-controls="findm" aria-selected="true">
+                                        {{ i18n.trans('search') }}
                                     </a>
                                 </li>
                             </ul>
                         </div>
                         <div class="card-body">
                             <div class="tab-content">
-                                <div class="tab-pane fade show active" id="findm" role="tabpanel" aria-labelledby="findm-tab">
-                                    {{ _self.findMachineTab(fsc, i18n) }}
-                                </div>
-                                <div class="tab-pane fade" id="newm" role="tabpanel" aria-labelledby="newm-tab">
+                                <div class="tab-pane fade show active" id="newm" role="tabpanel" aria-labelledby="newm-tab">
                                     {{ _self.newMachineTab(fsc, i18n) }}
+                                </div>
+                                <div class="tab-pane fade" id="findm" role="tabpanel" aria-labelledby="findm-tab">
+                                    {{ _self.findMachineTab(fsc, i18n) }}
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm text-right">
+                    {{ _self.noMachineForm(fsc, i18n) }}
                 </div>
             </div>
         {% else %}
@@ -210,7 +214,7 @@
                         </tr>
                     {% else %}
                         <tr class="table-warning">
-                            <td>{{ i18n.trans('customer-has-no-machines') }}</td>
+                            <td colspan="6">{{ i18n.trans('customer-has-no-machines') }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -220,7 +224,53 @@
 {% endmacro %}
 
 {% macro newMachineTab(fsc, i18n) %}
-
+    <form method="post">
+        <input type="hidden" name="action" value="new-machine" />
+        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
+        <div class="form-row">
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('reference') }}
+                    <input type="text" name="referencia" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('manufacturer') }}
+                    <select name="codfabricante" class="form-control">
+                        {% for item in fsc.codeModel.all('fabricantes','codfabricante','nombre') %}
+                            <option value="{{ item.code }}">{{ item.description }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('serial-number') }}
+                    <input type="text" name="numserie" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('name') }}
+                    <input type="text" name="nombre" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('description') }}
+                    <textarea class="form-control" name="descripcion"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <button type="submit" class="btn btn-primary">
+                {{ i18n.trans('continue') }}
+            </button>
+        </div>
+    </form>
 {% endmacro %}
 
 {% macro noMachineForm(fsc, i18n) %}
@@ -228,7 +278,7 @@
         <input type="hidden" name="action" value="no-machine" />
         <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
         <button type="submit" class="btn btn-secondary">
-            {{ i18n.trans('no-machine') }}
+            <i class="fas fa-times-circle"></i>&nbsp; {{ i18n.trans('no-machine') }}
         </button>
     </form>
 {% endmacro %}

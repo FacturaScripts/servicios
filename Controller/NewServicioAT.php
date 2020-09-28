@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\CodeModel;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
@@ -37,6 +38,12 @@ class NewServicioAT extends Controller
      * @var Cliente
      */
     public $cliente;
+
+    /**
+     *
+     * @var CodeModel
+     */
+    public $codeModel;
 
     /**
      *
@@ -70,6 +77,7 @@ class NewServicioAT extends Controller
     public function privateCore(&$response, $user, $permissions)
     {
         parent::privateCore($response, $user, $permissions);
+        $this->codeModel = new CodeModel();
         $this->loadCustomer();
 
         $action = $this->request->get('action');
@@ -79,6 +87,9 @@ class NewServicioAT extends Controller
 
             case 'machine':
                 return $this->machineAction();
+
+            case 'new-machine':
+                return $this->newMachineAction();
 
             case 'no-machine':
                 return $this->noMachineAction();
@@ -132,6 +143,36 @@ class NewServicioAT extends Controller
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
         $newServicio->idmaquina = $this->request->request->get('idmaquina');
+        $newServicio->nick = $this->user->nick;
+        if ($newServicio->save()) {
+            $this->redirect($newServicio->url());
+            return;
+        }
+
+        $this->toolBox()->i18nLog()->warning('record-save-error');
+    }
+
+    protected function newMachineAction()
+    {
+        $codfabricante = $this->request->request->get('codfabricante');
+
+        $newMachine = new MaquinaAT();
+        $newMachine->codcliente = $this->cliente->codcliente;
+        $newMachine->codfabricante = empty($codfabricante) ? null : $codfabricante;
+        $newMachine->descripcion = $this->request->request->get('descripcion');
+        $newMachine->nombre = $this->request->request->get('nombre');
+        $newMachine->numserie = $this->request->request->get('numserie');
+        $newMachine->referencia = $this->request->request->get('referencia');
+        if (false === $newMachine->save()) {
+            $this->toolBox()->i18nLog()->warning('record-save-error');
+            return;
+        }
+
+        $newServicio = new ServicioAT();
+        $newServicio->codalmacen = $this->user->codalmacen;
+        $newServicio->codcliente = $this->cliente->codcliente;
+        $newServicio->idempresa = $this->user->idempresa;
+        $newServicio->idmaquina = $newMachine->idmaquina;
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
             $this->redirect($newServicio->url());
