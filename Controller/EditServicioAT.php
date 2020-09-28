@@ -71,20 +71,25 @@ class EditServicioAT extends EditController
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
     {
         $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
+
+        /// disable column
         $this->views[$viewName]->disableColumn('service');
     }
 
     /**
      * 
-     * @param BaseView $view
+     * @param string $mainViewName
+     * @param string $exclude
      */
-    protected function disableServiceColumns(&$view)
+    protected function disableAllColumns($mainViewName, $exclude = '')
     {
-        foreach ($view->getColumns() as $group) {
+        foreach ($this->views[$mainViewName]->getColumns() as $group) {
             foreach ($group->columns as $col) {
-                if ($col->name !== 'status') {
-                    $view->disableColumn($col->name, false, 'true');
+                if ($col->name === $exclude || $col->display === 'none') {
+                    continue;
                 }
+
+                $this->views[$mainViewName]->disableColumn($col->name, false, 'true');
             }
         }
     }
@@ -125,7 +130,13 @@ class EditServicioAT extends EditController
                     $view->model->idempresa = $this->user->idempresa;
                     $view->model->nick = $this->user->nick;
                 } elseif (false === $view->model->editable) {
-                    $this->disableServiceColumns($view);
+                    $this->disableAllColumns($mainViewName, 'status');
+                    $this->disableAllColumns('EditTrabajoAT');
+
+                    /// disable buttons
+                    $this->setSettings('EditTrabajoAT', 'btnDelete', false);
+                    $this->setSettings('EditTrabajoAT', 'btnNew', false);
+                    $this->setSettings('EditTrabajoAT', 'btnSave', false);
                 }
                 break;
 
@@ -137,9 +148,7 @@ class EditServicioAT extends EditController
                     $this->addButton('EditTrabajoAT', [
                         'action' => 'auto-quantity',
                         'icon' => 'fas fa-calculator',
-                        'label' => 'calculate-hours',
-                        'type' => 'action',
-                        'color' => 'info',
+                        'label' => 'calculate-hours'
                     ]);
                 } elseif (false === $view->model->exists()) {
                     $view->model->codagente = $this->getViewModelValue($mainViewName, 'codagente');
