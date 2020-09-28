@@ -85,6 +85,9 @@ class NewServicioAT extends Controller
             case 'autocomplete-customer':
                 return $this->autocompleteCustomerAction();
 
+            case 'autocomplete-machine':
+                return $this->autocompleteMachineAction();
+
             case 'machine':
                 return $this->machineAction();
 
@@ -117,6 +120,28 @@ class NewServicioAT extends Controller
         $this->response->setContent(\json_encode($list));
     }
 
+    protected function autocompleteMachineAction()
+    {
+        $this->setTemplate(false);
+
+        $list = [];
+        $machine = new MaquinaAT();
+        $query = $this->request->get('query');
+        $where = [new DataBaseWhere('descripcion|nombre|numserie|referencia', $query, 'XLIKE')];
+        foreach ($machine->all($where) as $mac) {
+            $list[] = [
+                'key' => $this->toolBox()->utils()->fixHtml($mac->idmaquina),
+                'value' => $this->toolBox()->utils()->fixHtml($mac->nombre)
+            ];
+        }
+
+        if (empty($list)) {
+            $list[] = ['key' => null, 'value' => $this->toolBox()->i18n()->trans('no-data')];
+        }
+
+        $this->response->setContent(\json_encode($list));
+    }
+
     protected function loadCustomer()
     {
         $this->cliente = new Cliente();
@@ -138,11 +163,16 @@ class NewServicioAT extends Controller
 
     protected function machineAction()
     {
+        $idmaquina = $this->request->request->get('idmaquina');
+        if (empty($idmaquina)) {
+            return;
+        }
+
         $newServicio = new ServicioAT();
         $newServicio->codalmacen = $this->user->codalmacen;
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
-        $newServicio->idmaquina = $this->request->request->get('idmaquina');
+        $newServicio->idmaquina = $idmaquina;
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
             $this->redirect($newServicio->url());

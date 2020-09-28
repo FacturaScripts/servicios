@@ -6,7 +6,8 @@
     "machines": "Máquinas",
     "new-machine": "Nueva máquina",
     "new-service": "Nuevo servicio",
-    "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (o ninguna)",
+    "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (opcional)",
+    "no-machine": "Ninguna máquina",
     "services": "Servicios",
     "until-hour": "Hora fin",
     "work": "Trabajo"
