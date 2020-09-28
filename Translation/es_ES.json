@@ -1,9 +1,12 @@
 {
     "calculate-hours": "Calcular horas",
+    "customer-has-no-machines": "El cliente no tiene máquinas",
     "from-hour": "Hora inicio",
     "machine": "Máquina",
     "machines": "Máquinas",
+    "new-machine": "Nueva máquina",
     "new-service": "Nuevo servicio",
+    "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (o ninguna)",
     "services": "Servicios",
     "until-hour": "Hora fin",
     "work": "Trabajo"

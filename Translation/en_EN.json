@@ -1,9 +1,12 @@
 {
     "calculate-hours": "Calculate hours",
+    "customer-has-no-machines": "Customer has no machines",
     "from-hour": "From hour",
     "machine": "Machine",
     "machines": "Machines",
+    "new-machine": "New machine",
     "new-service": "New service",
+    "new-service-p": "To create a service you must first select or create a client and then a machine (or none)",
     "services": "Services",
     "until-hour": "Until hour",
     "work": "Work"

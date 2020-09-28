@@ -60,7 +60,7 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['fecha'], 'date');
         $this->addOrderBy($viewName, ['nombre'], 'name');
         $this->addOrderBy($viewName, ['referencia'], 'reference');
-        $this->addSearchFields($viewName, ['idmaquina', 'nombre', 'numserie', 'referencia']);
+        $this->addSearchFields($viewName, ['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia']);
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
