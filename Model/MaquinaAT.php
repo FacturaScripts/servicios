@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Model\Fabricante;
 
 /**
  * Description of MaquinaAT
@@ -92,6 +93,17 @@ class MaquinaAT extends Base\ModelClass
 
     /**
      * 
+     * @return Fabricante
+     */
+    public function getFabricante()
+    {
+        $fabricante = new Fabricante();
+        $fabricante->loadFromCode($this->codfabricante);
+        return $fabricante;
+    }
+
+    /**
+     * 
      * @return string
      */
     public static function primaryColumn(): string
@@ -122,7 +134,7 @@ class MaquinaAT extends Base\ModelClass
 
         return parent::test();
     }
-    
+
     /**
      * 
      * @param string $type
