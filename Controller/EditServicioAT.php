@@ -100,8 +100,7 @@ class EditServicioAT extends EditController
     {
         switch ($action) {
             case 'auto-quantity':
-                $this->calculateQuantity();
-                return true;
+                return $this->calculateQuantity();
 
             default:
                 return parent::execPreviousAction($action);
@@ -142,6 +141,9 @@ class EditServicioAT extends EditController
                         'type' => 'action',
                         'color' => 'info',
                     ]);
+                } elseif (false === $view->model->exists()) {
+                    $view->model->codagente = $this->getViewModelValue($mainViewName, 'codagente');
+                    $view->model->nick = $this->getViewModelValue($mainViewName, 'nick');
                 }
                 break;
         }
@@ -156,19 +158,25 @@ class EditServicioAT extends EditController
     {
         if (false === $this->permissions->allowUpdate) {
             $this->toolBox()->i18nLog()->warning('not-allowed-modify');
-            return;
+            return true;
         }
 
-        $code = $this->request->request->get('code', '');
         $model = new TrabajoAT();
-        if ($model->loadFromCode($code)) {
-            $days = $this->daysBetween($model->fechainicio, $model->fechafin);
-            $hours = $this->TimeDifferenceInHours($model->horainicio, $model->horafin);
-            $model->cantidad = ($days * 24) + $hours;
-            if ($model->save()) {
-                $this->toolBox()->i18nLog()->notice('record-updated-correctly');
-            }
+        $code = $this->request->request->get('code', '');
+        if (false === $model->loadFromCode($code)) {
+            return true;
         }
+
+        $days = $this->daysBetween($model->fechainicio, $model->fechafin);
+        $hours = $this->TimeDifferenceInHours($model->horainicio, $model->horafin);
+        $model->cantidad = ($days * 24) + $hours;
+        if ($model->save()) {
+            $this->toolBox()->i18nLog()->notice('record-updated-correctly');
+            return true;
+        }
+
+        $this->toolBox()->i18nLog()->warning('record-save-error');
+        return true;
     }
 
     /**
@@ -202,10 +210,10 @@ class EditServicioAT extends EditController
      *
      * @return float
      */
-    private function TimeDifferenceInHours(string $start, string $end): float
+    private function TimeDifferenceInHours($start, $end): float
     {
         if (empty($start) || empty($end)) {
-            return 0;
+            return 0.0;
         }
 
         $startHour = \date_parse_from_format('H:i:s', $start);
