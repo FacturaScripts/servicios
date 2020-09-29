@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 
 /**
@@ -149,6 +150,18 @@ class ServicioAT extends Base\ModelOnChangeClass
         $status = new EstadoAT();
         $status->loadFromCode($this->idestado);
         return $status;
+    }
+
+    /**
+     * 
+     * @return TrabajoAT[]
+     */
+    public function getTrabajos()
+    {
+        $trabajo = new TrabajoAT();
+        $where = [new DataBaseWhere('idservicio', $this->idservicio)];
+        $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
+        return $trabajo->all($where, $order, 0, 0);
     }
 
     /**
