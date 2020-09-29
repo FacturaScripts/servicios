@@ -64,6 +64,10 @@ class ListServicioAT extends ListController
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
+
+        $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
+        $this->addFilterSelect($viewName, 'codfabricante', 'manufacturer', 'codfabricante', $manufacturers);
+
         $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
@@ -88,6 +92,9 @@ class ListServicioAT extends ListController
 
         $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);
+
+        $users = $this->codeModel->all('users', 'nick', 'nick');
+        $this->addFilterSelect($viewName, 'nick', 'user', 'nick', $users);
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);

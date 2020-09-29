@@ -62,6 +62,23 @@ class EditServicioAT extends EditController
         parent::createViews();
         $this->setTabsPosition('top');
         $this->createViewsWorks();
+        $this->createViewsInvoices();
+    }
+
+    /**
+     * 
+     * @param string $viewName
+     */
+    protected function createViewsInvoices(string $viewName = 'ListFacturaCliente')
+    {
+        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-copy');
+        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
+        $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
+
+        /// disable buttons
+        $this->setSettings($viewName, 'btnDelete', false);
+        $this->setSettings($viewName, 'btnNew', false);
+        $this->setSettings($viewName, 'checkBoxes', false);
     }
 
     /**

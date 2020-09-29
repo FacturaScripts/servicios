@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table>
+    <column>
+        <name>idservicio</name>
+        <type>integer</type>
+    </column>
+    <constraint>
+        <name>ca_facturascli_servicios</name>
+        <type>FOREIGN KEY (idservicio) REFERENCES serviciosat (idservicio) ON DELETE SET NULL ON UPDATE CASCADE</type>
+    </constraint>
+</table>
