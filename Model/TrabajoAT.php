@@ -30,6 +30,11 @@ class TrabajoAT extends Base\ModelClass
 
     use Base\ModelTrait;
 
+    const STATUS_NONE = 0;
+    const STATUS_MAKE_INVOICE = 1;
+    const STATUS_INVOICED = 2;
+    const STATUS_SUBSTRACT_STOCK = -1;
+
     /**
      *
      * @var float
@@ -120,8 +125,8 @@ class TrabajoAT extends Base\ModelClass
     public function clear()
     {
         parent::clear();
-        $this->cantidad = 0.0;
-        $this->estado = 0;
+        $this->cantidad = 1.0;
+        $this->estado = self::STATUS_MAKE_INVOICE;
         $this->fechainicio = \date(self::DATE_STYLE);
         $this->horainicio = \date(self::HOUR_STYLE);
         $this->precio = 0.0;

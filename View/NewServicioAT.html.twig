@@ -272,11 +272,13 @@
             </table>
         </div>
         <div class="row">
-            <div class="col-sm">
-                <button type="submit" class="btn btn-primary">
-                    {{ i18n.trans('continue') }}
-                </button>
-            </div>
+            {% if fsc.maquinas %}
+                <div class="col-sm">
+                    <button type="submit" class="btn btn-primary">
+                        {{ i18n.trans('continue') }}
+                    </button>
+                </div>
+            {% endif %}
             <div class="col-sm text-right">
                 <button type="button" class="btn btn-secondary" id="nomachineBtn">
                     <i class="fas fa-times-circle"></i>&nbsp; {{ i18n.trans('no-machine') }}

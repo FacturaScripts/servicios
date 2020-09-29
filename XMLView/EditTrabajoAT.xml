@@ -58,7 +58,7 @@
         <group name="invoice" title="invoice" numcolumns="12">
             <column name="reference" order="100">
                 <widget type="autocomplete" fieldname="referencia">
-                    <values source="Variante" fieldcode="referencia" />
+                    <values source="Variante" fieldcode="referencia" fieldtitle="referencia" />
                 </widget>
             </column>
             <column name="quantity" order="110">
