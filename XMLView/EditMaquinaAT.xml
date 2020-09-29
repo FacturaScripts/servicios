@@ -27,7 +27,7 @@
             <column name="reference" order="110">
                 <widget type="text" fieldname="referencia" icon="fas fa-hashtag" />
             </column>
-            <column name="manufacturer" order="120">
+            <column name="manufacturer" titleurl="ListFabricante" order="120">
                 <widget type="select" fieldname="codfabricante" onclick="EditFabricante">
                     <values source="fabricantes" fieldcode="codfabricante" fieldtitle="nombre" />
                 </widget>

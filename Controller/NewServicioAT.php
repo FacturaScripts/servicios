@@ -96,6 +96,9 @@ class NewServicioAT extends Controller
 
             case 'no-machine':
                 return $this->noMachineAction();
+
+            default:
+                return $this->defaultAction();
         }
     }
 
@@ -140,6 +143,36 @@ class NewServicioAT extends Controller
         }
 
         $this->response->setContent(\json_encode($list));
+    }
+
+    protected function defaultAction()
+    {
+        $id = $this->request->get('idmaquina');
+        if (empty($id)) {
+            return;
+        }
+
+        $maquina = new MaquinaAT();
+        if (false === $maquina->loadFromCode($id)) {
+            return;
+        }
+
+        if (empty($maquina->codcliente) || false === $this->cliente->loadFromCode($maquina->codcliente)) {
+            return;
+        }
+
+        $newServicio = new ServicioAT();
+        $newServicio->codalmacen = $this->user->codalmacen;
+        $newServicio->codcliente = $this->cliente->codcliente;
+        $newServicio->idempresa = $this->user->idempresa;
+        $newServicio->idmaquina = $id;
+        $newServicio->nick = $this->user->nick;
+        if ($newServicio->save()) {
+            $this->redirect($newServicio->url());
+            return;
+        }
+
+        $this->toolBox()->i18nLog()->warning('record-save-error');
     }
 
     protected function loadCustomer()
