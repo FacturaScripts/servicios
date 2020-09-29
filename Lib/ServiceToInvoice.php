@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Servicios\Lib;
 
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -60,11 +61,13 @@ class ServiceToInvoice
             return false;
         }
 
+        $found = false;
         foreach ($service->getTrabajos() as $work) {
             if ($work->estado !== TrabajoAT::STATUS_MAKE_INVOICE) {
                 continue;
             }
 
+            $found = true;
             $newLine = empty($work->referencia) ? $newInvoice->getNewLine() : $newInvoice->getNewProductLine($work->referencia);
             $newLine->cantidad = $work->cantidad;
             if ($work->precio) {
@@ -82,6 +85,12 @@ class ServiceToInvoice
             }
         }
 
+        if (false === $found) {
+            static::toolBox()->i18nLog()->warning('no-works-to-invoice');
+            $database->rollback();
+            return false;
+        }
+
         /// update invoice
         $docTools = new BusinessDocumentTools();
         $docTools->recalculate($newInvoice);
@@ -92,5 +101,14 @@ class ServiceToInvoice
 
         $database->rollback();
         return false;
+    }
+
+    /**
+     * 
+     * @return ToolBox
+     */
+    protected static function toolBox()
+    {
+        return new ToolBox();
     }
 }

@@ -25,7 +25,7 @@ use FacturaScripts\Core\Model\Base;
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class TrabajoAT extends Base\ModelClass
+class TrabajoAT extends Base\ModelOnChangeClass
 {
 
     use Base\ModelTrait;
@@ -130,6 +130,17 @@ class TrabajoAT extends Base\ModelClass
         $this->fechainicio = \date(self::DATE_STYLE);
         $this->horainicio = \date(self::HOUR_STYLE);
         $this->precio = 0.0;
+    }
+
+    /**
+     * 
+     * @return ServicioAT
+     */
+    public function getServicio()
+    {
+        $servicio = new ServicioAT();
+        $servicio->loadFromCode($this->idservicio);
+        return $servicio;
     }
 
     /**

@@ -72,7 +72,6 @@
                     <values title="do-nothing">0</values>
                     <values title="make-invoice">1</values>
                     <values title="invoiced">2</values>
-                    <values title="subtract-stock">-1</values>
                 </widget>
             </column>
             <column name="description" numcolumns="12" order="140">
