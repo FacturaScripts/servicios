@@ -245,6 +245,7 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @return string
      */
+
     public function url(string $type = 'auto', string $list = 'List'): string
     {
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
