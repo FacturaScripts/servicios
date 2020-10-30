@@ -60,7 +60,9 @@
             </widget>
         </column>
         <column name="priority" display="right" order="190">
-            <widget type="number" fieldname="prioridad" decimal="0" />
+            <widget type="select" fieldname="idprioridad">
+                <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
+            </widget>
         </column>
         <column name="date" display="right" order="200">
             <widget type="date" fieldname="fecha" />

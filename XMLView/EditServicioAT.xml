@@ -43,8 +43,9 @@
                 </widget>
             </column>
             <column name="priority" numcolumns="2" order="150">
-                <widget type="number" fieldname="prioridad" required="true" />
-            </column>
+                <widget type="select" fieldname="idprioridad" required="true">
+                    <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
+                </widget>
             <column name="agent" titleurl="ListAgente" numcolumns="2" order="160">
                 <widget type="select" fieldname="codagente" onclick="EditAgente">
                     <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />

@@ -64,8 +64,9 @@
         <type>text</type>
     </column>
     <column>
-        <name>prioridad</name>
+        <name>idprioridad</name>
         <type>integer</type>
+        <null>NO</null>
     </column>
     <constraint>
         <name>serviciosat_pkey</name>
@@ -94,5 +95,9 @@
     <constraint>
         <name>ca_serviciosat_users</name>
         <type>FOREIGN KEY (nick) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_prioridades</name>
+        <type>FOREIGN KEY (idprioridad) REFERENCES serviciosat_prioridades (id) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
 </table>
