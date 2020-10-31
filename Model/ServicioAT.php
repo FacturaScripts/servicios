@@ -112,7 +112,7 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @var int
      */
-    public $prioridad;
+    public $idprioridad;
 
     public function clear()
     {
@@ -125,6 +125,14 @@ class ServicioAT extends Base\ModelOnChangeClass
             if ($status->predeterminado) {
                 $this->idestado = $status->id;
                 $this->editable = $status->editable;
+                break;
+            }
+        }
+        
+        /// set default priority
+        foreach ($this->getAvailablePriority() as $priority) {
+            if ($priority->predeterminado) {
+                $this->idprioridad = $priority->id;
                 break;
             }
         }
@@ -150,6 +158,29 @@ class ServicioAT extends Base\ModelOnChangeClass
         $status->loadFromCode($this->idestado);
         return $status;
     }
+    
+    /**
+     * 
+     * @return PrioridadAT
+     */   
+    
+        public function getAvailablePriority()
+    {
+        $priority = new PrioridadAT();
+        return $priority->all([], [], 0, 0);
+    }
+    
+    /**
+     * 
+     * @return PrioridadAT
+     */ 
+    
+    public function getPriority()
+    {
+        $priority = new PrioridadAT();
+        $priority->loadFromCode($this->idprioridad);
+        return $priority;
+    }
 
     /**
      * 
@@ -160,7 +191,8 @@ class ServicioAT extends Base\ModelOnChangeClass
         /// neede dependencies
         new MaquinaAT();
         new EstadoAT();
-
+        new PrioridadAT();
+        
         return parent::install();
     }
 
@@ -213,6 +245,7 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @return string
      */
+
     public function url(string $type = 'auto', string $list = 'List'): string
     {
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
