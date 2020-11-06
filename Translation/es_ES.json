@@ -10,6 +10,7 @@
     "new-service": "Nuevo servicio",
     "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (opcional)",
     "no-machine": "Ninguna máquina",
+    "no-works-to-invoice": "No hay trabajos para facturar",
     "services": "Servicios",
     "subtract-stock": "Restar stock",
     "until-hour": "Hora fin",
