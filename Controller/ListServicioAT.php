@@ -47,6 +47,7 @@ class ListServicioAT extends ListController
         $this->createViewsServices();
         $this->createViewsMachines();
         $this->createViewsStatus();
+        $this->createViewsPriority();
     }
 
     /**
@@ -82,14 +83,15 @@ class ListServicioAT extends ListController
     {
         $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
         $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
-        $this->addOrderBy($viewName, ['prioridad'], 'priority');
+        $this->addOrderBy($viewName, ['idprioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
         $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'observaciones']);
 
         /// filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
         $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
-
+        $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
+        $this->addFilterSelect($viewName, 'idprioridad', 'priority', 'idprioridad', $priority);
         $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);
 
@@ -107,6 +109,16 @@ class ListServicioAT extends ListController
     protected function createViewsStatus(string $viewName = 'ListEstadoAT')
     {
         $this->addView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
+        $this->addOrderBy($viewName, ['nombre'], 'name', 1);
+    }
+
+    /**
+     * 
+     * @param string $viewName
+     */
+    protected function createViewsPriority(string $viewName = 'ListPrioridadAT')
+    {
+        $this->addView($viewName, 'PrioridadAT', 'priority', 'fas fa-tags');
         $this->addOrderBy($viewName, ['nombre'], 'name', 1);
     }
 }
