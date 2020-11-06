@@ -40,7 +40,7 @@
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <div class="card shadow mt-3 mb-5">
+                    <div class="card shadow mt-5 mb-5">
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item" role="presentation">
@@ -66,11 +66,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm text-right">
-                    {{ _self.noMachineForm(fsc, i18n) }}
                 </div>
             </div>
         {% else %}
@@ -158,28 +153,79 @@
                     }
                 }
             });
+            $("#machineac").autocomplete({
+                source: function (request, response) {
+                    var formData = {};
+                    var rawForm = $("form[id=formSearchMachine]").serializeArray();
+                    $.each(rawForm, function (i, input) {
+                        formData[input.name] = input.value;
+                    });
+                    formData["action"] = "autocomplete-machine";
+                    console.log(formData);
+                    $.ajax({
+                        method: "POST",
+                        url: "NewServicioAT",
+                        data: formData,
+                        dataType: "json",
+                        success: function (results) {
+                            var values = [];
+                            results.forEach(function (element) {
+                                if (element.key === null || element.key === element.value) {
+                                    values.push(element);
+                                } else {
+                                    values.push({key: element.key, value: element.key + " | " + element.value});
+                                }
+                            });
+                            response(values);
+                        },
+                        error: function (msg) {
+                            alert(msg.status + " " + msg.responseText);
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    if (ui.item.key !== null) {
+                        $("form[id=formSearchMachine] input[name=idmaquina]").val(ui.item.key);
+                        var value = ui.item.value.split(" | ");
+                        if (value.length > 1) {
+                            ui.item.value = value[1];
+                        } else {
+                            ui.item.value = value[0];
+                        }
+                    }
+                }
+            });
+            $("#nomachineBtn").click(function () {
+                $(this.form.action).val('no-machine');
+                $(this.form).submit();
+            });
         });
     </script>
 {% endblock %}
 
 {% macro findMachineTab(fsc, i18n) %}
-    <div class="row">
-        <div class="col-sm">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="fas fa-search"></i>
-                    </span>
+    <form id="formSearchMachine" method="post">
+        <input type="hidden" name="action" value="machine" />
+        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
+        <input type="hidden" name="idmaquina" value="" />
+        <div class="row">
+            <div class="col-sm">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" name="query" class="form-control" id="machineac" placeholder="{{ i18n.trans('search') }}" />
                 </div>
-                <input type="text" name="query" class="form-control" id="customerac" placeholder="{{ i18n.trans('search') }}" autofocus="" />
+            </div>
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary">
+                    {{ i18n.trans('continue') }}
+                </button>
             </div>
         </div>
-        <div class="col-sm">
-            <button type="submit" class="btn btn-primary">
-                {{ i18n.trans('continue') }}
-            </button>
-        </div>
-    </div>
+    </form>
 {% endmacro %}
 
 {% macro machineList(fsc, i18n) %}
@@ -190,7 +236,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>{{ i18n.trans('select') }}</th>
                         <th>{{ i18n.trans('name') }}</th>
                         <th>{{ i18n.trans('serial-number') }}</th>
                         <th>{{ i18n.trans('reference') }}</th>
@@ -202,11 +247,17 @@
                     {% for machine in fsc.maquinas %}
                         <tr>
                             <td>
-                                <button type="submit" name="idmaquina" value="{{ machine.idmaquina }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-play"></i>
-                                </button>
+                                <div class="form-check">
+                                    {% if loop.index == 1 %}
+                                        <input class="form-check-input" type="radio" name="idmaquina" value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}" checked=""/>
+                                    {% else %}
+                                        <input class="form-check-input" type="radio" name="idmaquina" value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}" />
+                                    {% endif %}
+                                    <label class="form-check-label" for="maquina{{ loop.index }}">
+                                        {{ machine.nombre }}
+                                    </label>
+                                </div>
                             </td>
-                            <td>{{ machine.nombre }}</td>
                             <td>{{ machine.numserie }}</td>
                             <td>{{ machine.reference }}</td>
                             <td>{{ machine.getFabricante().nombre }}</td>
@@ -220,6 +271,20 @@
                 </tbody>
             </table>
         </div>
+        <div class="row">
+            {% if fsc.maquinas %}
+                <div class="col-sm">
+                    <button type="submit" class="btn btn-primary">
+                        {{ i18n.trans('continue') }}
+                    </button>
+                </div>
+            {% endif %}
+            <div class="col-sm text-right">
+                <button type="button" class="btn btn-secondary" id="nomachineBtn">
+                    <i class="fas fa-times-circle"></i>&nbsp; {{ i18n.trans('no-machine') }}
+                </button>
+            </div>
+        </div>
     </form>
 {% endmacro %}
 
@@ -228,6 +293,18 @@
         <input type="hidden" name="action" value="new-machine" />
         <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
         <div class="form-row">
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('name') }}
+                    <input type="text" name="nombre" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    {{ i18n.trans('serial-number') }}
+                    <input type="text" name="numserie" class="form-control" />
+                </div>
+            </div>
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('reference') }}
@@ -244,18 +321,6 @@
                     </select>
                 </div>
             </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ i18n.trans('serial-number') }}
-                    <input type="text" name="numserie" class="form-control" />
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ i18n.trans('name') }}
-                    <input type="text" name="nombre" class="form-control" />
-                </div>
-            </div>
         </div>
         <div class="form-row">
             <div class="col-sm">
@@ -266,19 +331,11 @@
             </div>
         </div>
         <div class="form-row">
-            <button type="submit" class="btn btn-primary">
-                {{ i18n.trans('continue') }}
-            </button>
+            <div class="col-sm text-right">
+                <button type="submit" class="btn btn-success">
+                    {{ i18n.trans('save') }}
+                </button>
+            </div>
         </div>
-    </form>
-{% endmacro %}
-
-{% macro noMachineForm(fsc, i18n) %}
-    <form method="post">
-        <input type="hidden" name="action" value="no-machine" />
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
-        <button type="submit" class="btn btn-secondary">
-            <i class="fas fa-times-circle"></i>&nbsp; {{ i18n.trans('no-machine') }}
-        </button>
     </form>
 {% endmacro %}

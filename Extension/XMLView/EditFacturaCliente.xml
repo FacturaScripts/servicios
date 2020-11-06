@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view>
+    <columns>
+        <group name="data" numcolumns="12">
+            <column name="service" titleurl="ListServicio" order="105">
+                <widget type="autocomplete" fieldname="idservicio" onclick="EditServicioAT">
+                    <values source="serviciosat" fieldcode="idservicio" fieldtitle="idservicio" />
+                </widget>
+            </column>
+        </group>
+    </columns>
+</view>

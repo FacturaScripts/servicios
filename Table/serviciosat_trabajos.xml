@@ -6,12 +6,20 @@
 -->
 <table>
     <column>
+        <name>cantidad</name>
+        <type>double precision</type>
+    </column>
+    <column>
         <name>codagente</name>
         <type>character varying(10)</type>
     </column>
     <column>
         <name>descripcion</name>
         <type>text</type>
+    </column>
+    <column>
+        <name>estado</name>
+        <type>integer</type>
     </column>
     <column>
         <name>fechafin</name>
@@ -40,16 +48,20 @@
         <null>NO</null>
     </column>
     <column>
-        <name>cantidad</name>
+        <name>nick</name>
+        <type>character varying(50)</type>
+    </column>
+    <column>
+        <name>observaciones</name>
+        <type>text</type>
+    </column>
+    <column>
+        <name>precio</name>
         <type>double precision</type>
     </column>
     <column>
         <name>referencia</name>
         <type>character varying(30)</type>
-    </column>
-    <column>
-        <name>observaciones</name>
-        <type>text</type>
     </column>
     <constraint>
         <name>serviciosat_trabajos_pkey</name>

@@ -24,19 +24,19 @@
             <column name="code" display="none" order="100">
                 <widget type="text" fieldname="idmaquina" />
             </column>
-            <column name="reference" order="110">
+            <column name="name" order="110">
+                <widget type="text" fieldname="nombre" />
+            </column>
+            <column name="serial-number" order="120">
+                <widget type="text" fieldname="numserie" />
+            </column>
+            <column name="reference" order="130">
                 <widget type="text" fieldname="referencia" icon="fas fa-hashtag" />
             </column>
-            <column name="manufacturer" order="120">
+            <column name="manufacturer" titleurl="ListFabricante" order="140">
                 <widget type="select" fieldname="codfabricante" onclick="EditFabricante">
                     <values source="fabricantes" fieldcode="codfabricante" fieldtitle="nombre" />
                 </widget>
-            </column>
-            <column name="serial-number" order="130">
-                <widget type="text" fieldname="numserie" />
-            </column>
-            <column name="name" order="140">
-                <widget type="text" fieldname="nombre" />
             </column>
             <column name="description" numcolumns="12" order="150">
                 <widget type="textarea" fieldname="descripcion" />

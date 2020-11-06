@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 
 /**
@@ -128,7 +129,7 @@ class ServicioAT extends Base\ModelOnChangeClass
                 break;
             }
         }
-        
+
         /// set default priority
         foreach ($this->getAvailablePriority() as $priority) {
             if ($priority->predeterminado) {
@@ -158,28 +159,38 @@ class ServicioAT extends Base\ModelOnChangeClass
         $status->loadFromCode($this->idestado);
         return $status;
     }
-    
+
     /**
      * 
      * @return PrioridadAT
-     */   
-    
-        public function getAvailablePriority()
+     */
+    public function getAvailablePriority()
     {
         $priority = new PrioridadAT();
         return $priority->all([], [], 0, 0);
     }
-    
+
     /**
      * 
      * @return PrioridadAT
-     */ 
-    
+     */
     public function getPriority()
     {
         $priority = new PrioridadAT();
         $priority->loadFromCode($this->idprioridad);
         return $priority;
+    }
+
+    /**
+     * 
+     * @return TrabajoAT[]
+     */
+    public function getTrabajos()
+    {
+        $trabajo = new TrabajoAT();
+        $where = [new DataBaseWhere('idservicio', $this->idservicio)];
+        $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
+        return $trabajo->all($where, $order, 0, 0);
     }
 
     /**
@@ -192,7 +203,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         new MaquinaAT();
         new EstadoAT();
         new PrioridadAT();
-        
+
         return parent::install();
     }
 
@@ -245,7 +256,6 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @return string
      */
-
     public function url(string $type = 'auto', string $list = 'List'): string
     {
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);

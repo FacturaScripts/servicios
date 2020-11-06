@@ -23,21 +23,24 @@
         <column name="code" order="100">
             <widget type="text" fieldname="idmaquina" />
         </column>
-        <column name="reference" order="110">
-            <widget type="text" fieldname="referencia" />
+        <column name="name" order="110">
+            <widget type="text" fieldname="nombre" />
         </column>
-        <column name="manufacturer" order="120">
-            <widget type="select" fieldname="codfabricante" onclick="EditFabricante">
-                <values source="fabricantes" fieldcode="codfabricante" fieldtitle="nombre" />
-            </widget>
+        <column name="description" order="120">
+            <widget type="textarea" fieldname="descripcion" />
         </column>
         <column name="serial-number" order="130">
             <widget type="text" fieldname="numserie" />
         </column>
-        <column name="name" order="140">
-            <widget type="text" fieldname="nombre" />
+        <column name="reference" order="140">
+            <widget type="text" fieldname="referencia" />
         </column>
-        <column name="date" display="right" order="150">
+        <column name="manufacturer" order="150">
+            <widget type="select" fieldname="codfabricante" onclick="EditFabricante">
+                <values source="fabricantes" fieldcode="codfabricante" fieldtitle="nombre" />
+            </widget>
+        </column>
+        <column name="date" display="right" order="160">
             <widget type="date" fieldname="fecha" />
         </column>
     </columns>

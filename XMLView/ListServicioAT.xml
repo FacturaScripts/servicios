@@ -34,12 +34,12 @@
             </widget>
         </column>
         <column name="customer" order="130">
-            <widget type="autocomplete" fieldname="codcliente">
+            <widget type="autocomplete" fieldname="codcliente" onclick="EditCliente">
                 <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
             </widget>
         </column>
         <column name="machine" order="140">
-            <widget type="autocomplete" fieldname="idmaquina">
+            <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaAT">
                 <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
             </widget>
         </column>
@@ -49,12 +49,17 @@
         <column name="observations" display="none" order="160">
             <widget type="textarea" fieldname="observaciones" />
         </column>
-        <column name="agent" order="170">
+        <column name="user" display="none" order="170">
+            <widget type="select" fieldname="codagente">
+                <values source="users" fieldcode="nick" fieldtitle="nick" />
+            </widget>
+        </column>
+        <column name="agent" display="none" order="180">
             <widget type="select" fieldname="codagente">
                 <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />
             </widget>
         </column>
-        <column name="status" order="180">
+        <column name="status" order="190">
             <widget type="select" fieldname="idestado">
                 <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre" />
             </widget>
@@ -70,7 +75,9 @@
     </columns>
     <rows>
         <row type="status">
-            <option color="warning" fieldname="editable" title="non-editable-document">0</option>
+            <option color="warning" fieldname="idestado" title="processing">2</option>
+            <option color="danger" fieldname="idestado" title="cancelled">4</option>
+            <option color="success" fieldname="editable" title="non-editable-document">0</option>
         </row>
     </rows>
 </view>

@@ -31,7 +31,7 @@ class PrioridadAT extends Base\ModelClass
 
     use Base\ModelTrait;
 
-      public $id;
+    public $id;
 
     /**
      *

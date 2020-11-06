@@ -1,10 +1,18 @@
 {
     "calculate-hours": "Calcular horas",
+    "customer-has-no-machines": "El cliente no tiene máquinas",
     "from-hour": "Hora inicio",
+    "invoiced": "Facturado",
     "machine": "Máquina",
     "machines": "Máquinas",
+    "make-invoice": "Hacer factura",
+    "new-machine": "Nueva máquina",
     "new-service": "Nuevo servicio",
+    "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (opcional)",
+    "no-machine": "Ninguna máquina",
+    "no-works-to-invoice": "No hay trabajos para facturar",
     "services": "Servicios",
+    "subtract-stock": "Restar stock",
     "until-hour": "Hora fin",
     "work": "Trabajo"
 }

@@ -1,10 +1,18 @@
 {
     "calculate-hours": "Calculate hours",
+    "customer-has-no-machines": "Customer has no machines",
     "from-hour": "From hour",
+    "invoiced": "Invoiced",
     "machine": "Machine",
     "machines": "Machines",
+    "make-invoice": "Make invoice",
+    "new-machine": "New machine",
     "new-service": "New service",
+    "new-service-p": "To create a service you must first select or create a client and then a machine (optional)",
+    "no-machine": "No machine",
+    "no-works-to-invoice": "There are no jobs to invoice",
     "services": "Services",
+    "subtract-stock": "Subtract stock",
     "until-hour": "Until hour",
     "work": "Work"
 }

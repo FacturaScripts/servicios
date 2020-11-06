@@ -25,17 +25,22 @@ use FacturaScripts\Core\Model\Base;
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class TrabajoAT extends Base\ModelClass
+class TrabajoAT extends Base\ModelOnChangeClass
 {
 
     use Base\ModelTrait;
+
+    const STATUS_NONE = 0;
+    const STATUS_MAKE_INVOICE = 1;
+    const STATUS_INVOICED = 2;
+    const STATUS_SUBSTRACT_STOCK = -1;
 
     /**
      *
      * @var float
      */
     public $cantidad;
-    
+
     /**
      *
      * @var string
@@ -47,6 +52,12 @@ class TrabajoAT extends Base\ModelClass
      * @var string
      */
     public $descripcion;
+
+    /**
+     *
+     * @var int
+     */
+    public $estado;
 
     /**
      *
@@ -88,17 +99,48 @@ class TrabajoAT extends Base\ModelClass
      *
      * @var string
      */
+    public $nick;
+
+    /**
+     *
+     * @var string
+     */
     public $observaciones;
-    
+
+    /**
+     *
+     * @var float
+     */
+    public $precio;
+
+    /**
+     *
+     * @var string
+     */
+    public $referencia;
+
     /**
      * Reset the values of all model properties.
      */
     public function clear()
     {
         parent::clear();
+        $this->cantidad = 1.0;
+        $this->estado = self::STATUS_MAKE_INVOICE;
         $this->fechainicio = \date(self::DATE_STYLE);
         $this->horainicio = \date(self::HOUR_STYLE);
-        $this->cantidad = 0;
+        $this->precio = 0.0;
+    }
+
+    /**
+     * 
+     * @return ServicioAT
+     */
+    public function getServicio()
+    {
+        $servicio = new ServicioAT();
+        $servicio->loadFromCode($this->idservicio);
+        return $servicio;
     }
 
     /**
@@ -117,5 +159,18 @@ class TrabajoAT extends Base\ModelClass
     public static function tableName(): string
     {
         return 'serviciosat_trabajos';
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function test()
+    {
+        foreach (['descripcion', 'observaciones', 'referencia'] as $field) {
+            $this->{$field} = $this->toolBox()->utils()->noHtml($this->{$field});
+        }
+
+        return parent::test();
     }
 }

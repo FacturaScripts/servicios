@@ -21,6 +21,8 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
+use FacturaScripts\Plugins\Servicios\Lib\ServiceToInvoice;
+use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
@@ -55,6 +57,36 @@ class EditServicioAT extends EditController
     }
 
     /**
+     * Calculate the number of hours worked.
+     * 
+     * @return float
+     */
+    protected function calculateQuantity()
+    {
+        if (false === $this->permissions->allowUpdate) {
+            $this->toolBox()->i18nLog()->warning('not-allowed-modify');
+            return true;
+        }
+
+        $model = new TrabajoAT();
+        $code = $this->request->request->get('code', '');
+        if (false === $model->loadFromCode($code)) {
+            return true;
+        }
+
+        $days = $this->daysBetween($model->fechainicio, $model->fechafin);
+        $hours = $this->TimeDifferenceInHours($model->horainicio, $model->horafin);
+        $model->cantidad = ($days * 24) + $hours;
+        if ($model->save()) {
+            $this->toolBox()->i18nLog()->notice('record-updated-correctly');
+            return true;
+        }
+
+        $this->toolBox()->i18nLog()->warning('record-save-error');
+        return true;
+    }
+
+    /**
      * Create the view to display.
      */
     protected function createViews()
@@ -62,6 +94,31 @@ class EditServicioAT extends EditController
         parent::createViews();
         $this->setTabsPosition('top');
         $this->createViewsWorks();
+        $this->createViewsInvoices();
+    }
+
+    /**
+     * 
+     * @param string $viewName
+     */
+    protected function createViewsInvoices(string $viewName = 'ListFacturaCliente')
+    {
+        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-copy');
+        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
+        $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
+
+        /// disable buttons
+        $this->setSettings($viewName, 'btnDelete', false);
+        $this->setSettings($viewName, 'btnNew', false);
+        $this->setSettings($viewName, 'checkBoxes', false);
+
+        $this->addButton($viewName, [
+            'action' => 'make-invoice',
+            'color' => 'warning',
+            'confirm' => true,
+            'icon' => 'fas fa-magic',
+            'label' => 'make-invoice'
+        ]);
     }
 
     /**
@@ -71,20 +128,48 @@ class EditServicioAT extends EditController
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
     {
         $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
+
+        /// disable column
         $this->views[$viewName]->disableColumn('service');
     }
 
     /**
-     * 
-     * @param BaseView $view
+     * Calculate number days between two dates
+     *
+     * @param string $start
+     * @param string $end
+     * @param bool   $increment
+     *
+     * @return int
      */
-    protected function disableServiceColumns(&$view)
+    protected function daysBetween($start, $end, $increment = false): int
     {
-        foreach ($view->getColumns() as $group) {
+        if (empty($start) || empty($end)) {
+            return 0;
+        }
+
+        $diff = \strtotime($end) - \strtotime($start);
+        $result = \ceil($diff / 86400);
+        if ($increment) {
+            ++$result;
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     * @param string $mainViewName
+     * @param string $exclude
+     */
+    protected function disableAllColumns($mainViewName, $exclude = '')
+    {
+        foreach ($this->views[$mainViewName]->getColumns() as $group) {
             foreach ($group->columns as $col) {
-                if ($col->name !== 'status') {
-                    $view->disableColumn($col->name, false, 'true');
+                if ($col->name === $exclude || $col->display === 'none') {
+                    continue;
                 }
+
+                $this->views[$mainViewName]->disableColumn($col->name, false, 'true');
             }
         }
     }
@@ -100,8 +185,10 @@ class EditServicioAT extends EditController
     {
         switch ($action) {
             case 'auto-quantity':
-                $this->calculateQuantity();
-                return true;
+                return $this->calculateQuantity();
+
+            case 'make-invoice':
+                return $this->makeInvoiceAction();
 
             default:
                 return parent::execPreviousAction($action);
@@ -117,6 +204,7 @@ class EditServicioAT extends EditController
     protected function loadData($viewName, $view)
     {
         $mainViewName = $this->getMainViewName();
+        $idservicio = $this->getViewModelValue($mainViewName, 'idservicio');
 
         switch ($viewName) {
             case $mainViewName:
@@ -126,72 +214,58 @@ class EditServicioAT extends EditController
                     $view->model->idempresa = $this->user->idempresa;
                     $view->model->nick = $this->user->nick;
                 } elseif (false === $view->model->editable) {
-                    $this->disableServiceColumns($view);
+                    $this->disableAllColumns($mainViewName, 'status');
+                    $this->disableAllColumns('EditTrabajoAT');
+
+                    /// disable buttons
+                    $this->setSettings('EditTrabajoAT', 'btnDelete', false);
+                    $this->setSettings('EditTrabajoAT', 'btnNew', false);
+                    $this->setSettings('EditTrabajoAT', 'btnSave', false);
                 }
                 break;
 
             case 'EditTrabajoAT':
-                $idservicio = $this->getViewModelValue($mainViewName, 'idservicio');
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
                 $view->loadData('', $where);
                 if ($view->count > 0) {
                     $this->addButton('EditTrabajoAT', [
                         'action' => 'auto-quantity',
                         'icon' => 'fas fa-calculator',
-                        'label' => 'calculate-hours',
-                        'type' => 'action',
-                        'color' => 'info',
+                        'label' => 'calculate-hours'
                     ]);
+                } elseif (false === $view->model->exists()) {
+                    $view->model->codagente = $this->getViewModelValue($mainViewName, 'codagente');
+                    $view->model->nick = $this->getViewModelValue($mainViewName, 'nick');
                 }
+                break;
+
+            case 'ListFacturaCliente':
+                $where = [new DataBaseWhere('idservicio', $idservicio)];
+                $view->loadData('', $where);
                 break;
         }
     }
 
-    /**
-     * Calculate the number of hours worked.
-     * 
-     * @return float
-     */
-    private function calculateQuantity()
+    protected function makeInvoiceAction()
     {
         if (false === $this->permissions->allowUpdate) {
             $this->toolBox()->i18nLog()->warning('not-allowed-modify');
-            return;
+            return true;
         }
 
-        $code = $this->request->request->get('code', '');
-        $model = new TrabajoAT();
-        if ($model->loadFromCode($code)) {
-            $days = $this->daysBetween($model->fechainicio, $model->fechafin);
-            $hours = $this->TimeDifferenceInHours($model->horainicio, $model->horafin);
-            $model->cantidad = ($days * 24) + $hours;
-            if ($model->save()) {
-                $this->toolBox()->i18nLog()->notice('record-updated-correctly');
-            }
-        }
-    }
-
-    /**
-     * Calculate number days between two dates
-     *
-     * @param string $start
-     * @param string $end
-     * @param bool   $increment
-     *
-     * @return int
-     */
-    private function daysBetween($start, $end, $increment = false): int
-    {
-        if (empty($start) || empty($end)) {
-            return 0;
+        $service = new ServicioAT();
+        $code = $this->request->get('code', '');
+        if (false === $service->loadFromCode($code) || false === $service->editable) {
+            return true;
         }
 
-        $diff = strtotime($end) - strtotime($start);
-        $result = ceil($diff / 86400);
-        if ($increment) {
-            ++$result;
+        if (false === ServiceToInvoice::generate($service)) {
+            $this->toolBox()->i18nLog()->warning('record-save-error');
+            return true;
         }
-        return $result;
+
+        $this->toolBox()->i18nLog()->notice('record-updated-correctly');
+        return true;
     }
 
     /**
@@ -202,10 +276,10 @@ class EditServicioAT extends EditController
      *
      * @return float
      */
-    private function TimeDifferenceInHours(string $start, string $end): float
+    protected function TimeDifferenceInHours($start, $end): float
     {
         if (empty($start) || empty($end)) {
-            return 0;
+            return 0.0;
         }
 
         $startHour = \date_parse_from_format('H:i:s', $start);
