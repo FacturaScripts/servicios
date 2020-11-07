@@ -35,8 +35,8 @@
     </columns>
     <rows>
         <row type="status">
-            <option color="info" fieldname="predeterminado">1</option>
-            <option color="warning" fieldname="editable">0</option>
+            <option color="info" fieldname="predeterminado" title="default">1</option>
+            <option color="warning" fieldname="editable" title="non-editable-document">0</option>
         </row>
     </rows>
 </view>
