@@ -30,6 +30,7 @@ class ServicioAT extends Base\ModelOnChangeClass
 {
 
     use Base\ModelTrait;
+    use Base\CompanyRelationTrait;
 
     /**
      *
@@ -72,12 +73,6 @@ class ServicioAT extends Base\ModelOnChangeClass
      * @var string
      */
     public $hora;
-
-    /**
-     *
-     * @var int
-     */
-    public $idempresa;
 
     /**
      *
