@@ -38,7 +38,9 @@
                 <widget type="time" fieldname="hora" required="true" />
             </column>
             <column name="priority" numcolumns="2" order="140">
-                <widget type="number" fieldname="prioridad" required="true" />
+                <widget type="select" fieldname="idprioridad" required="true">
+                    <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
+                </widget>
             </column>
             <column name="status" numcolumns="2" order="150">
                 <widget type="select" fieldname="idestado" required="true">
