@@ -1,0 +1,18 @@
+{
+    "calculate-hours": "Orduak kalkulatu",
+    "customer-has-no-machines": "Bezeroak ez dauka makinarik",
+    "from-hour": "Hasiera ordua",
+    "invoiced": "Fakturatuta",
+    "machine": "Makina",
+    "machines": "Makinak",
+    "make-invoice": "Faktura egin",
+    "new-machine": "Makina berria",
+    "new-service": "Zerbitzu berria",
+    "new-service-p": "Zerbitzu bat sortu aurretik bezero bat aukeratu edo sortu behar duzu eta gero makina bat aukeratu (aukerakoa)",
+    "no-machine": "Makinarik ez",
+    "no-works-to-invoice": "Ez dago fakturatzeko lanarik",
+    "services": "Zerbitzuak",
+    "subtract-stock": "Stocka kendu",
+    "until-hour": "Amaiera ordua",
+    "work": "Lana"
+}

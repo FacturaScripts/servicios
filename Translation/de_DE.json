@@ -1,0 +1,18 @@
+{
+    "calculate-hours": "calculate-hours",
+    "customer-has-no-machines": "customer-has-no-machines",
+    "from-hour": "from-hour",
+    "invoiced": "invoiced",
+    "machine": "machine",
+    "machines": "machines",
+    "make-invoice": "make-invoice",
+    "new-machine": "new-machine",
+    "new-service": "new-service",
+    "new-service-p": "new-service-p",
+    "no-machine": "no-machine",
+    "no-works-to-invoice": "no-works-to-invoice",
+    "services": "services",
+    "subtract-stock": "subtract-stock",
+    "until-hour": "until-hour",
+    "work": "work"
+}

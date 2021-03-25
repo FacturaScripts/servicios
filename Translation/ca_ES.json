@@ -1,0 +1,18 @@
+{
+    "calculate-hours": "Calcular hores",
+    "customer-has-no-machines": "El client no té màquines",
+    "from-hour": "Hora inici",
+    "invoiced": "Facturat",
+    "machine": "Màquina",
+    "machines": "Màquines",
+    "make-invoice": "Fer factura",
+    "new-machine": "Nova màquina",
+    "new-service": "Nou servei",
+    "new-service-p": "Per crear un servei primer has de seleccionar o crear un client i després una màquina (opcional)",
+    "no-machine": "Cap màquina",
+    "no-works-to-invoice": "No hi ha treballs per facturar",
+    "services": "Serveis",
+    "subtract-stock": "Restar estoc",
+    "until-hour": "Hora fi",
+    "work": "Treball"
+}

@@ -18,9 +18,8 @@
  */
 namespace FacturaScripts\Plugins\Servicios;
 
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\InitClass;
-use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
 /**
  * Description of Init
@@ -37,7 +36,24 @@ class Init extends InitClass
 
     public function update()
     {
-        new MaquinaAT();
-        new ServicioAT();
+        new Model\EstadoAT();
+        new Model\MaquinaAT();
+        new Model\PrioridadAT();
+        $this->fixPriorities();
+
+        new Model\ServicioAT();
+    }
+
+    private function fixPriorities()
+    {
+        $dataBase = new DataBase();
+        if (false === $dataBase->tableExists(Model\PrioridadAT::tableName()) ||
+            false === $dataBase->tableExists(Model\ServicioAT::tableName())) {
+            return;
+        }
+
+        $sql = 'UPDATE ' . Model\ServicioAT::tableName() . ' SET idprioridad = NULL'
+            . ' WHERE idprioridad IS NOT NULL AND idprioridad NOT IN (SELECT id FROM ' . Model\PrioridadAT::tableName() . ');';
+        $dataBase->exec($sql);
     }
 }
