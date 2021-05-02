@@ -42,18 +42,26 @@
         <null>NO</null>
     </column>
     <column>
-        <name>idmaquina</name>
-        <type>integer</type>
-    </column>
-    <column>
         <name>idestado</name>
         <type>integer</type>
         <null>NO</null>
     </column>
     <column>
+        <name>idmaquina</name>
+        <type>integer</type>
+    </column>
+    <column>
+        <name>idprioridad</name>
+        <type>integer</type>
+    </column>
+    <column>
         <name>idservicio</name>
         <type>serial</type>
         <null>NO</null>
+    </column>
+    <column>
+        <name>material</name>
+        <type>text</type>
     </column>
     <column>
         <name>nick</name>
@@ -64,8 +72,8 @@
         <type>text</type>
     </column>
     <column>
-        <name>idprioridad</name>
-        <type>integer</type>
+        <name>solucion</name>
+        <type>text</type>
     </column>
     <constraint>
         <name>serviciosat_pkey</name>

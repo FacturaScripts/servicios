@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -78,19 +78,31 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @var int
      */
-    public $idmaquina;
-
-    /**
-     *
-     * @var int
-     */
     public $idestado;
 
     /**
      *
      * @var int
      */
+    public $idmaquina;
+
+    /**
+     *
+     * @var int
+     */
+    public $idprioridad;
+
+    /**
+     *
+     * @var int
+     */
     public $idservicio;
+
+    /**
+     * 
+     * @var string
+     */
+    public $material;
 
     /**
      *
@@ -105,10 +117,10 @@ class ServicioAT extends Base\ModelOnChangeClass
     public $observaciones;
 
     /**
-     *
-     * @var int
+     * 
+     * @var string
      */
-    public $idprioridad;
+    public $solucion;
 
     public function clear()
     {
@@ -236,7 +248,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     public function test()
     {
         $utils = $this->toolBox()->utils();
-        $fields = ['descripcion', 'observaciones'];
+        $fields = ['descripcion', 'material', 'observaciones', 'solucion'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }
