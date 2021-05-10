@@ -33,6 +33,8 @@ use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 class EditServicioAT extends EditController
 {
 
+    use \FacturaScripts\Core\Lib\ExtendedController\DocFilesTrait;
+
     /**
      * 
      * @return string
@@ -94,6 +96,7 @@ class EditServicioAT extends EditController
         parent::createViews();
         $this->setTabsPosition('top');
         $this->createViewsWorks();
+        $this->createViewDocFiles();
         $this->createViewsInvoices();
         $this->createViewsDeliveryNotes();
         $this->createViewsEstimations();
@@ -234,8 +237,17 @@ class EditServicioAT extends EditController
     protected function execPreviousAction($action)
     {
         switch ($action) {
+            case 'add-file':
+                return $this->addFileAction();
+
             case 'auto-quantity':
                 return $this->calculateQuantity();
+
+            case 'delete-file':
+                return $this->deleteFileAction();
+
+            case 'edit-file':
+                return $this->editFileAction();
 
             case 'make-delivery-note':
                 return $this->makeDeliveryNoteAction();
@@ -246,9 +258,11 @@ class EditServicioAT extends EditController
             case 'make-invoice':
                 return $this->makeInvoiceAction();
 
-            default:
-                return parent::execPreviousAction($action);
+            case 'unlink-file':
+                return $this->unlinkFileAction();
         }
+
+        return parent::execPreviousAction($action);
     }
 
     /**
@@ -278,6 +292,10 @@ class EditServicioAT extends EditController
                     $this->setSettings('EditTrabajoAT', 'btnNew', false);
                     $this->setSettings('EditTrabajoAT', 'btnSave', false);
                 }
+                break;
+
+            case 'docfiles':
+                $this->loadDataDocFiles($view, $this->getModelClassName(), $this->getModel()->primaryColumnValue());
                 break;
 
             case 'EditTrabajoAT':
