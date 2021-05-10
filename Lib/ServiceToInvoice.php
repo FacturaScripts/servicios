@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,7 +22,9 @@ use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
@@ -40,7 +42,127 @@ class ServiceToInvoice
      *
      * @return bool
      */
-    public static function generate(&$service)
+    public static function deliveryNote(&$service)
+    {
+        $customer = new Cliente();
+        if (false === $customer->loadFromCode($service->codcliente)) {
+            return false;
+        }
+
+        /// start transaction
+        $database = new DataBase();
+        $database->beginTransaction();
+
+        $newAlbaran = new AlbaranCliente();
+        $newAlbaran->setSubject($customer);
+        $newAlbaran->codagente = $service->codagente ?? $newAlbaran->codagente;
+        $newAlbaran->idservicio = $service->idservicio;
+        $newAlbaran->nick = $service->nick;
+        if (false === $newAlbaran->save()) {
+            $database->rollback();
+            return false;
+        }
+
+        $found = false;
+        foreach ($service->getTrabajos() as $work) {
+            if ($work->estado !== TrabajoAT::STATUS_MAKE_DELIVERY_NOTE) {
+                continue;
+            }
+
+            $found = true;
+            $newLine = empty($work->referencia) ? $newAlbaran->getNewLine() : $newAlbaran->getNewProductLine($work->referencia);
+            $newLine->cantidad = $work->cantidad;
+            if ($work->precio) {
+                $newLine->pvpunitario = $work->precio;
+            }
+
+            if ($work->descripcion) {
+                $newLine->descripcion = $work->descripcion;
+            }
+
+            $work->estado = TrabajoAT::STATUS_DELIVERY_NOTE;
+            if (false === $newLine->save() || false === $work->save()) {
+                $database->rollback();
+                return false;
+            }
+        }
+
+        if (false === $found) {
+            ToolBox::i18nLog()->warning('no-works-to-delivery-note');
+            $database->rollback();
+            return false;
+        }
+
+        return static::recalculate($newAlbaran, $database);
+    }
+
+    /**
+     * 
+     * @param ServicioAT $service
+     *
+     * @return bool
+     */
+    public static function estimation(&$service)
+    {
+        $customer = new Cliente();
+        if (false === $customer->loadFromCode($service->codcliente)) {
+            return false;
+        }
+
+        /// start transaction
+        $database = new DataBase();
+        $database->beginTransaction();
+
+        $newEstimation = new PresupuestoCliente();
+        $newEstimation->setSubject($customer);
+        $newEstimation->codagente = $service->codagente ?? $newEstimation->codagente;
+        $newEstimation->idservicio = $service->idservicio;
+        $newEstimation->nick = $service->nick;
+        if (false === $newEstimation->save()) {
+            $database->rollback();
+            return false;
+        }
+
+        $found = false;
+        foreach ($service->getTrabajos() as $work) {
+            if ($work->estado !== TrabajoAT::STATUS_MAKE_ESTIMATION) {
+                continue;
+            }
+
+            $found = true;
+            $newLine = empty($work->referencia) ? $newEstimation->getNewLine() : $newEstimation->getNewProductLine($work->referencia);
+            $newLine->cantidad = $work->cantidad;
+            if ($work->precio) {
+                $newLine->pvpunitario = $work->precio;
+            }
+
+            if ($work->descripcion) {
+                $newLine->descripcion = $work->descripcion;
+            }
+
+            $work->estado = TrabajoAT::STATUS_ESTIMATION;
+            if (false === $newLine->save() || false === $work->save()) {
+                $database->rollback();
+                return false;
+            }
+        }
+
+        if (false === $found) {
+            ToolBox::i18nLog()->warning('no-works-to-estimation');
+            $database->rollback();
+            return false;
+        }
+
+        return static::recalculate($newEstimation, $database);
+    }
+
+    /**
+     * 
+     * @param ServicioAT $service
+     *
+     * @return bool
+     */
+    public static function invoice(&$service)
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
@@ -86,29 +208,31 @@ class ServiceToInvoice
         }
 
         if (false === $found) {
-            static::toolBox()->i18nLog()->warning('no-works-to-invoice');
+            ToolBox::i18nLog()->warning('no-works-to-invoice');
             $database->rollback();
             return false;
         }
 
-        /// update invoice
+        return static::recalculate($newInvoice, $database);
+    }
+
+    /**
+     * 
+     * @param AlbaranCliente|FacturaCliente|PresupuestoCliente $newDoc
+     * @param DataBase                                         $database
+     *
+     * @return bool
+     */
+    protected static function recalculate(&$newDoc, &$database): bool
+    {
         $docTools = new BusinessDocumentTools();
-        $docTools->recalculate($newInvoice);
-        if ($newInvoice->save()) {
+        $docTools->recalculate($newDoc);
+        if ($newDoc->save()) {
             $database->commit();
             return true;
         }
 
         $database->rollback();
         return false;
-    }
-
-    /**
-     * 
-     * @return ToolBox
-     */
-    protected static function toolBox()
-    {
-        return new ToolBox();
     }
 }

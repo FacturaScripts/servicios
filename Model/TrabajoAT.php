@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -33,6 +33,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
     const STATUS_NONE = 0;
     const STATUS_MAKE_INVOICE = 1;
     const STATUS_INVOICED = 2;
+    const STATUS_MAKE_DELIVERY_NOTE = 3;
+    const STATUS_DELIVERY_NOTE = 4;
+    const STATUS_MAKE_ESTIMATION = 5;
+    const STATUS_ESTIMATION = 6;
     const STATUS_SUBSTRACT_STOCK = -1;
 
     /**
