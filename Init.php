@@ -18,8 +18,8 @@
  */
 namespace FacturaScripts\Plugins\Servicios;
 
-use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\InitClass;
+use FacturaScripts\Dinamic\Lib\ExportManager;
 
 /**
  * Description of Init
@@ -31,7 +31,11 @@ class Init extends InitClass
 
     public function init()
     {
+        /// extensions
         $this->loadExtension(new Extension\Controller\EditCliente());
+
+        /// export manager
+        ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
     }
 
     public function update()

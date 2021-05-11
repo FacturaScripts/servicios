@@ -20,6 +20,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Model\Cliente;
 
 /**
  * Description of ServicioAT
@@ -186,6 +187,17 @@ class ServicioAT extends Base\ModelOnChangeClass
         $priority = new PrioridadAT();
         $priority->loadFromCode($this->idprioridad);
         return $priority;
+    }
+
+    /**
+     * 
+     * @return Cliente
+     */
+    public function getSubject()
+    {
+        $cliente = new Cliente();
+        $cliente->loadFromCode($this->codcliente);
+        return $cliente;
     }
 
     /**
