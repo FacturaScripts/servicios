@@ -68,19 +68,19 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         $this->pdf->ezText('');
 
         if ($model->descripcion) {
-            $this->pdf->ezText("\n" . $this->i18n->trans('description') . "\n", self::FONT_SIZE + 6);
+            $this->pdf->ezText("\n" . $this->i18n->trans('description') . "\n", self::FONT_SIZE + 4);
             $this->newLine();
             $this->pdf->ezText(\nl2br($model->descripcion) . "\n", self::FONT_SIZE + 2);
         }
 
         if ($model->material) {
-            $this->pdf->ezText("\n" . $this->i18n->trans('material') . "\n", self::FONT_SIZE + 6);
+            $this->pdf->ezText("\n" . $this->i18n->trans('material') . "\n", self::FONT_SIZE + 4);
             $this->newLine();
             $this->pdf->ezText(\nl2br($model->material) . "\n", self::FONT_SIZE + 2);
         }
 
         if ($model->solucion) {
-            $this->pdf->ezText("\n" . $this->i18n->trans('solution') . "\n", self::FONT_SIZE + 6);
+            $this->pdf->ezText("\n" . $this->i18n->trans('solution') . "\n", self::FONT_SIZE + 4);
             $this->newLine();
             $this->pdf->ezText(\nl2br($model->solucion) . "\n", self::FONT_SIZE + 2);
         }
