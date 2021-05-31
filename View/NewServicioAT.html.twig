@@ -100,6 +100,7 @@
 
 {% block css %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.css') }}" />
     <style>
         .bg-header {
             background-color: #FAFBFC;
@@ -109,6 +110,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#customerac").autocomplete({
