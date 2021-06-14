@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -34,12 +34,12 @@
             </widget>
         </column>
         <column name="customer" order="130">
-            <widget type="autocomplete" fieldname="codcliente" onclick="EditCliente">
+            <widget type="autocomplete" fieldname="codcliente">
                 <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
             </widget>
         </column>
         <column name="machine" order="140">
-            <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaAT">
+            <widget type="autocomplete" fieldname="idmaquina">
                 <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
             </widget>
         </column>
