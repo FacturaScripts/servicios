@@ -20,6 +20,9 @@ namespace FacturaScripts\Plugins\Servicios;
 
 use FacturaScripts\Core\Base\InitClass;
 use FacturaScripts\Dinamic\Lib\ExportManager;
+use FacturaScripts\Dinamic\Model\AlbaranCliente;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 
 /**
  * Description of Init
@@ -44,5 +47,8 @@ class Init extends InitClass
         new Model\MaquinaAT();
         new Model\PrioridadAT();
         new Model\ServicioAT();
+        new AlbaranCliente();
+        new FacturaCliente();
+        new PresupuestoCliente();
     }
 }
