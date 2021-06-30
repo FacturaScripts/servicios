@@ -51,6 +51,18 @@
         <type>integer</type>
     </column>
     <column>
+        <name>idmaquina2</name>
+        <type>integer</type>
+    </column>
+    <column>
+        <name>idmaquina3</name>
+        <type>integer</type>
+    </column>
+    <column>
+        <name>idmaquina4</name>
+        <type>integer</type>
+    </column>
+    <column>
         <name>idprioridad</name>
         <type>integer</type>
     </column>
@@ -90,6 +102,18 @@
     <constraint>
         <name>ca_serviciosat_maquinas</name>
         <type>FOREIGN KEY (idmaquina) REFERENCES serviciosat_maquinas (idmaquina) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_maquinas2</name>
+        <type>FOREIGN KEY (idmaquina2) REFERENCES serviciosat_maquinas (idmaquina) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_maquinas3</name>
+        <type>FOREIGN KEY (idmaquina3) REFERENCES serviciosat_maquinas (idmaquina) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_maquinas4</name>
+        <type>FOREIGN KEY (idmaquina4) REFERENCES serviciosat_maquinas (idmaquina) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
         <name>ca_serviciosat_empresas</name>

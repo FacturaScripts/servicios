@@ -26,23 +26,33 @@
                     <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="machine" order="110">
+            <column name="machine" title="machine" order="110">
                 <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaAT">
                     <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="date" numcolumns="2" order="120">
-                <widget type="date" fieldname="fecha" required="true" />
-            </column>
-            <column name="hour" numcolumns="2" order="130">
-                <widget type="time" fieldname="hora" required="true" />
-            </column>
-            <column name="priority" numcolumns="2" order="140">
-                <widget type="select" fieldname="idprioridad" required="true">
-                    <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
+            <column name="machine2" title="machine" order="120">
+                <widget type="autocomplete" fieldname="idmaquina2" onclick="EditMaquinaAT">
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="status" numcolumns="2" order="150">
+            <column name="machine3" title="machine" display="none" order="130">
+                <widget type="autocomplete" fieldname="idmaquina3" onclick="EditMaquinaAT">
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
+                </widget>
+            </column>
+            <column name="machine4" title="machine" display="none" order="140">
+                <widget type="autocomplete" fieldname="idmaquina4" onclick="EditMaquinaAT">
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
+                </widget>
+            </column>
+            <column name="date" numcolumns="2" order="150">
+                <widget type="date" fieldname="fecha" required="true" />
+            </column>
+            <column name="hour" numcolumns="2" order="160">
+                <widget type="time" fieldname="hora" required="true" />
+            </column>
+            <column name="status" numcolumns="2" order="180">
                 <widget type="select" fieldname="idestado" required="true">
                     <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre" />
                 </widget>
@@ -81,6 +91,11 @@
             <column name="company" display="none" order="130">
                 <widget type="select" fieldname="idempresa" onclick="EditEmpresa" required="true" readonly="dinamic">
                     <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto" />
+                </widget>
+            </column>
+            <column name="priority" numcolumns="2" order="140">
+                <widget type="select" fieldname="idprioridad" required="true">
+                    <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
                 </widget>
             </column>
         </group>
