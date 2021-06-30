@@ -29,7 +29,7 @@ class ListServicioAT extends ListController
 {
 
     /**
-     * 
+     *
      * @return array
      */
     public function getPageData(): array
@@ -45,12 +45,10 @@ class ListServicioAT extends ListController
     {
         $this->createViewsServices();
         $this->createViewsMachines();
-        $this->createViewsStatus();
-        $this->createViewsPriority();
     }
 
     /**
-     * 
+     *
      * @param string $viewName
      */
     protected function createViewsMachines(string $viewName = 'ListMaquinaAT')
@@ -75,7 +73,7 @@ class ListServicioAT extends ListController
     }
 
     /**
-     * 
+     *
      * @param string $viewName
      */
     protected function createViewsServices(string $viewName = 'ListServicioAT')
@@ -99,25 +97,5 @@ class ListServicioAT extends ListController
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
-    }
-
-    /**
-     * 
-     * @param string $viewName
-     */
-    protected function createViewsStatus(string $viewName = 'ListEstadoAT')
-    {
-        $this->addView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
-        $this->addOrderBy($viewName, ['nombre'], 'name', 1);
-    }
-
-    /**
-     * 
-     * @param string $viewName
-     */
-    protected function createViewsPriority(string $viewName = 'ListPrioridadAT')
-    {
-        $this->addView($viewName, 'PrioridadAT', 'priority', 'fas fa-tags');
-        $this->addOrderBy($viewName, ['nombre'], 'name', 1);
     }
 }
