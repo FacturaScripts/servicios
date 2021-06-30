@@ -9,10 +9,10 @@
                 <widget type="textarea" fieldname="footer" rows="4" />
             </column>
             <column name="print-works" numcolumns="3" order="110">
-                <widget type="checkbox" fieldname="tasks" />
+                <widget type="checkbox" fieldname="works" />
             </column>
-            <column name="print-machine" numcolumns="3" order="120">
-                <widget type="checkbox" fieldname="machine" />
+            <column name="print-machines" numcolumns="3" order="120">
+                <widget type="checkbox" fieldname="machines" />
             </column>
             <column name="print-notes" numcolumns="3" order="130">
                 <widget type="checkbox" fieldname="notes" />
