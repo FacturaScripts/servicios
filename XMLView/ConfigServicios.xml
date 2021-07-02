@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view>
+    <columns>
+        <group name="services" numcolumns="12" valign="bottom">
+            <column name="name" display="none" order="0">
+                <widget type="text" fieldname="name" readonly="true" required="true" />
+            </column>
+            <column name="footer-text" numcolumns="12" order="100">
+                <widget type="textarea" fieldname="footer" rows="4" />
+            </column>
+            <column name="print-works" numcolumns="3" order="110">
+                <widget type="checkbox" fieldname="works" />
+            </column>
+            <column name="print-machines" numcolumns="3" order="120">
+                <widget type="checkbox" fieldname="machines" />
+            </column>
+            <column name="print-notes" numcolumns="3" order="130">
+                <widget type="checkbox" fieldname="notes" />
+            </column>
+        </group>
+    </columns>
+</view>

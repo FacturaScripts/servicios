@@ -91,6 +91,24 @@ class ServicioAT extends Base\ModelOnChangeClass
      *
      * @var int
      */
+    public $idmaquina2;
+
+    /**
+     *
+     * @var int
+     */
+    public $idmaquina3;
+
+    /**
+     *
+     * @var int
+     */
+    public $idmaquina4;
+
+    /**
+     *
+     * @var int
+     */
     public $idprioridad;
 
     /**
@@ -100,7 +118,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     public $idservicio;
 
     /**
-     * 
+     *
      * @var string
      */
     public $material;
@@ -118,7 +136,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     public $observaciones;
 
     /**
-     * 
+     *
      * @var string
      */
     public $solucion;
@@ -148,7 +166,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return EstadoAT[]
      */
     public function getAvailableStatus()
@@ -158,7 +176,28 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
+     * @return MaquinaAT[]
+     */
+    public function getMachines()
+    {
+        $result = [];
+        $machines = [ $this->idmaquina, $this->idmaquina2, $this->idmaquina3, $this->idmaquina4 ];
+        foreach ($machines as $code) {
+            if (empty($code)) {
+                continue;
+            }
+
+            $machine = new MaquinaAT();
+            $machine->loadFromCode($code);
+            $result[] = $machine;
+        }
+
+        return $result;
+    }
+
+    /**
+     *
      * @return EstadoAT
      */
     public function getStatus()
@@ -169,7 +208,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return PrioridadAT
      */
     public function getAvailablePriority()
@@ -179,7 +218,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return PrioridadAT
      */
     public function getPriority()
@@ -190,7 +229,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return Cliente
      */
     public function getSubject()
@@ -201,7 +240,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return TrabajoAT[]
      */
     public function getTrabajos()
@@ -213,7 +252,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function install()
@@ -227,7 +266,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public static function primaryColumn(): string
@@ -236,7 +275,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function primaryDescriptionColumn(): string
@@ -245,7 +284,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public static function tableName(): string
@@ -254,7 +293,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @return bool
      */
     public function test()
@@ -269,7 +308,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @param string $type
      * @param string $list
      *
@@ -281,7 +320,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @param string $field
      *
      * @return bool
@@ -298,7 +337,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
+     *
      * @param array $fields
      */
     protected function setPreviousData(array $fields = [])
