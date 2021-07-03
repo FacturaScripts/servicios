@@ -51,7 +51,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         $this->insertParalellTable($this->serviceData($model, $subject), '', $this->tableOptions());
         $this->pdf->ezText('');
 
-        if ($this->toolBox()->appSettings()->get('servicios', 'machines', false)) {
+        if ($this->toolBox()->appSettings()->get('servicios', 'printmachineinfo', false)) {
             $this->printTableSection('machines', $this->machinesData($model));
         }
 
@@ -59,25 +59,44 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         $this->printTextSection('material', $model->material);
         $this->printTextSection('solution', $model->solucion);
 
-        if ($this->toolBox()->appSettings()->get('servicios', 'notes', false)) {
-            $this->printTextSection('notes', $model->observaciones);
+        if ($this->toolBox()->appSettings()->get('servicios', 'printobservations', false)) {
+            $this->printTextSection('observations', $model->observaciones);
         }
 
-        if ($this->toolBox()->appSettings()->get('servicios', 'works', false)) {
-            $this->printTableSection('works', $this->worksData($model));
+        if ($this->toolBox()->appSettings()->get('servicios', 'printworks', false)) {
+            $this->printTableSection('work', $this->worksData($model));
         }
 
-        $footer = $this->toolBox()->appSettings()->get('servicios', 'footer', '');
+        $footer = $this->toolBox()->appSettings()->get('servicios', 'footertext', '');
         $this->printTextSection("", $footer, false);
 
         return false;
     }
 
     /**
+     *
+     * @param ServicioAT $model
+     *
+     * @return array
+     */
+    private function machinesData(&$model): array
+    {
+        $result = [];
+        foreach ($model->getMachines() as $machine) {
+            $result[] = [
+                $this->i18n->trans('name') => $machine->nombre,
+                $this->i18n->trans('serial-number') => $machine->numserie,
+                $this->i18n->trans('description') => $machine->descripcion
+            ];
+        }
+        return $result;
+    }
+
+    /**
      * Print a section with an array of data.
      *
      * @param string $title
-     * @param array $data
+     * @param array  $data
      */
     protected function printTableSection($title, $data)
     {
@@ -85,7 +104,6 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         $this->newLine();
         $this->pdf->ezTable($data, '', '', $this->tableOptions(1));
         $this->pdf->ezText('');
-
     }
 
     /**
@@ -111,7 +129,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
      *
      * @return array
      */
-    protected function tableOptions($headings = 0):array
+    protected function tableOptions($headings = 0): array
     {
         return [
             'width' => $this->tableWidth,
@@ -125,28 +143,11 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     /**
      *
      * @param ServicioAT $model
-     * @return array
-     */
-    private function machinesData(&$model):array
-    {
-        $result = [];
-        foreach ($model->getMachines() as $machine) {
-            $result[] = [
-                $this->i18n->trans('name') => $machine->nombre,
-                $this->i18n->trans('serial-number') => $machine->numserie,
-                $this->i18n->trans('description') => $machine->descripcion,
-            ];
-        }
-        return $result;
-    }
-
-    /**
+     * @param Cliente    $subject
      *
-     * @param ServicioAT $model
-     * @param Cliente $subject
      * @return array
      */
-    private function serviceData(&$model, &$subject):array
+    private function serviceData(&$model, &$subject): array
     {
         $tipoidfiscal = empty($subject->tipoidfiscal) ? $this->i18n->trans('cifnif') : $subject->tipoidfiscal;
 
@@ -163,9 +164,10 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     /**
      *
      * @param ServicioAT $model
+     *
      * @return array
      */
-    private function worksData(&$model):array
+    private function worksData(&$model): array
     {
         $result = [];
         foreach ($model->getTrabajos() as $work) {
@@ -174,7 +176,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
                 $this->i18n->trans('from-hour') => $work->horainicio,
                 $this->i18n->trans('until-date') => $work->fechafin,
                 $this->i18n->trans('until-hour') => $work->horafin,
-                $this->i18n->trans('observations') => $work->observaciones,
+                $this->i18n->trans('observations') => $work->observaciones
             ];
         }
         return $result;

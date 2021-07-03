@@ -23,15 +23,15 @@ use FacturaScripts\Dinamic\Lib\ExtendedController\PanelController;
 /**
  * Description of AdminServicios
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
- * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
+ * @author Carlos Garcia Gomez              <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello Principal    <yopli2000@gmail.com>
  */
 class AdminServicios extends PanelController
 {
 
     private const VIEW_CONFIG_PROJECTS = 'ConfigServicios';
-    private const VIEW_LIST_PRIORITIES = 'ListPrioridadAT';
-    private const VIEW_LIST_STATUS = 'ListEstadoAT';
+    private const VIEW_LIST_PRIORITIES = 'EditPrioridadAT';
+    private const VIEW_LIST_STATUS = 'EditEstadoAT';
 
     /**
      * Return the basic data for this page.
@@ -54,29 +54,8 @@ class AdminServicios extends PanelController
     {
         $this->setTemplate('EditSettings');
         $this->createViewEditConfig();
-        $this->createViewPriorities();
         $this->createViewStatus();
-    }
-
-    /**
-     * Loads the data to display.
-     *
-     * @param string   $viewName
-     * @param BaseView $view
-     */
-    protected function loadData($viewName, $view)
-    {
-        switch ($viewName) {
-            case self::VIEW_CONFIG_PROJECTS:
-                $view->loadData('servicios');
-                $view->model->name = 'servicios';
-                break;
-
-            case self::VIEW_LIST_PRIORITIES:
-            case self::VIEW_LIST_STATUS:
-                $view->loadData();
-                break;
-        }
+        $this->createViewPriorities();
     }
 
     /**
@@ -98,9 +77,8 @@ class AdminServicios extends PanelController
      */
     private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES)
     {
-        $this->addListView($viewName, 'PrioridadAT', 'priority', 'fas fa-tags');
-        $this->views[$viewName]->searchFields = ['nombre'];
-        $this->views[$viewName]->addOrderBy(['nombre'], 'name', 1);
+        $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol');
+        $this->views[$viewName]->setInLine(true);
     }
 
     /**
@@ -109,8 +87,28 @@ class AdminServicios extends PanelController
      */
     private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS)
     {
-        $this->addListView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
-        $this->views[$viewName]->searchFields = ['nombre'];
-        $this->views[$viewName]->addOrderBy(['nombre'], 'name', 1);
+        $this->addEditListView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
+        $this->views[$viewName]->setInLine(true);
+    }
+
+    /**
+     * Loads the data to display.
+     *
+     * @param string   $viewName
+     * @param BaseView $view
+     */
+    protected function loadData($viewName, $view)
+    {
+        switch ($viewName) {
+            case self::VIEW_CONFIG_PROJECTS:
+                $view->loadData('servicios');
+                $view->model->name = 'servicios';
+                break;
+
+            case self::VIEW_LIST_PRIORITIES:
+            case self::VIEW_LIST_STATUS:
+                $view->loadData();
+                break;
+        }
     }
 }

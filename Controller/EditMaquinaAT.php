@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -75,7 +75,7 @@ class EditMaquinaAT extends EditController
         $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
 
         /// disable customer column
-        $this->views[$viewName]->disableColumn('customer');
+        $this->views[$viewName]->disableColumn('machine');
     }
 
     /**
@@ -90,7 +90,12 @@ class EditMaquinaAT extends EditController
         switch ($viewName) {
             case 'ListServicioAT':
                 $idmaquina = $this->getViewModelValue($mainViewName, 'idmaquina');
-                $where = [new DataBaseWhere('idmaquina', $idmaquina)];
+                $where = [
+                    new DataBaseWhere('idmaquina', $idmaquina),
+                    new DataBaseWhere('idmaquina2', $idmaquina, '=', 'OR'),
+                    new DataBaseWhere('idmaquina3', $idmaquina, '=', 'OR'),
+                    new DataBaseWhere('idmaquina4', $idmaquina, '=', 'OR')
+                ];
                 $view->loadData('', $where);
                 break;
 

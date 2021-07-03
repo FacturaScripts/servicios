@@ -50,5 +50,15 @@ class Init extends InitClass
         new AlbaranCliente();
         new FacturaCliente();
         new PresupuestoCliente();
+
+        $this->setupSettings();
+    }
+
+    private function setupSettings()
+    {
+        $appsettings = $this->toolBox()->appSettings();
+        $footerText = $appsettings->get('servicios', 'footertext', '');
+        $appsettings->set('servicios', 'footertext', $footerText);
+        $appsettings->save();
     }
 }
