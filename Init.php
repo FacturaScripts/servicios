@@ -37,6 +37,10 @@ class Init extends InitClass
         /// extensions
         $this->loadExtension(new Extension\Controller\EditCliente());
 
+        if (\class_exists('FacturaScripts\\Dinamic\\Controller\\Randomizer')) {
+            $this->loadExtension(new Extension\Controller\Randomizer());
+        }
+
         /// export manager
         ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
     }
