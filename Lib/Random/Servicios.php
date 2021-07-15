@@ -67,8 +67,8 @@ class Servicios extends NewItems
             $service->codalmacen = static::codalmacen();
             $service->idestado = static::idestado();
             $service->idprioridad = static::idprioridad();
-            $service->fecha = $faker->date();
-            $service->hora = $faker->time();
+            $service->fecha = static::fecha();
+            $service->hora = static::hora();
             $service->descripcion = $faker->text;
             $service->material = $faker->optional()->text;
             $service->solucion = $faker->optional()->text;
@@ -98,14 +98,14 @@ class Servicios extends NewItems
      */
     protected static function createMachinesForCustomer(&$faker, &$machineList, $code)
     {
-        $max = $faker->numberBetween(1, 5);
+        $max = $faker->optional(0.1, 1)->numberBetween(2, 5);
         for ($index = 1; $index <= $max; $index++) {
             $machine = new MaquinaAT();
-            $machine->codcliente = $code;
             $machine->codagente = static::codagente();
+            $machine->codcliente = $code;
             $machine->codfabricante = static::codfabricante();
             $machine->descripcion = $faker->text;
-            $machine->fecha = $faker->date();
+            $machine->fecha = static::fecha();
             $machine->nombre = $faker->text(100);
             $machine->numserie = $faker->isbn13;
             $machine->referencia = static::referencia();
@@ -151,20 +151,17 @@ class Servicios extends NewItems
     /**
      *
      * @param MaquinaAT[] $machines
-     * @param int|null    $previous
+     *
      * @return int|null
      */
-    protected static function getMachine(&$machines, $previous = null)
+    protected static function idmaquina(&$machines)
     {
-        if (empty($machines) || empty($previous) || (\mt_rand(0, 2) !== 0)) {
-            return null;
+        foreach ($machines as $key => $value) {
+            unset($machines[$key]);
+            return $value->idmaquina;
         }
 
-        \shuffle($machines);
-        $result = $machines[0]->idmaquina;
-        \array_splice($machines, 0, 1);
-
-        return $result;
+        return null;
     }
 
     /**
@@ -201,22 +198,22 @@ class Servicios extends NewItems
 
     /**
      * Establish 0 to 4 machines to service.
-     *
-     * @param ServicioAT $service
+     * 
+     * @param Faker\Generator $faker
+     * @param ServicioAT      $service
      */
     protected static function setMachines(&$faker, &$service)
     {
-        $where = [ new DataBaseWhere('codcliente', $service->codcliente) ];
         $model = new MaquinaAT();
+        $where = [new DataBaseWhere('codcliente', $service->codcliente)];
         $machines = $model->all($where);
-
         if (empty($machines)) {
             static::createMachinesForCustomer($faker, $machines, $service->codcliente);
         }
 
-        $service->idmaquina = static::getMachine($machines);
-        $service->idmaquina2 = static::getMachine($machines, $service->idmaquina);
-        $service->idmaquina3 = static::getMachine($machines, $service->idmaquina2);
-        $service->idmaquina4 = static::getMachine($machines, $service->idmaquina3);
+        $service->idmaquina = static::idmaquina($machines);
+        $service->idmaquina2 = static::idmaquina($machines);
+        $service->idmaquina3 = static::idmaquina($machines);
+        $service->idmaquina4 = static::idmaquina($machines);
     }
 }
