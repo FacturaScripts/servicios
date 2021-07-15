@@ -204,7 +204,7 @@ class Servicios extends NewItems
      *
      * @param ServicioAT $service
      */
-    protected static function setMachines(&$faker, $service)
+    protected static function setMachines(&$faker, &$service)
     {
         $where = [ new DataBaseWhere('codcliente', $service->codcliente) ];
         $model = new MaquinaAT();
