@@ -48,7 +48,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         $this->pdf->ezText("\n" . $title . ': ' . $model->idservicio . "\n", self::FONT_SIZE + 6);
         $this->newLine();
 
-        $this->insertParalellTable($this->serviceData($model, $subject), '', $this->tableOptions());
+        $this->insertParallelTable($this->serviceData($model, $subject), '', $this->tableOptions());
         $this->pdf->ezText('');
 
         if ($this->toolBox()->appSettings()->get('servicios', 'printmachineinfo', false)) {

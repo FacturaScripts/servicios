@@ -18,7 +18,11 @@
  */
 namespace FacturaScripts\Plugins\Servicios;
 
+use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Base\InitClass;
+use FacturaScripts\Core\Model\Role;
+use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Dinamic\Lib\ExportManager;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -56,6 +60,68 @@ class Init extends InitClass
         new PresupuestoCliente();
 
         $this->setupSettings();
+        $this->createRoleForPlugin();
+    }
+
+    private function createRoleForPlugin()
+    {
+        $dataBase = new DataBase();
+        $dataBase->beginTransaction();
+        
+        $role = new Role();
+        $nameOfRole = 'Servicios'; // Name of plugin in facturascripts.ini
+        
+        // Check if exist the name of this plugin between roles
+        if (false === $role->loadFromCode($nameOfRole)) 
+        {   // NO exist, then will be create
+            $role->codrole = $nameOfRole;
+            $role->descripcion = 'Rol - plugin ' . $nameOfRole;
+            
+            // Try to save. If can't do it will be to do rollback for the 
+            // Transaction and not will continue
+            if (false === $role->save())
+            {   // Can't create it
+                $dataBase->rollback();
+            }
+        }
+        
+        // if the plugin is active and then we decide it will be deactive, 
+        // the permissions of the rule will be delete.
+        // Then always is necesary to check ir they exist
+        $nameControllers = ['AdminServicios', 'EditMaquinaAT', 'EditServicioAT', 'ListServicioAT', 'NewServicioAT'];
+        foreach ($nameControllers as $nameController) 
+        {
+            $roleAccess = new RoleAccess();
+
+            // Check if exist the $nameController between permissions for 
+            // this role/plugin
+            $where = [
+                new DataBaseWhere('codrole', $nameOfRole),
+                new DataBaseWhere('pagename', $nameController)
+            ];
+
+            if (false === $roleAccess->loadFromCode('', $where)) 
+            {
+                // NO exist, then will be create
+                $roleAccess->allowdelete = true;
+                $roleAccess->allowupdate = true;
+                $roleAccess->codrole = $nameOfRole; 
+                $roleAccess->pagename = $nameController;
+                $roleAccess->onlyownerdata = false;
+
+                // Try to save. If can't do it will be to do rollback for the 
+                // Transaction and not will continue
+                if (false === $roleAccess->save())
+                {   // Can't create it
+                    $dataBase->rollback();
+                    return; // to not create permission for this role
+                }
+            }
+        }
+            
+        // without problems = Commit
+        $dataBase->commit();
+        return;
     }
 
     private function setupSettings()
