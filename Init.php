@@ -57,9 +57,9 @@ class Init extends InitClass
         new Model\MaquinaAT();
         new Model\PrioridadAT();
         new Model\ServicioAT();
+        new PresupuestoCliente();
         new AlbaranCliente();
         new FacturaCliente();
-        new PresupuestoCliente();
 
         $this->setupSettings();
         $this->createRoleForPlugin();
