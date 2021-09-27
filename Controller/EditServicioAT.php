@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
+use FacturaScripts\Core\Lib\ExtendedController\DocFilesTrait;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Plugins\Servicios\Lib\ServiceToInvoice;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
@@ -33,10 +35,9 @@ use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 class EditServicioAT extends EditController
 {
 
-    use \FacturaScripts\Core\Lib\ExtendedController\DocFilesTrait;
+    use DocFilesTrait;
 
     /**
-     * 
      * @return string
      */
     public function getModelClassName()
@@ -45,7 +46,6 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @return array
      */
     public function getPageData()
@@ -53,17 +53,17 @@ class EditServicioAT extends EditController
         $data = parent::getPageData();
         $data['menu'] = 'sales';
         $data['title'] = 'service';
-        $data['icon'] = 'fas fa-edit';
+        $data['icon'] = 'fas fa-headset';
         $data['showonmenu'] = false;
         return $data;
     }
 
     /**
      * Calculate the number of hours worked.
-     * 
-     * @return float
+     *
+     * @return bool
      */
-    protected function calculateQuantity()
+    protected function calculateQuantity(): bool
     {
         if (false === $this->permissions->allowUpdate) {
             $this->toolBox()->i18nLog()->warning('not-allowed-modify');
@@ -103,12 +103,11 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @param string $viewName
      */
     protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente')
     {
-        $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-copy');
+        $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-dolly-flatbed');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
         $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
 
@@ -127,12 +126,11 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @param string $viewName
      */
     protected function createViewsEstimations(string $viewName = 'ListPresupuestoCliente')
     {
-        $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'fas fa-copy');
+        $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'far fa-file-powerpoint');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
         $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
 
@@ -151,12 +149,11 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @param string $viewName
      */
     protected function createViewsInvoices(string $viewName = 'ListFacturaCliente')
     {
-        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-copy');
+        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-file-invoice-dollar');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
         $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
 
@@ -175,7 +172,6 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @param string $viewName
      */
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
@@ -191,7 +187,7 @@ class EditServicioAT extends EditController
      *
      * @param string $start
      * @param string $end
-     * @param bool   $increment
+     * @param bool $increment
      *
      * @return int
      */
@@ -201,8 +197,8 @@ class EditServicioAT extends EditController
             return 0;
         }
 
-        $diff = \strtotime($end) - \strtotime($start);
-        $result = \ceil($diff / 86400);
+        $diff = strtotime($end) - strtotime($start);
+        $result = ceil($diff / 86400);
         if ($increment) {
             ++$result;
         }
@@ -210,7 +206,6 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @param string $mainViewName
      * @param string $exclude
      */
@@ -267,8 +262,8 @@ class EditServicioAT extends EditController
 
     /**
      * Loads the data to display.
-     * 
-     * @param string   $viewName
+     *
+     * @param string $viewName
      * @param BaseView $view
      */
     protected function loadData($viewName, $view)
@@ -323,7 +318,6 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @return bool
      */
     protected function makeDeliveryNoteAction(): bool
@@ -349,7 +343,6 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @return bool
      */
     protected function makeEstimationAction(): bool
@@ -375,7 +368,6 @@ class EditServicioAT extends EditController
     }
 
     /**
-     * 
      * @return bool
      */
     protected function makeInvoiceAction(): bool
@@ -414,13 +406,13 @@ class EditServicioAT extends EditController
             return 0.0;
         }
 
-        $startHour = \date_parse_from_format('H:i:s', $start);
-        $endHour = \date_parse_from_format('H:i:s', $end);
+        $startHour = date_parse_from_format('H:i:s', $start);
+        $endHour = date_parse_from_format('H:i:s', $end);
 
         $ini = ($startHour['hour'] * 3600) + ($startHour['minute'] * 60) + $startHour['second'];
         $fin = ($endHour['hour'] * 3600) + ($endHour['minute'] * 60) + $endHour['second'];
 
         $dif = ($fin - $ini) / 3600;
-        return \round($dif, 4);
+        return round($dif, 4);
     }
 }

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios;
 
 use FacturaScripts\Core\Base\DataBase;
@@ -35,6 +36,7 @@ use FacturaScripts\Dinamic\Model\PresupuestoCliente;
  */
 class Init extends InitClass
 {
+    const ROLE_NAME = 'Servicios';
 
     public function init()
     {
@@ -67,61 +69,46 @@ class Init extends InitClass
     {
         $dataBase = new DataBase();
         $dataBase->beginTransaction();
-        
+
+        // creates the role if not exists
         $role = new Role();
-        $nameOfRole = 'Servicios'; // Name of plugin in facturascripts.ini
-        
-        // Check if exist the name of this plugin between roles
-        if (false === $role->loadFromCode($nameOfRole)) 
-        {   // NO exist, then will be create
-            $role->codrole = $nameOfRole;
-            $role->descripcion = 'Rol - plugin ' . $nameOfRole;
-            
-            // Try to save. If can't do it will be to do rollback for the 
-            // Transaction and not will continue
-            if (false === $role->save())
-            {   // Can't create it
+        if (false === $role->loadFromCode(self::ROLE_NAME)) {
+            $role->codrole = $role->descripcion = self::ROLE_NAME;
+            if (false === $role->save()) {
+                // rollback and exit on fail
                 $dataBase->rollback();
+                return;
             }
         }
-        
-        // if the plugin is active and then we decide it will be deactive, 
-        // the permissions of the rule will be delete.
-        // Then always is necesary to check ir they exist
-        $nameControllers = ['AdminServicios', 'EditMaquinaAT', 'EditServicioAT', 'ListServicioAT', 'NewServicioAT'];
-        foreach ($nameControllers as $nameController) 
-        {
-            $roleAccess = new RoleAccess();
 
-            // Check if exist the $nameController between permissions for 
-            // this role/plugin
+        // checks the role permissions
+        $nameControllers = ['EditMaquinaAT', 'EditServicioAT', 'ListServicioAT', 'NewServicioAT'];
+        foreach ($nameControllers as $nameController) {
+            $roleAccess = new RoleAccess();
             $where = [
-                new DataBaseWhere('codrole', $nameOfRole),
+                new DataBaseWhere('codrole', self::ROLE_NAME),
                 new DataBaseWhere('pagename', $nameController)
             ];
+            if ($roleAccess->loadFromCode('', $where)) {
+                // permission exists? Then skip
+                continue;
+            }
 
-            if (false === $roleAccess->loadFromCode('', $where)) 
-            {
-                // NO exist, then will be create
-                $roleAccess->allowdelete = true;
-                $roleAccess->allowupdate = true;
-                $roleAccess->codrole = $nameOfRole; 
-                $roleAccess->pagename = $nameController;
-                $roleAccess->onlyownerdata = false;
-
-                // Try to save. If can't do it will be to do rollback for the 
-                // Transaction and not will continue
-                if (false === $roleAccess->save())
-                {   // Can't create it
-                    $dataBase->rollback();
-                    return; // to not create permission for this role
-                }
+            // creates the permission if not exists
+            $roleAccess->allowdelete = true;
+            $roleAccess->allowupdate = true;
+            $roleAccess->codrole = self::ROLE_NAME;
+            $roleAccess->pagename = $nameController;
+            $roleAccess->onlyownerdata = false;
+            if (false === $roleAccess->save()) {
+                // rollback and exit on fail
+                $dataBase->rollback();
+                return;
             }
         }
-            
+
         // without problems = Commit
         $dataBase->commit();
-        return;
     }
 
     private function setupSettings()
