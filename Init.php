@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -40,14 +40,14 @@ class Init extends InitClass
 
     public function init()
     {
-        /// extensions
+        // extensions
         $this->loadExtension(new Extension\Controller\EditCliente());
 
-        if (\class_exists('FacturaScripts\\Dinamic\\Controller\\Randomizer')) {
+        if (class_exists('FacturaScripts\\Dinamic\\Controller\\Randomizer')) {
             $this->loadExtension(new Extension\Controller\Randomizer());
         }
 
-        /// export manager
+        // export manager
         ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
     }
 
@@ -63,6 +63,7 @@ class Init extends InitClass
 
         $this->setupSettings();
         $this->createRoleForPlugin();
+        $this->fixMissingCustomers();
     }
 
     private function createRoleForPlugin()
@@ -111,11 +112,18 @@ class Init extends InitClass
         $dataBase->commit();
     }
 
+    private function fixMissingCustomers()
+    {
+        $db = new DataBase();
+        $sql = 'UPDATE serviciosat SET codcliente = NULL WHERE codcliente IS NOT NULL AND codcliente NOT IN (SELECT codcliente FROM clientes);';
+        $db->exec($sql);
+    }
+
     private function setupSettings()
     {
-        $appsettings = $this->toolBox()->appSettings();
-        $footerText = $appsettings->get('servicios', 'footertext', '');
-        $appsettings->set('servicios', 'footertext', $footerText);
-        $appsettings->save();
+        $appSettings = $this->toolBox()->appSettings();
+        $footerText = $appSettings->get('servicios', 'footertext', '');
+        $appSettings->set('servicios', 'footertext', $footerText);
+        $appSettings->save();
     }
 }

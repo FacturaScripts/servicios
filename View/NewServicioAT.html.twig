@@ -1,4 +1,4 @@
-{% extends "Master/MenuTemplate.html.twig" %}
+{% extends "Master/MenuBghTemplate.html.twig" %}
 
 {% block bodyHeaderOptions %}
     {{ parent() }}
@@ -10,7 +10,8 @@
                 <ul class="nav nav-tabs">
                     {% if fsc.cliente.exists() %}
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ i18n.trans('customer') }}</a>
+                            <a class="nav-link disabled" href="#" tabindex="-1"
+                               aria-disabled="true">{{ i18n.trans('customer') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="#">{{ i18n.trans('machine') }}</a>
@@ -20,7 +21,8 @@
                             <a class="nav-link active" href="#">{{ i18n.trans('customer') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ i18n.trans('machine') }}</a>
+                            <a class="nav-link disabled" href="#" tabindex="-1"
+                               aria-disabled="true">{{ i18n.trans('machine') }}</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -44,12 +46,14 @@
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="newm-tab" data-toggle="tab" href="#newm" role="tab" aria-controls="newm" aria-selected="false">
+                                    <a class="nav-link active" id="newm-tab" data-toggle="tab" href="#newm" role="tab"
+                                       aria-controls="newm" aria-selected="false">
                                         {{ i18n.trans('new-machine') }}
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="findm-tab" data-toggle="tab" href="#findm" role="tab" aria-controls="findm" aria-selected="true">
+                                    <a class="nav-link" id="findm-tab" data-toggle="tab" href="#findm" role="tab"
+                                       aria-controls="findm" aria-selected="true">
                                         {{ i18n.trans('search') }}
                                     </a>
                                 </li>
@@ -57,7 +61,8 @@
                         </div>
                         <div class="card-body">
                             <div class="tab-content">
-                                <div class="tab-pane fade show active" id="newm" role="tabpanel" aria-labelledby="newm-tab">
+                                <div class="tab-pane fade show active" id="newm" role="tabpanel"
+                                     aria-labelledby="newm-tab">
                                     {{ _self.newMachineTab(fsc, i18n) }}
                                 </div>
                                 <div class="tab-pane fade" id="findm" role="tabpanel" aria-labelledby="findm-tab">
@@ -70,8 +75,8 @@
             </div>
         {% else %}
             <form id="formSearchCustomer" method="post">
-                <input type="hidden" name="action" value="" />
-                <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
+                <input type="hidden" name="action" value=""/>
+                <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
                 <div class="row mt-4">
                     <div class="col-sm">
                         <div class="input-group mb-3">
@@ -80,7 +85,8 @@
                                     <i class="fas fa-search"></i>
                                 </span>
                             </div>
-                            <input type="text" name="query" class="form-control" id="customerac" placeholder="{{ i18n.trans('search') }}" autofocus="" />
+                            <input type="text" name="query" class="form-control" id="customerac"
+                                   placeholder="{{ i18n.trans('search') }}" autofocus=""/>
                         </div>
                     </div>
                     <div class="col-sm">
@@ -100,12 +106,7 @@
 
 {% block css %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.css') }}" />
-    <style>
-        .bg-header {
-            background-color: #FAFBFC;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
@@ -207,9 +208,9 @@
 
 {% macro findMachineTab(fsc, i18n) %}
     <form id="formSearchMachine" method="post">
-        <input type="hidden" name="action" value="machine" />
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
-        <input type="hidden" name="idmaquina" value="" />
+        <input type="hidden" name="action" value="machine"/>
+        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
+        <input type="hidden" name="idmaquina" value=""/>
         <div class="row">
             <div class="col-sm">
                 <div class="input-group mb-3">
@@ -218,7 +219,8 @@
                             <i class="fas fa-search"></i>
                         </span>
                     </div>
-                    <input type="text" name="query" class="form-control" id="machineac" placeholder="{{ i18n.trans('search') }}" />
+                    <input type="text" name="query" class="form-control" id="machineac"
+                           placeholder="{{ i18n.trans('search') }}"/>
                 </div>
             </div>
             <div class="col-sm">
@@ -232,44 +234,46 @@
 
 {% macro machineList(fsc, i18n) %}
     <form method="post">
-        <input type="hidden" name="action" value="machine" />
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
+        <input type="hidden" name="action" value="machine"/>
+        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th>{{ i18n.trans('name') }}</th>
-                        <th>{{ i18n.trans('serial-number') }}</th>
-                        <th>{{ i18n.trans('reference') }}</th>
-                        <th>{{ i18n.trans('manufacturer') }}</th>
-                        <th class="text-right">{{ i18n.trans('date') }}</th>
-                    </tr>
+                <tr>
+                    <th>{{ i18n.trans('name') }}</th>
+                    <th>{{ i18n.trans('serial-number') }}</th>
+                    <th>{{ i18n.trans('reference') }}</th>
+                    <th>{{ i18n.trans('manufacturer') }}</th>
+                    <th class="text-right">{{ i18n.trans('date') }}</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for machine in fsc.maquinas %}
-                        <tr>
-                            <td>
-                                <div class="form-check">
-                                    {% if loop.index == 1 %}
-                                        <input class="form-check-input" type="radio" name="idmaquina" value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}" checked=""/>
-                                    {% else %}
-                                        <input class="form-check-input" type="radio" name="idmaquina" value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}" />
-                                    {% endif %}
-                                    <label class="form-check-label" for="maquina{{ loop.index }}">
-                                        {{ machine.nombre }}
-                                    </label>
-                                </div>
-                            </td>
-                            <td>{{ machine.numserie }}</td>
-                            <td>{{ machine.reference }}</td>
-                            <td>{{ machine.getFabricante().nombre }}</td>
-                            <td class="text-right">{{ machine.fecha }}</td>
-                        </tr>
-                    {% else %}
-                        <tr class="table-warning">
-                            <td colspan="6">{{ i18n.trans('customer-has-no-machines') }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for machine in fsc.maquinas %}
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                {% if loop.index == 1 %}
+                                    <input class="form-check-input" type="radio" name="idmaquina"
+                                           value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}" checked=""/>
+                                {% else %}
+                                    <input class="form-check-input" type="radio" name="idmaquina"
+                                           value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}"/>
+                                {% endif %}
+                                <label class="form-check-label" for="maquina{{ loop.index }}">
+                                    {{ machine.nombre }}
+                                </label>
+                            </div>
+                        </td>
+                        <td>{{ machine.numserie }}</td>
+                        <td>{{ machine.reference }}</td>
+                        <td>{{ machine.getFabricante().nombre }}</td>
+                        <td class="text-right">{{ machine.fecha }}</td>
+                    </tr>
+                {% else %}
+                    <tr class="table-warning">
+                        <td colspan="6">{{ i18n.trans('customer-has-no-machines') }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -292,25 +296,25 @@
 
 {% macro newMachineTab(fsc, i18n) %}
     <form method="post">
-        <input type="hidden" name="action" value="new-machine" />
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}" />
+        <input type="hidden" name="action" value="new-machine"/>
+        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
         <div class="form-row">
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('name') }}
-                    <input type="text" name="nombre" class="form-control" />
+                    <input type="text" name="nombre" class="form-control"/>
                 </div>
             </div>
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('serial-number') }}
-                    <input type="text" name="numserie" class="form-control" />
+                    <input type="text" name="numserie" class="form-control"/>
                 </div>
             </div>
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('reference') }}
-                    <input type="text" name="referencia" class="form-control" />
+                    <input type="text" name="referencia" class="form-control"/>
                 </div>
             </div>
             <div class="col-sm">
