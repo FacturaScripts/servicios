@@ -11,6 +11,7 @@
     "new-machine": "Nova màquina",
     "new-service": "Nou servei",
     "new-service-p": "Per crear un servei primer has de seleccionar o crear un client i després una màquina (opcional)",
+    "new-work-status": "Estado para nuevos trabajos",
     "no-machine": "Cap màquina",
     "no-works-to-delivery-note": "No hi ha treballs per a incloure al albarà",
     "no-works-to-estimation": "No hi ha treballs per incloure al pressupost",

@@ -11,6 +11,7 @@
     "new-machine": "Makina berria",
     "new-service": "Zerbitzu berria",
     "new-service-p": "Zerbitzu bat sortu aurretik bezero bat aukeratu edo sortu behar duzu eta gero makina bat aukeratu (aukerakoa)",
+    "new-work-status": "Estado para nuevos trabajos",
     "no-machine": "Makinarik ez",
     "no-works-to-delivery-note": "Ez dago albaranean sartzeko lanik",
     "no-works-to-estimation": "Ez dago aurrekontuan sartzeko lanik",

@@ -124,6 +124,7 @@ class Init extends InitClass
         $appSettings = $this->toolBox()->appSettings();
         $footerText = $appSettings->get('servicios', 'footertext', '');
         $appSettings->set('servicios', 'footertext', $footerText);
+        $appSettings->set('servicios', 'workstatus', 1);
         $appSettings->save();
     }
 }

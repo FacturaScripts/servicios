@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base;
@@ -37,88 +38,74 @@ class TrabajoAT extends Base\ModelOnChangeClass
     const STATUS_DELIVERY_NOTE = 4;
     const STATUS_MAKE_ESTIMATION = 5;
     const STATUS_ESTIMATION = 6;
-    const STATUS_SUBSTRACT_STOCK = -1;
+    const STATUS_SUBTRACT_STOCK = -1;
 
     /**
-     *
      * @var float
      */
     public $cantidad;
 
     /**
-     *
      * @var string
      */
     public $codagente;
 
     /**
-     *
      * @var string
      */
     public $descripcion;
 
     /**
-     *
      * @var int
      */
     public $estado;
 
     /**
-     *
      * @var string
      */
     public $fechafin;
 
     /**
-     *
      * @var string
      */
     public $fechainicio;
 
     /**
-     *
      * @var string
      */
     public $horafin;
 
     /**
-     *
      * @var string
      */
     public $horainicio;
 
     /**
-     *
      * @var int
      */
     public $idservicio;
 
     /**
-     *
      * @var int
      */
     public $idtrabajo;
 
     /**
-     *
      * @var string
      */
     public $nick;
 
     /**
-     *
      * @var string
      */
     public $observaciones;
 
     /**
-     *
      * @var float
      */
     public $precio;
 
     /**
-     *
      * @var string
      */
     public $referencia;
@@ -130,14 +117,13 @@ class TrabajoAT extends Base\ModelOnChangeClass
     {
         parent::clear();
         $this->cantidad = 1.0;
-        $this->estado = self::STATUS_MAKE_INVOICE;
-        $this->fechainicio = \date(self::DATE_STYLE);
-        $this->horainicio = \date(self::HOUR_STYLE);
+        $this->estado = (int)self::toolBox()::appSettings()::get('servicios', 'workstatus');
+        $this->fechainicio = date(self::DATE_STYLE);
+        $this->horainicio = date(self::HOUR_STYLE);
         $this->precio = 0.0;
     }
 
     /**
-     * 
      * @return ServicioAT
      */
     public function getServicio()
@@ -148,7 +134,6 @@ class TrabajoAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
      * @return string
      */
     public static function primaryColumn(): string
@@ -157,7 +142,6 @@ class TrabajoAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
      * @return string
      */
     public static function tableName(): string
@@ -166,7 +150,6 @@ class TrabajoAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * 
      * @return bool
      */
     public function test()

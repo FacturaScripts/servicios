@@ -11,6 +11,7 @@
     "new-machine": "Nova Máquina",
     "new-service": "Novo Serviço",
     "new-service-p": "Para criar um Serviço tem que selecionar um cliente e posteriormente uma máquina (opcional)",
+    "new-work-status": "Estado para nuevos trabajos",
     "no-machine": "no-machine",
     "no-works-to-delivery-note": "Não há trabalhos para criar a Nota de Entrega",
     "no-works-to-estimation": "Não há trabalhos para criar o orçamento",

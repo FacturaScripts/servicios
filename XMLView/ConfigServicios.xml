@@ -3,19 +3,32 @@
     <columns>
         <group name="services" numcolumns="12" valign="bottom">
             <column name="name" display="none" order="0">
-                <widget type="text" fieldname="name" readonly="true" required="true" />
+                <widget type="text" fieldname="name" readonly="true" required="true"/>
             </column>
+            <column name="new-work-status" numcolumns="4" order="100">
+                <widget type="select" fieldname="workstatus" translate="true" required="true">
+                    <values title="do-nothing">0</values>
+                    <values title="make-invoice">1</values>
+                    <values title="invoiced">2</values>
+                    <values title="make-delivery-note">3</values>
+                    <values title="delivery-note">4</values>
+                    <values title="make-estimation">5</values>
+                    <values title="estimation">6</values>
+                </widget>
+            </column>
+        </group>
+        <group name="print" title="print" icon="fas fa-print" numcolumns="12" valign="bottom">
             <column name="footer-text" numcolumns="12" order="100">
-                <widget type="textarea" fieldname="footertext" rows="4" />
+                <widget type="textarea" fieldname="footertext" rows="4"/>
             </column>
             <column name="print-works" numcolumns="3" order="110">
-                <widget type="checkbox" fieldname="printworks" />
+                <widget type="checkbox" fieldname="printworks"/>
             </column>
             <column name="print-machine-info" numcolumns="3" order="120">
-                <widget type="checkbox" fieldname="printmachineinfo" />
+                <widget type="checkbox" fieldname="printmachineinfo"/>
             </column>
             <column name="print-observations" numcolumns="3" order="130">
-                <widget type="checkbox" fieldname="printobservations" />
+                <widget type="checkbox" fieldname="printobservations"/>
             </column>
         </group>
     </columns>
