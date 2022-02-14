@@ -23,9 +23,9 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\DocFilesTrait;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
-use FacturaScripts\Plugins\Servicios\Lib\ServiceToInvoice;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
-use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
+use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\TrabajoAT;
 
 /**
  * Description of EditServicioAT
