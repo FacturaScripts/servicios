@@ -73,7 +73,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            if (false === static::addLine($newAlbaran, $work)) {
+            if (false === static::addLine($newAlbaran, $work, TrabajoAT::STATUS_DELIVERY_NOTE)) {
                 $database->rollback();
                 return false;
             }
@@ -123,7 +123,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            if (false === static::addLine($newEstimation, $work)) {
+            if (false === static::addLine($newEstimation, $work, TrabajoAT::STATUS_ESTIMATION)) {
                 $database->rollback();
                 return false;
             }
@@ -173,7 +173,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            if (false === static::addLine($newInvoice, $work)) {
+            if (false === static::addLine($newInvoice, $work, TrabajoAT::STATUS_INVOICED)) {
                 $database->rollback();
                 return false;
             }
@@ -188,7 +188,7 @@ class ServiceToInvoice
         return static::recalculate($newInvoice, $database);
     }
 
-    protected static function addLine(SalesDocument &$doc, TrabajoAT &$work): bool
+    protected static function addLine(SalesDocument &$doc, TrabajoAT &$work, int $estado): bool
     {
         $newLine = empty($work->referencia) ? $doc->getNewLine() : $doc->getNewProductLine($work->referencia);
         $newLine->cantidad = $work->cantidad;
@@ -200,7 +200,7 @@ class ServiceToInvoice
             $newLine->descripcion = $work->descripcion;
         }
 
-        $work->estado = TrabajoAT::STATUS_DELIVERY_NOTE;
+        $work->estado = $estado;
         if (false === $newLine->save() || false === $work->save()) {
             return false;
         }
