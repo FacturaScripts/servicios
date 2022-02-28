@@ -16,6 +16,7 @@
     "no-works-to-delivery-note": "Não há trabalhos para criar a Nota de Entrega",
     "no-works-to-estimation": "Não há trabalhos para criar o orçamento",
     "no-works-to-invoice": "no-works-to-invoice",
+    "optional-or-product": "Opcional. Si no se escribe nada se usará del producto.",
     "print-machine-info": "Imprimir informação da máquina",
     "print-observations": "Imprimir observações",
     "print-works": "Imprimir Trabalhos",

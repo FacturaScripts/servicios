@@ -16,6 +16,7 @@
     "no-works-to-delivery-note": "Aucun travail à inclure dans le bon de livraison",
     "no-works-to-estimation": "Aucun travail à inclure dans le devis",
     "no-works-to-invoice": "Aucun travail à inclure dans la facture",
+    "optional-or-product": "Opcional. Si no se escribe nada se usará del producto.",
     "print-machine-info": "Imprimer les informations de la machine",
     "print-observations": "Imprimer les remarques",
     "print-works": "Imprimer les travaux",

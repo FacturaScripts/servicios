@@ -16,6 +16,7 @@
     "no-works-to-delivery-note": "No hi ha treballs per a incloure al albarà",
     "no-works-to-estimation": "No hi ha treballs per incloure al pressupost",
     "no-works-to-invoice": "No hi ha treballs per facturar",
+    "optional-or-product": "Opcional. Si no se escribe nada se usará del producto.",
     "print-machine-info": "Imprimir informació de la màquina",
     "print-observations": "Imprimir observacions",
     "print-works": "Imprimir treballs",

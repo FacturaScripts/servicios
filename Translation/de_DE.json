@@ -16,6 +16,7 @@
     "no-works-to-delivery-note": "no-works-to-delivery-note",
     "no-works-to-estimation": "no-works-to-estimation",
     "no-works-to-invoice": "no-works-to-invoice",
+    "optional-or-product": "Opcional. Si no se escribe nada se usará del producto.",
     "print-machine-info": "Maschineninformation drucken",
     "print-observations": "Bemerkungen drucken",
     "print-works": "print-works",

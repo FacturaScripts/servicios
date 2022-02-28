@@ -24,21 +24,21 @@
             <column name="code" display="none" order="100">
                 <widget type="text" fieldname="idtrabajo"/>
             </column>
-            <column name="service" numcolumns="2" order="110">
+            <column name="service" order="110">
                 <widget type="autocomplete" fieldname="idservicio" onclick="EditServicioAT">
                     <values source="serviciosat" fieldcode="idservicio"/>
                 </widget>
             </column>
-            <column name="from-date" numcolumns="2" order="120">
+            <column name="from-date" order="120">
                 <widget type="date" fieldname="fechainicio" required="true"/>
             </column>
-            <column name="from-hour" numcolumns="2" order="130">
+            <column name="from-hour" order="130">
                 <widget type="time" fieldname="horainicio" required="true"/>
             </column>
-            <column name="until-date" numcolumns="2" order="140">
+            <column name="until-date" order="140">
                 <widget type="date" fieldname="fechafin"/>
             </column>
-            <column name="until-hour" numcolumns="2" order="150">
+            <column name="until-hour" order="150">
                 <widget type="time" fieldname="horafin"/>
             </column>
             <column name="user" order="160">
@@ -46,28 +46,26 @@
                     <values source="users" fieldcode="nick" fieldtitle="nick"/>
                 </widget>
             </column>
-            <column name="agent" titleurl="ListAgente" order="170">
+            <column name="agent" order="170">
                 <widget type="select" fieldname="codagente" onclick="EditAgente">
                     <values source="agentes" fieldcode="codagente" fieldtitle="nombre"/>
                 </widget>
             </column>
-            <column name="observations" numcolumns="12" order="180">
-                <widget type="textarea" fieldname="observaciones" rows="1"/>
+            <column name="observations" order="180">
+                <widget type="textarea" fieldname="observaciones"/>
             </column>
-        </group>
-        <group name="invoice" title="invoice" numcolumns="12">
-            <column name="reference" titleurl="ListProducto" order="100">
+            <column name="reference" display="none" order="180">
                 <widget type="autocomplete" fieldname="referencia">
                     <values source="Variante" fieldcode="referencia" fieldtitle="referencia"/>
                 </widget>
             </column>
-            <column name="quantity" numcolumns="2" order="110">
+            <column name="quantity" display="none" order="190">
                 <widget type="number" fieldname="cantidad"/>
             </column>
-            <column name="price" description="optional" numcolumns="2" order="120">
+            <column name="price" display="none" order="200">
                 <widget type="money" fieldname="precio"/>
             </column>
-            <column name="status" order="130">
+            <column name="status" order="210">
                 <widget type="select" fieldname="estado" translate="true" required="true">
                     <values title="do-nothing">0</values>
                     <values title="make-invoice">1</values>
@@ -78,8 +76,8 @@
                     <values title="estimation">6</values>
                 </widget>
             </column>
-            <column name="description" description="optional-or-product" numcolumns="12" order="140">
-                <widget type="textarea" fieldname="descripcion" rows="1"/>
+            <column name="description" order="220">
+                <widget type="textarea" fieldname="descripcion"/>
             </column>
         </group>
     </columns>

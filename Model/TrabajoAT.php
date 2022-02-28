@@ -160,4 +160,15 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
         return parent::test();
     }
+
+    /**
+     * @param string $type
+     * @param string $list
+     *
+     * @return string
+     */
+    public function url(string $type = 'auto', string $list = 'ListServicioAT')
+    {
+        return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
+    }
 }
