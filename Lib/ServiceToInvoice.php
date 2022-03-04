@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Lib;
 
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\ToolBox;
+use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
-use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
+use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
@@ -37,25 +39,26 @@ class ServiceToInvoice
 {
 
     /**
-     * 
      * @param ServicioAT $service
      *
      * @return bool
      */
-    public static function deliveryNote(&$service)
+    public static function deliveryNote(&$service): bool
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
             return false;
         }
 
-        /// start transaction
+        // start transaction
         $database = new DataBase();
         $database->beginTransaction();
 
         $newAlbaran = new AlbaranCliente();
         $newAlbaran->setSubject($customer);
         $newAlbaran->codagente = $service->codagente ?? $newAlbaran->codagente;
+        $newAlbaran->codalmacen = $service->codalmacen;
+        $newAlbaran->idempresa = $service->idempresa;
         $newAlbaran->idservicio = $service->idservicio;
         $newAlbaran->nick = $service->nick;
         if (false === $newAlbaran->save()) {
@@ -70,18 +73,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            $newLine = empty($work->referencia) ? $newAlbaran->getNewLine() : $newAlbaran->getNewProductLine($work->referencia);
-            $newLine->cantidad = $work->cantidad;
-            if ($work->precio) {
-                $newLine->pvpunitario = $work->precio;
-            }
-
-            if ($work->descripcion) {
-                $newLine->descripcion = $work->descripcion;
-            }
-
-            $work->estado = TrabajoAT::STATUS_DELIVERY_NOTE;
-            if (false === $newLine->save() || false === $work->save()) {
+            if (false === static::addLine($newAlbaran, $work, TrabajoAT::STATUS_DELIVERY_NOTE)) {
                 $database->rollback();
                 return false;
             }
@@ -97,25 +89,26 @@ class ServiceToInvoice
     }
 
     /**
-     * 
      * @param ServicioAT $service
      *
      * @return bool
      */
-    public static function estimation(&$service)
+    public static function estimation(&$service): bool
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
             return false;
         }
 
-        /// start transaction
+        // start transaction
         $database = new DataBase();
         $database->beginTransaction();
 
         $newEstimation = new PresupuestoCliente();
         $newEstimation->setSubject($customer);
         $newEstimation->codagente = $service->codagente ?? $newEstimation->codagente;
+        $newEstimation->codalmacen = $service->codalmacen;
+        $newEstimation->idempresa = $service->idempresa;
         $newEstimation->idservicio = $service->idservicio;
         $newEstimation->nick = $service->nick;
         if (false === $newEstimation->save()) {
@@ -130,18 +123,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            $newLine = empty($work->referencia) ? $newEstimation->getNewLine() : $newEstimation->getNewProductLine($work->referencia);
-            $newLine->cantidad = $work->cantidad;
-            if ($work->precio) {
-                $newLine->pvpunitario = $work->precio;
-            }
-
-            if ($work->descripcion) {
-                $newLine->descripcion = $work->descripcion;
-            }
-
-            $work->estado = TrabajoAT::STATUS_ESTIMATION;
-            if (false === $newLine->save() || false === $work->save()) {
+            if (false === static::addLine($newEstimation, $work, TrabajoAT::STATUS_ESTIMATION)) {
                 $database->rollback();
                 return false;
             }
@@ -157,25 +139,26 @@ class ServiceToInvoice
     }
 
     /**
-     * 
      * @param ServicioAT $service
      *
      * @return bool
      */
-    public static function invoice(&$service)
+    public static function invoice(&$service): bool
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
             return false;
         }
 
-        /// start transaction
+        // start transaction
         $database = new DataBase();
         $database->beginTransaction();
 
         $newInvoice = new FacturaCliente();
         $newInvoice->setSubject($customer);
         $newInvoice->codagente = $service->codagente ?? $newInvoice->codagente;
+        $newInvoice->codalmacen = $service->codalmacen;
+        $newInvoice->idempresa = $service->idempresa;
         $newInvoice->idservicio = $service->idservicio;
         $newInvoice->nick = $service->nick;
         if (false === $newInvoice->save()) {
@@ -190,18 +173,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            $newLine = empty($work->referencia) ? $newInvoice->getNewLine() : $newInvoice->getNewProductLine($work->referencia);
-            $newLine->cantidad = $work->cantidad;
-            if ($work->precio) {
-                $newLine->pvpunitario = $work->precio;
-            }
-
-            if ($work->descripcion) {
-                $newLine->descripcion = $work->descripcion;
-            }
-
-            $work->estado = TrabajoAT::STATUS_INVOICED;
-            if (false === $newLine->save() || false === $work->save()) {
+            if (false === static::addLine($newInvoice, $work, TrabajoAT::STATUS_INVOICED)) {
                 $database->rollback();
                 return false;
             }
@@ -216,10 +188,29 @@ class ServiceToInvoice
         return static::recalculate($newInvoice, $database);
     }
 
+    protected static function addLine(SalesDocument &$doc, TrabajoAT &$work, int $estado): bool
+    {
+        $newLine = empty($work->referencia) ? $doc->getNewLine() : $doc->getNewProductLine($work->referencia);
+        $newLine->cantidad = $work->cantidad;
+        if ($work->precio) {
+            $newLine->pvpunitario = $work->precio;
+        }
+
+        if ($work->descripcion) {
+            $newLine->descripcion = $work->descripcion;
+        }
+
+        $work->estado = $estado;
+        if (false === $newLine->save() || false === $work->save()) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
-     * 
-     * @param AlbaranCliente|FacturaCliente|PresupuestoCliente $newDoc
-     * @param DataBase                                         $database
+     * @param SalesDocument $newDoc
+     * @param DataBase $database
      *
      * @return bool
      */

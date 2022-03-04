@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
@@ -28,10 +29,6 @@ use FacturaScripts\Core\Lib\ExtendedController\ListController;
 class ListServicioAT extends ListController
 {
 
-    /**
-     *
-     * @return array
-     */
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -44,13 +41,10 @@ class ListServicioAT extends ListController
     protected function createViews()
     {
         $this->createViewsServices();
+        $this->createViewsWorks();
         $this->createViewsMachines();
     }
 
-    /**
-     *
-     * @param string $viewName
-     */
     protected function createViewsMachines(string $viewName = 'ListMaquinaAT')
     {
         $this->addView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
@@ -60,7 +54,7 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['referencia'], 'reference');
         $this->addSearchFields($viewName, ['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia']);
 
-        /// filters
+        // filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
 
         $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
@@ -72,10 +66,6 @@ class ListServicioAT extends ListController
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
     }
 
-    /**
-     *
-     * @param string $viewName
-     */
     protected function createViewsServices(string $viewName = 'ListServicioAT')
     {
         $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
@@ -84,7 +74,7 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['idservicio'], 'code');
         $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'material', 'observaciones', 'solucion']);
 
-        /// filters
+        // filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
         $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
@@ -97,5 +87,25 @@ class ListServicioAT extends ListController
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
+    }
+
+    protected function createViewsWorks(string $viewName = 'ListTrabajoAT')
+    {
+        $this->addView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
+        $this->addOrderBy($viewName, ['fechainicio', 'horainicio'], 'from-date');
+        $this->addOrderBy($viewName, ['fechafin', 'horafin'], 'until-date', 2);
+        $this->addOrderBy($viewName, ['idservicio', 'idtrabajo'], 'service');
+        $this->addSearchFields($viewName, ['descripcion', 'observaciones', 'referencia']);
+
+        // filters
+        $users = $this->codeModel->all('users', 'nick', 'nick');
+        $this->addFilterSelect($viewName, 'nick', 'user', 'nick', $users);
+
+        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
+
+        // desactivamos los botones nuevo y eliminar
+        $this->setSettings($viewName, 'btnDelete', false);
+        $this->setSettings($viewName, 'btnNew', false);
     }
 }
