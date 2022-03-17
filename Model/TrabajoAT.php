@@ -19,7 +19,9 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Model\Variante;
 
 /**
  * Description of TrabajoAT
@@ -134,6 +136,17 @@ class TrabajoAT extends Base\ModelOnChangeClass
     }
 
     /**
+     * @return Variante
+     */
+    public function getVariante()
+    {
+        $variante = new Variante();
+        $where = [new DataBaseWhere('referencia', $this->referencia)];
+        $variante->loadFromCode('', $where);
+        return $variante;
+    }
+
+    /**
      * @return string
      */
     public static function primaryColumn(): string
@@ -156,6 +169,12 @@ class TrabajoAT extends Base\ModelOnChangeClass
     {
         foreach (['descripcion', 'observaciones', 'referencia'] as $field) {
             $this->{$field} = $this->toolBox()->utils()->noHtml($this->{$field});
+        }
+
+        if ($this->referencia) {
+            $variante = $this->getVariante();
+            $this->descripcion = empty($this->descripcion) ? $variante->description() : $this->descripcion;
+            $this->precio = empty($this->precio) ? $variante->precio : $this->precio;
         }
 
         return parent::test();

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -102,16 +102,13 @@ class EditServicioAT extends EditController
         $this->createViewsEstimations();
     }
 
-    /**
-     * @param string $viewName
-     */
     protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente')
     {
         $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-dolly-flatbed');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
         $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
 
-        /// disable buttons
+        // disable buttons
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
         $this->setSettings($viewName, 'checkBoxes', false);
@@ -125,16 +122,13 @@ class EditServicioAT extends EditController
         ]);
     }
 
-    /**
-     * @param string $viewName
-     */
     protected function createViewsEstimations(string $viewName = 'ListPresupuestoCliente')
     {
         $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'far fa-file-powerpoint');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
         $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
 
-        /// disable buttons
+        // disable buttons
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
         $this->setSettings($viewName, 'checkBoxes', false);
@@ -148,16 +142,13 @@ class EditServicioAT extends EditController
         ]);
     }
 
-    /**
-     * @param string $viewName
-     */
     protected function createViewsInvoices(string $viewName = 'ListFacturaCliente')
     {
         $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-file-invoice-dollar');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
         $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
 
-        /// disable buttons
+        // disable buttons
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
         $this->setSettings($viewName, 'checkBoxes', false);
@@ -171,14 +162,11 @@ class EditServicioAT extends EditController
         ]);
     }
 
-    /**
-     * @param string $viewName
-     */
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
     {
         $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
 
-        /// disable column
+        // disable column
         $this->views[$viewName]->disableColumn('service');
     }
 
@@ -282,7 +270,7 @@ class EditServicioAT extends EditController
                     $this->disableAllColumns($mainViewName, 'status');
                     $this->disableAllColumns('EditTrabajoAT');
 
-                    /// disable buttons
+                    // disable buttons
                     $this->setSettings('EditTrabajoAT', 'btnDelete', false);
                     $this->setSettings('EditTrabajoAT', 'btnNew', false);
                     $this->setSettings('EditTrabajoAT', 'btnSave', false);
@@ -317,9 +305,6 @@ class EditServicioAT extends EditController
         }
     }
 
-    /**
-     * @return bool
-     */
     protected function makeDeliveryNoteAction(): bool
     {
         if (false === $this->permissions->allowUpdate) {
@@ -342,9 +327,6 @@ class EditServicioAT extends EditController
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function makeEstimationAction(): bool
     {
         if (false === $this->permissions->allowUpdate) {
@@ -367,9 +349,6 @@ class EditServicioAT extends EditController
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function makeInvoiceAction(): bool
     {
         if (false === $this->permissions->allowUpdate) {
