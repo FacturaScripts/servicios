@@ -16,7 +16,7 @@
     "no-works-to-delivery-note": "No works to delivery note",
     "no-works-to-estimation": "No works to estimation",
     "no-works-to-invoice": "There are no jobs to invoice",
-    "optional-or-product": "Opcional. Si no se escribe nada se usará del producto.",
+    "optional-or-product": "Optional. If nothing is written, it will be used from the product.",
     "print-machine-info": "Print machine info",
     "print-observations": "Print observations",
     "print-works": "Print works",

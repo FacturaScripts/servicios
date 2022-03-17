@@ -56,18 +56,21 @@
             </column>
         </group>
         <group name="invoice" title="invoice" numcolumns="12">
-            <column name="reference" titleurl="ListProducto" order="100">
+            <column name="reference" titleurl="ListProducto" numcolumns="2" order="100">
                 <widget type="autocomplete" fieldname="referencia">
                     <values source="Variante" fieldcode="referencia" fieldtitle="referencia"/>
                 </widget>
             </column>
-            <column name="quantity" numcolumns="2" order="110">
+            <column name="description" description="optional-or-product" numcolumns="4" order="110">
+                <widget type="textarea" fieldname="descripcion" rows="1"/>
+            </column>
+            <column name="quantity" numcolumns="2" order="120">
                 <widget type="number" fieldname="cantidad"/>
             </column>
-            <column name="price" description="optional" numcolumns="2" order="120">
+            <column name="price" description="optional" numcolumns="2" order="130">
                 <widget type="money" fieldname="precio"/>
             </column>
-            <column name="status" order="130">
+            <column name="status" numcolumns="2" order="140">
                 <widget type="select" fieldname="estado" translate="true" required="true">
                     <values title="do-nothing">0</values>
                     <values title="make-invoice">1</values>
@@ -77,9 +80,6 @@
                     <values title="make-estimation">5</values>
                     <values title="estimation">6</values>
                 </widget>
-            </column>
-            <column name="description" description="optional-or-product" numcolumns="12" order="140">
-                <widget type="textarea" fieldname="descripcion" rows="1"/>
             </column>
         </group>
     </columns>

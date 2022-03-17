@@ -16,7 +16,7 @@
     "no-works-to-delivery-note": "Ez dago albaranean sartzeko lanik",
     "no-works-to-estimation": "Ez dago aurrekontuan sartzeko lanik",
     "no-works-to-invoice": "Ez dago fakturatzeko lanarik",
-    "optional-or-product": "Opcional. Si no se escribe nada se usará del producto.",
+    "optional-or-product": "Aukerakoa. Ezer idazten ez bada, produktuarena erabiliko da.",
     "print-machine-info": "Makinaren informazioa inprimatu",
     "print-observations": "Oharrak inprimatu",
     "print-works": "Lanak inprimatu",
