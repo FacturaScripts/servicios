@@ -37,18 +37,12 @@ class EditServicioAT extends EditController
 
     use DocFilesTrait;
 
-    /**
-     * @return string
-     */
-    public function getModelClassName()
+    public function getModelClassName(): string
     {
         return 'ServicioAT';
     }
 
-    /**
-     * @return array
-     */
-    public function getPageData()
+    public function getPageData(): array
     {
         $data = parent::getPageData();
         $data['menu'] = 'sales';
@@ -193,11 +187,7 @@ class EditServicioAT extends EditController
         return $result;
     }
 
-    /**
-     * @param string $mainViewName
-     * @param string $exclude
-     */
-    protected function disableAllColumns($mainViewName, $exclude = '')
+    protected function disableAllColumns(string $mainViewName, string $exclude = '')
     {
         foreach ($this->views[$mainViewName]->getColumns() as $group) {
             foreach ($group->columns as $col) {

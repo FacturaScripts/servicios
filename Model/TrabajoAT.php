@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Variante;
 
 /**
@@ -112,9 +113,6 @@ class TrabajoAT extends Base\ModelOnChangeClass
      */
     public $referencia;
 
-    /**
-     * Reset the values of all model properties.
-     */
     public function clear()
     {
         parent::clear();
@@ -125,20 +123,14 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $this->precio = 0.0;
     }
 
-    /**
-     * @return ServicioAT
-     */
-    public function getServicio()
+    public function getServicio(): DinServicioAT
     {
-        $servicio = new ServicioAT();
+        $servicio = new DinServicioAT();
         $servicio->loadFromCode($this->idservicio);
         return $servicio;
     }
 
-    /**
-     * @return Variante
-     */
-    public function getVariante()
+    public function getVariante(): Variante
     {
         $variante = new Variante();
         $where = [new DataBaseWhere('referencia', $this->referencia)];
@@ -146,26 +138,17 @@ class TrabajoAT extends Base\ModelOnChangeClass
         return $variante;
     }
 
-    /**
-     * @return string
-     */
     public static function primaryColumn(): string
     {
         return 'idtrabajo';
     }
 
-    /**
-     * @return string
-     */
     public static function tableName(): string
     {
         return 'serviciosat_trabajos';
     }
 
-    /**
-     * @return bool
-     */
-    public function test()
+    public function test(): bool
     {
         foreach (['descripcion', 'observaciones', 'referencia'] as $field) {
             $this->{$field} = $this->toolBox()->utils()->noHtml($this->{$field});
@@ -180,13 +163,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
         return parent::test();
     }
 
-    /**
-     * @param string $type
-     * @param string $list
-     *
-     * @return string
-     */
-    public function url(string $type = 'auto', string $list = 'ListServicioAT')
+    public function url(string $type = 'auto', string $list = 'ListServicioAT'): string
     {
         return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 
 /**
  * Description of ServicioAT
@@ -34,109 +36,91 @@ class ServicioAT extends Base\ModelOnChangeClass
     use Base\CompanyRelationTrait;
 
     /**
-     *
      * @var string
      */
     public $codagente;
 
     /**
-     *
      * @var string
      */
     public $codalmacen;
 
     /**
-     *
      * @var string
      */
     public $codcliente;
 
     /**
-     *
      * @var string
      */
     public $descripcion;
 
     /**
-     *
      * @var bool
      */
     public $editable;
 
     /**
-     *
      * @var string
      */
     public $fecha;
 
     /**
-     *
      * @var string
      */
     public $hora;
 
     /**
-     *
      * @var int
      */
     public $idestado;
 
     /**
-     *
      * @var int
      */
     public $idmaquina;
 
     /**
-     *
      * @var int
      */
     public $idmaquina2;
 
     /**
-     *
      * @var int
      */
     public $idmaquina3;
 
     /**
-     *
      * @var int
      */
     public $idmaquina4;
 
     /**
-     *
      * @var int
      */
     public $idprioridad;
 
     /**
-     *
      * @var int
      */
     public $idservicio;
 
     /**
-     *
      * @var string
      */
     public $material;
 
     /**
-     *
      * @var string
      */
     public $nick;
 
     /**
-     *
      * @var string
      */
     public $observaciones;
 
     /**
-     *
      * @var string
      */
     public $solucion;
@@ -144,10 +128,10 @@ class ServicioAT extends Base\ModelOnChangeClass
     public function clear()
     {
         parent::clear();
-        $this->fecha = \date(self::DATE_STYLE);
-        $this->hora = \date(self::HOUR_STYLE);
+        $this->fecha = date(self::DATE_STYLE);
+        $this->hora = date(self::HOUR_STYLE);
 
-        /// set default status
+        // set default status
         foreach ($this->getAvailableStatus() as $status) {
             if ($status->predeterminado) {
                 $this->idestado = $status->id;
@@ -156,7 +140,7 @@ class ServicioAT extends Base\ModelOnChangeClass
             }
         }
 
-        /// set default priority
+        // set default priority
         foreach ($this->getAvailablePriority() as $priority) {
             if ($priority->predeterminado) {
                 $this->idprioridad = $priority->id;
@@ -165,24 +149,33 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
     }
 
+    public function delete(): bool
+    {
+        foreach ($this->getTrabajos() as $trabajo) {
+            if (false === $trabajo->delete()) {
+                return false;
+            }
+        }
+
+        return parent::delete();
+    }
+
     /**
-     *
      * @return EstadoAT[]
      */
-    public function getAvailableStatus()
+    public function getAvailableStatus(): array
     {
         $status = new EstadoAT();
         return $status->all([], [], 0, 0);
     }
 
     /**
-     *
      * @return MaquinaAT[]
      */
-    public function getMachines()
+    public function getMachines(): array
     {
         $result = [];
-        $machines = [ $this->idmaquina, $this->idmaquina2, $this->idmaquina3, $this->idmaquina4 ];
+        $machines = [$this->idmaquina, $this->idmaquina2, $this->idmaquina3, $this->idmaquina4];
         foreach ($machines as $code) {
             if (empty($code)) {
                 continue;
@@ -197,7 +190,6 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     *
      * @return EstadoAT
      */
     public function getStatus()
@@ -208,17 +200,15 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     *
-     * @return PrioridadAT
+     * @return PrioridadAT[]
      */
-    public function getAvailablePriority()
+    public function getAvailablePriority(): array
     {
         $priority = new PrioridadAT();
         return $priority->all([], [], 0, 0);
     }
 
     /**
-     *
      * @return PrioridadAT
      */
     public function getPriority()
@@ -228,11 +218,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         return $priority;
     }
 
-    /**
-     *
-     * @return Cliente
-     */
-    public function getSubject()
+    public function getSubject(): Cliente
     {
         $cliente = new Cliente();
         $cliente->loadFromCode($this->codcliente);
@@ -240,24 +226,19 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     *
-     * @return TrabajoAT[]
+     * @return DinTrabajoAT[]
      */
-    public function getTrabajos()
+    public function getTrabajos(): array
     {
-        $trabajo = new TrabajoAT();
+        $trabajo = new DinTrabajoAT();
         $where = [new DataBaseWhere('idservicio', $this->idservicio)];
         $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
         return $trabajo->all($where, $order, 0, 0);
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function install()
+    public function install(): string
     {
-        /// neede dependencies
+        // needed dependencies
         new MaquinaAT();
         new EstadoAT();
         new PrioridadAT();
@@ -265,38 +246,22 @@ class ServicioAT extends Base\ModelOnChangeClass
         return parent::install();
     }
 
-    /**
-     *
-     * @return string
-     */
     public static function primaryColumn(): string
     {
         return 'idservicio';
     }
 
-    /**
-     *
-     * @return string
-     */
     public function primaryDescriptionColumn(): string
     {
         return 'idservicio';
     }
 
-    /**
-     *
-     * @return string
-     */
     public static function tableName(): string
     {
         return 'serviciosat';
     }
 
-    /**
-     *
-     * @return bool
-     */
-    public function test()
+    public function test(): bool
     {
         $utils = $this->toolBox()->utils();
         $fields = ['descripcion', 'material', 'observaciones', 'solucion'];
@@ -307,13 +272,6 @@ class ServicioAT extends Base\ModelOnChangeClass
         return parent::test();
     }
 
-    /**
-     *
-     * @param string $type
-     * @param string $list
-     *
-     * @return string
-     */
     public function url(string $type = 'auto', string $list = 'List'): string
     {
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
@@ -327,19 +285,14 @@ class ServicioAT extends Base\ModelOnChangeClass
      */
     protected function onChange($field)
     {
-        switch ($field) {
-            case 'idestado':
-                $this->editable = $this->getStatus()->editable;
-                return true;
+        if ($field == 'idestado') {
+            $this->editable = $this->getStatus()->editable;
+            return true;
         }
 
         return parent::onChange($field);
     }
 
-    /**
-     *
-     * @param array $fields
-     */
     protected function setPreviousData(array $fields = [])
     {
         $more = ['idestado'];

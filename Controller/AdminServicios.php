@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Dinamic\Lib\ExtendedController\PanelController;
@@ -33,11 +34,6 @@ class AdminServicios extends PanelController
     private const VIEW_LIST_PRIORITIES = 'EditPrioridadAT';
     private const VIEW_LIST_STATUS = 'EditEstadoAT';
 
-    /**
-     * Return the basic data for this page.
-     *
-     * @return array
-     */
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -58,33 +54,21 @@ class AdminServicios extends PanelController
         $this->createViewPriorities();
     }
 
-    /**
-     *
-     * @param string $viewName
-     */
     private function createViewEditConfig(string $viewName = self::VIEW_CONFIG_PROJECTS)
     {
         $this->addEditView($viewName, 'Settings', 'general');
 
-        /// disable buttons
+        // disable buttons
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
     }
 
-    /**
-     *
-     * @param string $viewName
-     */
     private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES)
     {
         $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol');
         $this->views[$viewName]->setInLine(true);
     }
 
-    /**
-     *
-     * @param string $viewName
-     */
     private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS)
     {
         $this->addEditListView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
@@ -94,7 +78,7 @@ class AdminServicios extends PanelController
     /**
      * Loads the data to display.
      *
-     * @param string   $viewName
+     * @param string $viewName
      * @param BaseView $view
      */
     protected function loadData($viewName, $view)
