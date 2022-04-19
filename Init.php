@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios;
 
+use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Base\InitClass;
@@ -49,6 +50,9 @@ class Init extends InitClass
 
         // export manager
         ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
+
+        // mods
+        SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
     }
 
     public function update()

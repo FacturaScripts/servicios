@@ -3,9 +3,7 @@
     <columns>
         <group name="data" numcolumns="12">
             <column name="service" titleurl="ListServicio" order="105">
-                <widget type="autocomplete" fieldname="idservicio" onclick="EditServicioAT">
-                    <values source="serviciosat" fieldcode="idservicio" fieldtitle="idservicio" />
-                </widget>
+                <widget type="text" fieldname="idservicio" onclick="EditServicioAT" readonly="true" />
             </column>
         </group>
     </columns>
