@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
+use Closure;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 
 /**
@@ -28,7 +29,7 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 class EditCliente
 {
 
-    protected function createViews()
+    protected function createViews(): Closure
     {
         return function() {
             $this->createViewsMachines();
@@ -36,7 +37,7 @@ class EditCliente
         };
     }
 
-    protected function createViewsMachines()
+    protected function createViewsMachines(): Closure
     {
         return function($viewName = 'ListMaquinaAT') {
             $this->addListView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
@@ -51,7 +52,7 @@ class EditCliente
         };
     }
 
-    protected function createViewsServices()
+    protected function createViewsServices(): Closure
     {
         return function($viewName = 'ListServicioAT') {
             $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
@@ -65,7 +66,7 @@ class EditCliente
         };
     }
 
-    protected function loadData()
+    protected function loadData(): Closure
     {
         return function($viewName, $view) {
             switch ($viewName) {
