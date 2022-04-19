@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
+
+use Closure;
 
 /**
  * Description of Randomizer
@@ -26,9 +29,9 @@ namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 class Randomizer
 {
 
-    protected function loadButtons()
+    protected function loadButtons(): Closure
     {
-        return function() {
+        return function () {
             $this->addButton('plugins', 'servicios', 'generated-services', 'services', 'fas fa-headset', 'Random\\Servicios', 'ServicioAT');
         };
     }
