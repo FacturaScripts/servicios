@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
@@ -30,20 +31,12 @@ use FacturaScripts\Core\Lib\ExtendedController\EditController;
 class EditMaquinaAT extends EditController
 {
 
-    /**
-     * 
-     * @return string
-     */
-    public function getModelClassName()
+    public function getModelClassName(): string
     {
         return 'MaquinaAT';
     }
 
-    /**
-     * 
-     * @return array
-     */
-    public function getPageData()
+    public function getPageData(): array
     {
         $data = parent::getPageData();
         $data['menu'] = 'sales';
@@ -62,10 +55,6 @@ class EditMaquinaAT extends EditController
         $this->createViewsServices();
     }
 
-    /**
-     * 
-     * @param string $viewName
-     */
     protected function createViewsServices(string $viewName = 'ListServicioAT')
     {
         $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
@@ -74,13 +63,12 @@ class EditMaquinaAT extends EditController
         $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
         $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
 
-        /// disable customer column
+        // disable customer column
         $this->views[$viewName]->disableColumn('machine');
     }
 
     /**
-     * 
-     * @param string   $viewName
+     * @param string $viewName
      * @param BaseView $view
      */
     protected function loadData($viewName, $view)

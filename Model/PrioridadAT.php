@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
@@ -34,13 +35,11 @@ class PrioridadAT extends Base\ModelClass
     public $id;
 
     /**
-     *
      * @var string
      */
     public $nombre;
 
     /**
-     *
      * @var bool
      */
     public $predeterminado;
@@ -51,20 +50,12 @@ class PrioridadAT extends Base\ModelClass
         $this->predeterminado = true;
     }
 
-    /**
-     * 
-     * @return string
-     */
     public static function primaryColumn(): string
     {
         return 'id';
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function save()
+    public function save(): bool
     {
         if (false === parent::save()) {
             return false;
@@ -84,32 +75,17 @@ class PrioridadAT extends Base\ModelClass
         return true;
     }
 
-    /**
-     * 
-     * @return string
-     */
     public static function tableName(): string
     {
         return 'serviciosat_prioridades';
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function test()
+    public function test(): bool
     {
         $this->nombre = $this->toolBox()->utils()->noHtml($this->nombre);
         return parent::test();
     }
 
-    /**
-     * 
-     * @param string $type
-     * @param string $list
-     *
-     * @return string
-     */
     public function url(string $type = 'auto', string $list = 'ListServicioAT?activetab=List'): string
     {
         return parent::url($type, $list);
