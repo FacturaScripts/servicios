@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Lib\Export;
 
 use FacturaScripts\Core\Base\Utils;
@@ -31,28 +32,26 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
 {
 
     /**
-     *
      * @param ServicioAT $model
-     * @param array      $columns
-     * @param string     $title
+     * @param array $columns
+     * @param string $title
      *
      * @return bool
      */
     public function addModelPage($model, $columns, $title = ''): bool
     {
-        $subject = $model->getSubject();
-        $idempresa = isset($model->idempresa) ? $model->idempresa : null;
-
         $this->newPage();
-        $this->insertHeader($idempresa);
+        $this->insertHeader($model->idempresa);
         $this->pdf->ezText("\n" . $title . ': ' . $model->idservicio . "\n", self::FONT_SIZE + 6);
         $this->newLine();
 
+        $subject = $model->getSubject();
         $this->insertParallelTable($this->serviceData($model, $subject), '', $this->tableOptions());
         $this->pdf->ezText('');
 
-        if ($this->toolBox()->appSettings()->get('servicios', 'printmachineinfo', false)) {
-            $this->printTableSection('machines', $this->machinesData($model));
+        $machinesData = $this->machinesData($model);
+        if ($machinesData && $this->toolBox()->appSettings()->get('servicios', 'printmachineinfo', false)) {
+            $this->printTableSection('machines', $machinesData);
         }
 
         $this->printTextSection('description', $model->descripcion);
@@ -63,8 +62,9 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
             $this->printTextSection('observations', $model->observaciones);
         }
 
-        if ($this->toolBox()->appSettings()->get('servicios', 'printworks', false)) {
-            $this->printTableSection('work', $this->worksData($model));
+        $worksData = $this->worksData($model);
+        if ($worksData && $this->toolBox()->appSettings()->get('servicios', 'printworks', false)) {
+            $this->printTableSection('work', $worksData);
         }
 
         $footer = $this->toolBox()->appSettings()->get('servicios', 'footertext', '');
@@ -74,7 +74,6 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     }
 
     /**
-     *
      * @param ServicioAT $model
      *
      * @return array
@@ -96,7 +95,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
      * Print a section with an array of data.
      *
      * @param string $title
-     * @param array  $data
+     * @param array $data
      */
     protected function printTableSection($title, $data)
     {
@@ -125,10 +124,6 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         $this->pdf->ezText(\nl2br($text) . "\n", self::FONT_SIZE + 2);
     }
 
-    /**
-     *
-     * @return array
-     */
     protected function tableOptions($headings = 0): array
     {
         return [
@@ -141,9 +136,8 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     }
 
     /**
-     *
      * @param ServicioAT $model
-     * @param Cliente    $subject
+     * @param Cliente $subject
      *
      * @return array
      */
@@ -162,7 +156,6 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     }
 
     /**
-     *
      * @param ServicioAT $model
      *
      * @return array
