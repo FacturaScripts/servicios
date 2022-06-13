@@ -26,10 +26,10 @@ use FacturaScripts\Core\Base\InitClass;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Dinamic\Lib\ExportManager;
+use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
-use FacturaScripts\Plugins\StockAvanzado\Lib\StockMovementManager;
 
 /**
  * Description of Init
@@ -54,7 +54,7 @@ class Init extends InitClass
 
         // mods
         SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
-        if (class_exists('FacturaScripts\\Plugins\\StockAvanzado\\Lib\\StockMovementManager')) {
+        if (class_exists('FacturaScripts\\Dinamic\\Lib\\StockMovementManager')) {
             StockMovementManager::addMod(new Mod\StockMovementMod());
         }
     }
