@@ -209,6 +209,12 @@ class TrabajoAT extends Base\ModelOnChangeClass
             return;
         }
 
+        // ¿El producto controla stock?
+        $producto = $this->getVariante()->getProducto();
+        if ($producto->nostock) {
+            return;
+        }
+
         $stock = new Stock();
         $where = [
             new DataBaseWhere('referencia', $referencia),

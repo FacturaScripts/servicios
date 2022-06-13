@@ -52,6 +52,12 @@ class StockMovementMod implements StockMovementModInterface
             return;
         }
 
+        // ¿El producto controla stock?
+        $producto = $trabajo->getVariante()->getProducto();
+        if ($producto->nostock) {
+            return;
+        }
+
         $movement = new MovimientoStock();
         $movement->codalmacen = $trabajo->getServicio()->codalmacen;
         $movement->referencia = $trabajo->referencia;
