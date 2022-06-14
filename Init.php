@@ -52,9 +52,12 @@ class Init extends InitClass
         // export manager
         ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
 
-        // mods
+        // mod para los documentos de venta
         SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
-        if (class_exists('FacturaScripts\\Dinamic\\Lib\\StockMovementManager')) {
+
+        // mod para StockAvanzado
+        $stockMovementClass = 'FacturaScripts\\Dinamic\\Lib\\StockMovementManager';
+        if (class_exists($stockMovementClass) && method_exists($stockMovementClass, 'addMod')) {
             StockMovementManager::addMod(new Mod\StockMovementMod());
         }
     }
