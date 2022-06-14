@@ -62,8 +62,8 @@ class StockMovementMod implements StockMovementModInterface
         $movement->codalmacen = $trabajo->getServicio()->codalmacen;
         $movement->referencia = $trabajo->referencia;
         $movement->cantidad = 0 - $trabajo->cantidad;
-        $movement->docid = $trabajo->idservicio;
-        $movement->docmodel = 'ServicioAT';
+        $movement->docid = $trabajo->idtrabajo;
+        $movement->docmodel = 'TrabajoAT';
         $movement->documento = ToolBox::i18n()->trans('service') . ' #' . $trabajo->idservicio;
         $movement->idproducto = $trabajo->getVariante()->idproducto;
         $movement->save();

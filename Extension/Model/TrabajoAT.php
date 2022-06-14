@@ -31,9 +31,8 @@ class TrabajoAT
         return function () {
             $movement = new MovimientoStock();
             $where = [
-                new DataBaseWhere('referencia', $this->referencia),
-                new DataBaseWhere('docid', $this->idservicio),
-                new DataBaseWhere('docmodel', 'ServicioAT'),
+                new DataBaseWhere('docid', $this->idtrabajo),
+                new DataBaseWhere('docmodel', 'TrabajoAT'),
             ];
             if ($movement->loadFromCode('', $where)) {
                 $movement->delete();
@@ -86,16 +85,15 @@ class TrabajoAT
             // buscamos el movimiento de stock
             $movement = new MovimientoStock();
             $where = [
-                new DataBaseWhere('referencia', $this->referencia),
-                new DataBaseWhere('docid', $this->idservicio),
-                new DataBaseWhere('docmodel', 'ServicioAT'),
+                new DataBaseWhere('docid', $this->idtrabajo),
+                new DataBaseWhere('docmodel', 'TrabajoAT'),
             ];
             if (false === $movement->loadFromCode('', $where)) {
                 // si no existe, lo creamos
                 $movement->codalmacen = $this->getServicio()->codalmacen;
                 $movement->referencia = $this->referencia;
-                $movement->docid = $this->idservicio;
-                $movement->docmodel = 'ServicioAT';
+                $movement->docid = $this->idtrabajo;
+                $movement->docmodel = 'TrabajoAT';
                 $movement->documento = ToolBox::i18n()->trans('service') . ' #' . $this->idservicio;
                 $movement->idproducto = $this->getVariante()->idproducto;
             }
