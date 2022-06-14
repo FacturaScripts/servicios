@@ -55,10 +55,11 @@ class Init extends InitClass
         // mod para los documentos de venta
         SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
 
-        // mod para StockAvanzado
+        // mod y extensión para StockAvanzado
         $stockMovementClass = 'FacturaScripts\\Dinamic\\Lib\\StockMovementManager';
         if (class_exists($stockMovementClass) && method_exists($stockMovementClass, 'addMod')) {
             StockMovementManager::addMod(new Mod\StockMovementMod());
+            $this->loadExtension(new Extension\Model\TrabajoAT());
         }
     }
 
