@@ -90,7 +90,6 @@ class TrabajoAT
             ];
             if (false === $movement->loadFromCode('', $where)) {
                 // si no existe, lo creamos
-                $movement->codalmacen = $this->getServicio()->codalmacen;
                 $movement->referencia = $this->referencia;
                 $movement->docid = $this->idtrabajo;
                 $movement->docmodel = 'TrabajoAT';
@@ -99,6 +98,9 @@ class TrabajoAT
             }
 
             $movement->cantidad = 0 - $this->cantidad;
+            $movement->codalmacen = $this->getServicio()->codalmacen;
+            $movement->fecha = $this->fechainicio;
+            $movement->hora = $this->horainicio;
             $movement->save();
         };
     }

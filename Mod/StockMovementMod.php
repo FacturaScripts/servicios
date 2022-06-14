@@ -66,6 +66,8 @@ class StockMovementMod implements StockMovementModInterface
         $movement->docmodel = 'TrabajoAT';
         $movement->documento = ToolBox::i18n()->trans('service') . ' #' . $trabajo->idservicio;
         $movement->idproducto = $trabajo->getVariante()->idproducto;
+        $movement->fecha = $trabajo->fechainicio;
+        $movement->hora = $trabajo->horainicio;
         $movement->save();
     }
 }
