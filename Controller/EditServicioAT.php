@@ -273,7 +273,8 @@ class EditServicioAT extends EditController
 
             case 'EditTrabajoAT':
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
-                $view->loadData('', $where, ['fechainicio' => 'ASC', 'horainicio' => 'ASC']);
+                $orderBy = ['fechainicio' => 'DESC', 'horainicio' => 'DESC', 'idtrabajo' => 'DESC'];
+                $view->loadData('', $where, $orderBy);
                 if ($view->count > 0) {
                     $this->addButton('EditTrabajoAT', [
                         'action' => 'auto-quantity',

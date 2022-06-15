@@ -70,7 +70,7 @@
             <column name="price" description="optional" numcolumns="2" order="130">
                 <widget type="money" fieldname="precio"/>
             </column>
-            <column name="status" numcolumns="2" order="140">
+            <column name="action" numcolumns="2" order="140">
                 <widget type="select" fieldname="estado" translate="true" required="true">
                     <values title="do-nothing">0</values>
                     <values title="make-invoice">1</values>

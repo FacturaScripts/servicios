@@ -26,6 +26,7 @@ use FacturaScripts\Core\Base\InitClass;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Dinamic\Lib\ExportManager;
+use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
@@ -51,8 +52,15 @@ class Init extends InitClass
         // export manager
         ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
 
-        // mods
+        // mod para los documentos de venta
         SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
+
+        // mod y extensión para StockAvanzado
+        $stockMovementClass = 'FacturaScripts\\Dinamic\\Lib\\StockMovementManager';
+        if (class_exists($stockMovementClass) && method_exists($stockMovementClass, 'addMod')) {
+            StockMovementManager::addMod(new Mod\StockMovementMod());
+            $this->loadExtension(new Extension\Model\TrabajoAT());
+        }
     }
 
     public function update()

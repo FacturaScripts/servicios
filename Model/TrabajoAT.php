@@ -22,6 +22,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
+use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\Variante;
 
 /**
@@ -166,5 +167,66 @@ class TrabajoAT extends Base\ModelOnChangeClass
     public function url(string $type = 'auto', string $list = 'ListServicioAT'): string
     {
         return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
+    }
+
+    protected function onChange($field): bool
+    {
+        switch ($field) {
+            case 'cantidad':
+            case 'estado':
+            case 'referencia':
+                $this->updateStock($this->previousData['referencia'], $this->previousData['cantidad'], $this->previousData['estado']);
+                $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
+                break;
+        }
+
+        return parent::onChange($field);
+    }
+
+    protected function onDelete()
+    {
+        parent::onDelete();
+        $this->updateStock($this->referencia, $this->cantidad, $this->estado);
+    }
+
+    protected function onInsert()
+    {
+        parent::onInsert();
+        $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
+    }
+
+    protected function setPreviousData(array $fields = [])
+    {
+        $more = ['cantidad', 'estado', 'referencia'];
+        parent::setPreviousData(array_merge($fields, $more));
+    }
+
+    protected function updateStock(?string $referencia, float $cantidad, int $estado)
+    {
+        $restan = [self::STATUS_MAKE_INVOICE, self::STATUS_MAKE_DELIVERY_NOTE, self::STATUS_NONE];
+        $sumar = in_array($estado, $restan, true) ? $cantidad : 0;
+        if (empty($referencia) || empty($cantidad) || empty($sumar)) {
+            return;
+        }
+
+        // ¿El producto controla stock?
+        $producto = $this->getVariante()->getProducto();
+        if ($producto->nostock) {
+            return;
+        }
+
+        $stock = new Stock();
+        $where = [
+            new DataBaseWhere('referencia', $referencia),
+            new DataBaseWhere('codalmacen', $this->getServicio()->codalmacen)
+        ];
+        if (false === $stock->loadFromCode('', $where)) {
+            // no hay registro de stock, lo creamos
+            $stock->referencia = $referencia;
+            $stock->codalmacen = $this->getServicio()->codalmacen;
+        }
+
+        $stock->cantidad += $sumar;
+        $stock->save();
     }
 }
