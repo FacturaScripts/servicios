@@ -33,8 +33,6 @@ class SalesHeaderHTMLMod implements SalesModInterface
 
     public function applyBefore(SalesDocument &$model, array $formData, User $user)
     {
-        // aplicamos antes para asegurarnos que se guarda para nuevos documentos
-        $model->idservicio = isset($formData['idservicio']) && $formData['idservicio'] ? $formData['idservicio'] : null;
     }
 
     public function assets(): void
@@ -48,9 +46,8 @@ class SalesHeaderHTMLMod implements SalesModInterface
 
     public function renderField(Translator $i18n, SalesDocument $model, string $field): ?string
     {
-        switch ($field) {
-            case 'servicio':
-                return $this->servicio($i18n, $model);
+        if ($field == 'servicio') {
+            return $this->servicio($i18n, $model);
         }
 
         return null;
@@ -58,15 +55,11 @@ class SalesHeaderHTMLMod implements SalesModInterface
 
     private static function servicio(Translator $i18n, SalesDocument $model): string
     {
-        if ($model->modelClassName() === 'PedidoCliente') {
-            return '';
-        }
-
-        return empty($model->{'idservicio'}) ? '' : '<div class="col-sm-6">'
+        return property_exists($model, 'idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
             . '<div class="form-group">'
             . '<a href="/EditServicioAT?code=' . $model->{'idservicio'} . '">' . $i18n->trans('service') . '</a>'
             . '<input type="text" value="' . $model->{'idservicio'} . '" class="form-control" disabled />'
             . '</div>'
-            . '</div>';
+            . '</div>' : '';
     }
 }
