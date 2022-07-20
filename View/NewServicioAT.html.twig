@@ -115,6 +115,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#customerac").autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     var formData = {};
                     var rawForm = $("form[id=formSearchCustomer]").serializeArray();
