@@ -195,6 +195,56 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
     }
 
+    /**
+     * @param array $values
+     *
+     * @return bool
+     */
+    protected function saveInsert(array $values = [])
+    {
+        if (false === parent::saveInsert($values)) {
+            return false;
+        }
+
+        // add audit log
+        $service = $this->getServicio();
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-work-created', [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => $this->primaryDescription(),
+            '%service-model%' => $service->modelClassName(),
+            '%service-key%' => $service->idservicio,
+            'model-class' => $service->modelClassName(),
+            'model-code' => $service->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+        return true;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return bool
+     */
+    protected function saveUpdate(array $values = [])
+    {
+        if (false === parent::saveUpdate($values)) {
+            return false;
+        }
+
+        // add audit log
+        $service = $this->getServicio();
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('updated-model', [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => $this->primaryDescription(),
+            'model-class' => $service->modelClassName(),
+            'model-code' => $service->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+        return true;
+    }
+
     protected function setPreviousData(array $fields = [])
     {
         $more = ['cantidad', 'estado', 'referencia'];

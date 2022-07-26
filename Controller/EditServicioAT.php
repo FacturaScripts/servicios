@@ -23,6 +23,7 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\DocFilesTrait;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
+use FacturaScripts\Core\Lib\ExtendedController\LogAuditTrait;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -36,6 +37,7 @@ class EditServicioAT extends EditController
 {
 
     use DocFilesTrait;
+    use LogAuditTrait;
 
     public function getModelClassName(): string
     {
@@ -94,6 +96,7 @@ class EditServicioAT extends EditController
         $this->createViewsInvoices();
         $this->createViewsDeliveryNotes();
         $this->createViewsEstimations();
+        $this->createViewLogAudit();
     }
 
     protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente')
@@ -268,7 +271,11 @@ class EditServicioAT extends EditController
                 break;
 
             case 'docfiles':
-                $this->loadDataDocFiles($view, $this->getModelClassName(), $this->getModel()->primaryColumnValue());
+                $this->loadDataDocFiles($view, $this->getModelClassName(), $idservicio);
+                break;
+
+            case 'ListLogMessage':
+                $this->loadDataLogAudit($view, $this->getModelClassName(), $idservicio);
                 break;
 
             case 'EditTrabajoAT':

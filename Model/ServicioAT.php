@@ -125,6 +125,8 @@ class ServicioAT extends Base\ModelOnChangeClass
      */
     public $solucion;
 
+    protected $messageLog = 'updated-model';
+
     public function clear()
     {
         parent::clear();
@@ -286,11 +288,64 @@ class ServicioAT extends Base\ModelOnChangeClass
     protected function onChange($field)
     {
         if ($field == 'idestado') {
-            $this->editable = $this->getStatus()->editable;
+            $status = $this->getStatus();
+            $this->messageLog = self::toolBox()->i18n()->trans('changed-status-to', [
+                '%status%' => $status->nombre,
+                '%model%' => $this->modelClassName(),
+                '%key%' => $this->primaryColumnValue(),
+                '%desc%' => $this->primaryDescription(),
+            ]);
+            $this->editable = $status->editable;
             return true;
         }
 
         return parent::onChange($field);
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return bool
+     */
+    protected function saveInsert(array $values = [])
+    {
+        if (false === parent::saveInsert($values)) {
+            return false;
+        }
+
+        // add audit log
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-service-created', [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => '',
+            'model-class' => $this->modelClassName(),
+            'model-code' => $this->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+        return true;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return bool
+     */
+    protected function saveUpdate(array $values = [])
+    {
+        if (false === parent::saveUpdate($values)) {
+            return false;
+        }
+
+        // add audit log
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info($this->messageLog, [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => '',
+            'model-class' => $this->modelClassName(),
+            'model-code' => $this->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+        return true;
     }
 
     protected function setPreviousData(array $fields = [])
