@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
@@ -253,6 +254,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
     protected function updateStock(?string $referencia, float $cantidad, int $estado)
     {
+        if (AppSettings::get('servicios', 'disablestockmanagement', false)) {
+            return;
+        }
+
         $restan = [self::STATUS_MAKE_INVOICE, self::STATUS_MAKE_DELIVERY_NOTE, self::STATUS_NONE];
         $sumar = in_array($estado, $restan, true) ? $cantidad : 0;
         if (empty($referencia) || empty($cantidad) || empty($sumar)) {

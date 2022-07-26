@@ -2,6 +2,7 @@
     "calculate-hours": "Calcular horas",
     "changed-status-to": "Se ha cambiado el estado a %status% de %model% (%key%) %desc%",
     "customer-has-no-machines": "El cliente no tiene máquinas",
+    "disable-stock-management": "Desactivar gestión de stock",
     "from-hour": "Hora inicio",
     "machine": "Máquina",
     "machines": "Máquinas",
