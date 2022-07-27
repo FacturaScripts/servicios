@@ -27,10 +27,15 @@
             <column name="name" order="110">
                 <widget type="text" fieldname="nombre" required="true" />
             </column>
-            <column name="editable" order="120">
+            <column name="user" order="120">
+                <widget type="select" fieldname="nick">
+                    <values source="users" fieldcode="nick" fieldtitle="nick" />
+                </widget>
+            </column>
+            <column name="editable" order="130">
                 <widget type="checkbox" fieldname="editable" />
             </column>
-            <column name="default" order="130">
+            <column name="default" order="140">
                 <widget type="checkbox" fieldname="predeterminado" />
             </column>
         </group>

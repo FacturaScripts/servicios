@@ -156,7 +156,7 @@ class Init extends InitClass
     private function updateEmailNotifications()
     {
         $notificationModel = new EmailNotification();
-        $keys = ['new-service-assignee'];
+        $keys = ['new-service-assignee', 'service-update-user', 'service-update-agent', 'service-update-customer'];
         foreach ($keys as $key) {
             if ($notificationModel->loadFromCode($key)) {
                 continue;

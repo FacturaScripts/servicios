@@ -48,6 +48,11 @@ class EstadoAT extends Base\ModelClass
     public $nombre;
 
     /**
+     * @var string
+     */
+    public $nick;
+
+    /**
      * @var bool
      */
     public $predeterminado;
