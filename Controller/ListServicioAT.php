@@ -72,6 +72,7 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
         $this->addOrderBy($viewName, ['idprioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
+        $this->addOrderBy($viewName, ['neto'], 'net');
         $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'material', 'observaciones', 'solucion']);
 
         // filters
@@ -87,6 +88,9 @@ class ListServicioAT extends ListController
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
+
+        $this->addFilterNumber($viewName, 'netogt', 'net', 'neto', '>=');
+        $this->views[$viewName]->addFilterNumber('netolt', 'net', 'neto', '<=');
     }
 
     protected function createViewsWorks(string $viewName = 'ListTrabajoAT')

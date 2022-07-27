@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
@@ -191,8 +192,42 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
     protected function onInsert()
     {
-        parent::onInsert();
         $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
+
+        $service = $this->getServicio();
+        $service->calculatePriceNet();
+
+        // add audit log
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-work-created', [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => $this->primaryDescription(),
+            '%service-model%' => $service->modelClassName(),
+            '%service-key%' => $service->idservicio,
+            'model-class' => $service->modelClassName(),
+            'model-code' => $service->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+
+        parent::onInsert();
+    }
+
+    protected function onUpdate()
+    {
+        $service = $this->getServicio();
+        $service->calculatePriceNet();
+
+        // add audit log
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('updated-model', [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => $this->primaryDescription(),
+            'model-class' => $service->modelClassName(),
+            'model-code' => $service->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+
+        parent::onUpdate();
     }
 
     protected function setPreviousData(array $fields = [])
@@ -203,6 +238,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
     protected function updateStock(?string $referencia, float $cantidad, int $estado)
     {
+        if (AppSettings::get('servicios', 'disablestockmanagement', false)) {
+            return;
+        }
+
         $restan = [self::STATUS_MAKE_INVOICE, self::STATUS_MAKE_DELIVERY_NOTE, self::STATUS_NONE];
         $sumar = in_array($estado, $restan, true) ? $cantidad : 0;
         if (empty($referencia) || empty($cantidad) || empty($sumar)) {

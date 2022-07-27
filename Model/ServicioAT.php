@@ -19,10 +19,16 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
+use FacturaScripts\Dinamic\Lib\Email\NewMail;
+use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
+use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Plugins\Servicios\Lib\ServiceTool;
 
 /**
  * Description of ServicioAT
@@ -34,6 +40,11 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     use Base\ModelTrait;
     use Base\CompanyRelationTrait;
+
+    /**
+     * @var string
+     */
+    public $asignado;
 
     /**
      * @var string
@@ -116,6 +127,11 @@ class ServicioAT extends Base\ModelOnChangeClass
     public $nick;
 
     /**
+     * @var double
+     */
+    public $neto;
+
+    /**
      * @var string
      */
     public $observaciones;
@@ -125,11 +141,23 @@ class ServicioAT extends Base\ModelOnChangeClass
      */
     public $solucion;
 
+    protected $messageLog = 'updated-model';
+
+    public function calculatePriceNet()
+    {
+        $this->neto = 0.0;
+        foreach ($this->getTrabajos() as $trabajo) {
+            $this->neto += $trabajo->precio * $trabajo->cantidad;
+        }
+        $this->save();
+    }
+
     public function clear()
     {
         parent::clear();
         $this->fecha = date(self::DATE_STYLE);
         $this->hora = date(self::HOUR_STYLE);
+        $this->neto = 0.0;
 
         // set default status
         foreach ($this->getAvailableStatus() as $status) {
@@ -269,6 +297,12 @@ class ServicioAT extends Base\ModelOnChangeClass
             $this->{$key} = $utils->noHtml($this->{$key});
         }
 
+        $status = $this->getStatus();
+        if (false === empty($status->nick)) {
+            // ponemos el usuario asignado del estado como usuario asignado del servicio
+            $this->asignado = $status->nick;
+        }
+
         return parent::test();
     }
 
@@ -286,16 +320,189 @@ class ServicioAT extends Base\ModelOnChangeClass
     protected function onChange($field)
     {
         if ($field == 'idestado') {
-            $this->editable = $this->getStatus()->editable;
+            $status = $this->getStatus();
+            $this->messageLog = self::toolBox()->i18n()->trans('changed-status-to', [
+                '%status%' => $status->nombre,
+                '%model%' => $this->modelClassName(),
+                '%key%' => $this->primaryColumnValue(),
+                '%desc%' => $this->primaryDescription(),
+            ]);
+            $this->editable = $status->editable;
             return true;
         }
 
         return parent::onChange($field);
     }
 
+    protected function onInsert()
+    {
+        if (AppSettings::get('servicios', 'notify_service_user', false)) {
+            $this->sendNotificationAuthor();
+            $this->sendNotificationAsigned();
+        } elseif (false === empty($this->asignado)) {
+            $this->sendNotificationAsigned();
+        }
+
+        if (false === empty($this->codagente)) {
+            $this->sendNotificationAgent();
+        }
+
+        if (false === empty($this->codcliente)) {
+            $this->sendNotificationCustomer();
+        }
+
+        // add audit log
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-service-created', [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => '',
+            'model-class' => $this->modelClassName(),
+            'model-code' => $this->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+
+        parent::onInsert();
+    }
+
+    protected function onUpdate()
+    {
+        if (AppSettings::get('servicios', 'notify_service_user', false)) {
+            $this->sendNotificationAuthor();
+            $this->sendNotificationAsigned();
+        } elseif ($this->previousData['asignado'] != $this->asignado) {
+            $this->sendNotificationAsigned();
+        }
+
+        if ($this->previousData['codagente'] != $this->codagente) {
+            $this->sendNotificationAgent();
+        }
+
+        if ($this->previousData['codcliente'] != $this->codcliente) {
+            $this->sendNotificationCustomer();
+        }
+
+        // add audit log
+        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info($this->messageLog, [
+            '%model%' => $this->modelClassName(),
+            '%key%' => $this->primaryColumnValue(),
+            '%desc%' => '',
+            'model-class' => $this->modelClassName(),
+            'model-code' => $this->primaryColumnValue(),
+            'model-data' => $this->toArray()
+        ]);
+
+        parent::onUpdate();
+    }
+
+    protected function sendNotificationAgent()
+    {
+        $newMail = new NewMail();
+        if (false === $newMail->canSendMail()) {
+            return;
+        }
+
+        if (false === AppSettings::get('servicios', 'notify_service_agent', false)) {
+            return;
+        }
+
+        $agent = new Agente();
+        if (false === $agent->loadFromCode($this->codagente)) {
+            return;
+        }
+
+        $contact = $agent->getContact();
+        if (empty($contact->email)) {
+            return;
+        }
+
+        $customer = $this->getSubject();
+        MailNotifier::send('service-update-agent', $contact->email, $agent->nombre, [
+            'number' => $this->idservicio,
+            'customer' => $customer->nombre,
+            'author' => $this->nick,
+            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
+    protected function sendNotificationAsigned()
+    {
+        $newMail = new NewMail();
+        if (false === $newMail->canSendMail()) {
+            return;
+        }
+
+        if (false === AppSettings::get('servicios', 'notify_service_assignee', false)
+            && false === AppSettings::get('servicios', 'notify_service_user', false)) {
+            return;
+        }
+
+        $asigned = new User();
+        if (false === $asigned->loadFromCode($this->asignado)) {
+            return;
+        }
+
+        $customer = $this->getSubject();
+        MailNotifier::send('new-service-assignee', $asigned->email, $asigned->nick, [
+            'number' => $this->idservicio,
+            'customer' => $customer->nombre,
+            'author' => $this->nick,
+            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
+    protected function sendNotificationAuthor()
+    {
+        $newMail = new NewMail();
+        if (false === $newMail->canSendMail()) {
+            return;
+        }
+
+        if (false === AppSettings::get('servicios', 'notify_service_user', false)) {
+            return;
+        }
+
+        $author = new User();
+        if (false === $author->loadFromCode($this->nick)) {
+            return;
+        }
+
+        $customer = $this->getSubject();
+        MailNotifier::send('service-update-user', $author->email, $author->nick, [
+            'number' => $this->idservicio,
+            'customer' => $customer->nombre,
+            'author' => $this->nick,
+            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
+    protected function sendNotificationCustomer()
+    {
+        $newMail = new NewMail();
+        if (false === $newMail->canSendMail()) {
+            return;
+        }
+
+        if (false === AppSettings::get('servicios', 'notify_service_customer', false)) {
+            return;
+        }
+
+        $customer = $this->getSubject();
+        if (empty($customer) || empty($customer->email)) {
+            return;
+        }
+
+        $customer = $this->getSubject();
+        MailNotifier::send('service-update-customer', $customer->email, $customer->nombre, [
+            'number' => $this->idservicio,
+            'customer' => $customer->nombre,
+            'author' => $this->nick,
+            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
     protected function setPreviousData(array $fields = [])
     {
-        $more = ['idestado'];
+        $more = ['idestado', 'asignado', 'codagente', 'codcliente'];
         parent::setPreviousData(\array_merge($more, $fields));
     }
 }

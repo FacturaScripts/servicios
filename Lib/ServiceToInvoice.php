@@ -19,10 +19,10 @@
 
 namespace FacturaScripts\Plugins\Servicios\Lib;
 
+use FacturaScripts\Core\Base\Calculator;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Core\Model\Base\SalesDocument;
-use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -201,7 +201,7 @@ class ServiceToInvoice
         }
 
         $work->estado = $estado;
-        if (false === $newLine->save() || false === $work->save()) {
+        if (false === $work->save() || false === $newLine->save()) {
             return false;
         }
 
@@ -216,9 +216,9 @@ class ServiceToInvoice
      */
     protected static function recalculate(&$newDoc, &$database): bool
     {
-        $docTools = new BusinessDocumentTools();
-        $docTools->recalculate($newDoc);
-        if ($newDoc->save()) {
+        $lines = $newDoc->getLines();
+        Calculator::calculate($newDoc, $lines, true);
+        if (Calculator::calculate($newDoc, $lines, true)) {
             $database->commit();
             return true;
         }

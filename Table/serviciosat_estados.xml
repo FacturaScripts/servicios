@@ -19,11 +19,19 @@
         <type>character varying(50)</type>
     </column>
     <column>
+        <name>nick</name>
+        <type>character varying(50)</type>
+    </column>
+    <column>
         <name>predeterminado</name>
         <type>boolean</type>
     </column>
     <constraint>
         <name>serviciosat_estados_pkey</name>
         <type>PRIMARY KEY (id)</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_estados_users</name>
+        <type>FOREIGN KEY (nick) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
 </table>
