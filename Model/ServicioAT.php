@@ -19,10 +19,15 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
+use FacturaScripts\Dinamic\Lib\Email\NewMail;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
+use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Plugins\CRM\Lib\CrmTool;
 
 /**
  * Description of ServicioAT
@@ -34,6 +39,11 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     use Base\ModelTrait;
     use Base\CompanyRelationTrait;
+
+    /**
+     * @var string
+     */
+    public $asignado;
 
     /**
      * @var string
@@ -312,6 +322,8 @@ class ServicioAT extends Base\ModelOnChangeClass
             ]);
             $this->editable = $status->editable;
             return true;
+        } elseif ($field === 'asignado' && false === empty($this->asignado)) {
+            $this->sendNotificationAsigned();
         }
 
         return parent::onChange($field);
@@ -326,6 +338,10 @@ class ServicioAT extends Base\ModelOnChangeClass
     {
         if (false === parent::saveInsert($values)) {
             return false;
+        }
+
+        if (!empty($this->asignado)) {
+            $this->sendNotificationAsigned();
         }
 
         // add audit log
@@ -363,9 +379,34 @@ class ServicioAT extends Base\ModelOnChangeClass
         return true;
     }
 
+    protected function sendNotificationAsigned()
+    {
+        $newMail = new NewMail();
+        if (false === $newMail->canSendMail()) {
+            return;
+        }
+
+        if (false === AppSettings::get('servicios', 'notify_servcie_assignee', false)) {
+            return;
+        }
+
+        $asigned = new User();
+        if (false === $asigned->loadFromCode($this->asignado)) {
+            return;
+        }
+
+        $customer = $this->getSubject();
+        MailNotifier::send('new-service-assignee', $asigned->email, $asigned->nick, [
+            'number' => $this->idservicio,
+            'customer' => $customer->nombre,
+            'author' => $this->nick,
+            'url' => CrmTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
     protected function setPreviousData(array $fields = [])
     {
-        $more = ['idestado'];
+        $more = ['idestado', 'asignado'];
         parent::setPreviousData(\array_merge($more, $fields));
     }
 }

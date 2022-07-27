@@ -78,27 +78,32 @@
                     <values source="users" fieldcode="nick" fieldtitle="nick" />
                 </widget>
             </column>
-            <column name="agent" titleurl="ListAgente" order="110">
+            <column name="asigned" order="110">
+                <widget type="select" fieldname="asignado">
+                    <values source="users" fieldcode="nick" fieldtitle="nick" />
+                </widget>
+            </column>
+            <column name="agent" titleurl="ListAgente" order="120">
                 <widget type="select" fieldname="codagente" onclick="EditAgente">
                     <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="warehouse" titleurl="ListAlmacen" order="120">
+            <column name="warehouse" titleurl="ListAlmacen" order="130">
                 <widget type="select" fieldname="codalmacen" onclick="EditAlmacen" required="true">
                     <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="company" display="none" order="130">
+            <column name="company" display="none" order="140">
                 <widget type="select" fieldname="idempresa" onclick="EditEmpresa" required="true" readonly="dinamic">
                     <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto" />
                 </widget>
             </column>
-            <column name="priority" numcolumns="2" order="140">
+            <column name="priority" numcolumns="2" order="150">
                 <widget type="select" fieldname="idprioridad" required="true">
                     <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
                 </widget>
             </column>
-            <column name="net" order="150">
+            <column name="net" order="160">
                 <widget type="money" fieldname="neto" readonly="true"/>
             </column>
         </group>

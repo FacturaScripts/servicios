@@ -33,6 +33,9 @@
             <column name="disable-stock-management" order="140">
                 <widget type="checkbox" fieldname="disablestockmanagement"/>
             </column>
+            <column name="notify-service-assignee" order="150">
+                <widget type="checkbox" fieldname="notify_servcie_assignee" />
+            </column>
         </group>
     </columns>
 </view>

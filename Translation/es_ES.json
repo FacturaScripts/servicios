@@ -1,4 +1,5 @@
 {
+    "asigned": "Asignado",
     "calculate-hours": "Calcular horas",
     "changed-status-to": "Se ha cambiado el estado a %status% de %model% (%key%) %desc%",
     "customer-has-no-machines": "El cliente no tiene máquinas",
@@ -12,6 +13,7 @@
     "material": "Material",
     "new-machine": "Nueva máquina",
     "new-service": "Nuevo servicio",
+    "notify-service-assignee": "Notificar al asignado del servicio",
     "new-service-created": "Se ha creado un nuevo servicio de %model% (%key%) %desc%",
     "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (opcional)",
     "new-work-created": "Se ha creado un nuevo trabajo de %model% (%key%) %desc% en el servicio %service-model% (%service-key%)",

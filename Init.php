@@ -28,6 +28,7 @@ use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Dinamic\Lib\ExportManager;
 use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
+use FacturaScripts\Dinamic\Model\EmailNotification;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
@@ -78,6 +79,7 @@ class Init extends InitClass
         $this->createRoleForPlugin();
         $this->fixMissingCustomers();
         $this->calculateNetServices();
+        $this->updateEmailNotifications();
     }
 
     private function calculateNetServices()
@@ -149,5 +151,22 @@ class Init extends InitClass
         $appSettings->set('servicios', 'footertext', $footerText);
         $appSettings->set('servicios', 'workstatus', 1);
         $appSettings->save();
+    }
+
+    private function updateEmailNotifications()
+    {
+        $notificationModel = new EmailNotification();
+        $keys = ['new-service-assignee'];
+        foreach ($keys as $key) {
+            if ($notificationModel->loadFromCode($key)) {
+                continue;
+            }
+
+            $notificationModel->name = $key;
+            $notificationModel->body = '';
+            $notificationModel->subject = $key;
+            $notificationModel->enabled = true;
+            $notificationModel->save();
+        }
     }
 }
