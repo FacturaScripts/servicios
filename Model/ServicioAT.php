@@ -116,6 +116,11 @@ class ServicioAT extends Base\ModelOnChangeClass
     public $nick;
 
     /**
+     * @var double
+     */
+    public $neto;
+
+    /**
      * @var string
      */
     public $observaciones;
@@ -127,11 +132,21 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     protected $messageLog = 'updated-model';
 
+    public function calculatePriceNet()
+    {
+        $this->neto = 0.0;
+        foreach ($this->getTrabajos() as $trabajo) {
+            $this->neto += $trabajo->precio * $trabajo->cantidad;
+        }
+        $this->save();
+    }
+
     public function clear()
     {
         parent::clear();
         $this->fecha = date(self::DATE_STYLE);
         $this->hora = date(self::HOUR_STYLE);
+        $this->neto = 0.0;
 
         // set default status
         foreach ($this->getAvailableStatus() as $status) {

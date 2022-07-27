@@ -98,6 +98,9 @@
                     <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
                 </widget>
             </column>
+            <column name="net" order="150">
+                <widget type="money" fieldname="neto" readonly="true"/>
+            </column>
         </group>
     </columns>
 </view>

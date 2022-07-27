@@ -30,6 +30,7 @@ use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
+use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
 /**
  * Description of Init
@@ -76,6 +77,16 @@ class Init extends InitClass
         $this->setupSettings();
         $this->createRoleForPlugin();
         $this->fixMissingCustomers();
+        $this->calculateNetServices();
+    }
+
+    private function calculateNetServices()
+    {
+        $service = new ServicioAT();
+        $where = [new DataBaseWhere('neto', 0.0)];
+        foreach ($service->all($where, [], 0, 0) as $service) {
+            $service->calculatePriceNet();
+        }
     }
 
     private function createRoleForPlugin()

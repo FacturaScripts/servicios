@@ -207,8 +207,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
             return false;
         }
 
-        // add audit log
         $service = $this->getServicio();
+        $service->calculatePriceNet();
+
+        // add audit log
         self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-work-created', [
             '%model%' => $this->modelClassName(),
             '%key%' => $this->primaryColumnValue(),
@@ -233,8 +235,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
             return false;
         }
 
-        // add audit log
         $service = $this->getServicio();
+        $service->calculatePriceNet();
+
+        // add audit log
         self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('updated-model', [
             '%model%' => $this->modelClassName(),
             '%key%' => $this->primaryColumnValue(),
