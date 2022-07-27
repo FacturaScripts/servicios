@@ -192,20 +192,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
     protected function onInsert()
     {
-        parent::onInsert();
         $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
-    }
-
-    /**
-     * @param array $values
-     *
-     * @return bool
-     */
-    protected function saveInsert(array $values = [])
-    {
-        if (false === parent::saveInsert($values)) {
-            return false;
-        }
 
         $service = $this->getServicio();
         $service->calculatePriceNet();
@@ -221,20 +208,12 @@ class TrabajoAT extends Base\ModelOnChangeClass
             'model-code' => $service->primaryColumnValue(),
             'model-data' => $this->toArray()
         ]);
-        return true;
+
+        parent::onInsert();
     }
 
-    /**
-     * @param array $values
-     *
-     * @return bool
-     */
-    protected function saveUpdate(array $values = [])
+    protected function onUpdate()
     {
-        if (false === parent::saveUpdate($values)) {
-            return false;
-        }
-
         $service = $this->getServicio();
         $service->calculatePriceNet();
 
@@ -247,7 +226,8 @@ class TrabajoAT extends Base\ModelOnChangeClass
             'model-code' => $service->primaryColumnValue(),
             'model-data' => $this->toArray()
         ]);
-        return true;
+
+        parent::onUpdate();
     }
 
     protected function setPreviousData(array $fields = [])
