@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
+use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Dinamic\Lib\ExtendedController\PanelController;
 
 /**
@@ -30,7 +31,7 @@ use FacturaScripts\Dinamic\Lib\ExtendedController\PanelController;
 class AdminServicios extends PanelController
 {
 
-    private const VIEW_CONFIG_PROJECTS = 'ConfigServicios';
+    private const VIEW_CONFIG = 'ConfigServicios';
     private const VIEW_LIST_PRIORITIES = 'EditPrioridadAT';
     private const VIEW_LIST_STATUS = 'EditEstadoAT';
 
@@ -54,7 +55,7 @@ class AdminServicios extends PanelController
         $this->createViewPriorities();
     }
 
-    private function createViewEditConfig(string $viewName = self::VIEW_CONFIG_PROJECTS)
+    private function createViewEditConfig(string $viewName = self::VIEW_CONFIG)
     {
         $this->addEditView($viewName, 'Settings', 'general');
 
@@ -84,14 +85,14 @@ class AdminServicios extends PanelController
     protected function loadData($viewName, $view)
     {
         switch ($viewName) {
-            case self::VIEW_CONFIG_PROJECTS:
+            case self::VIEW_CONFIG:
                 $view->loadData('servicios');
                 $view->model->name = 'servicios';
                 break;
 
             case self::VIEW_LIST_PRIORITIES:
             case self::VIEW_LIST_STATUS:
-                $view->loadData();
+                $view->loadData('', [], ['id' => 'DESC']);
                 break;
         }
     }

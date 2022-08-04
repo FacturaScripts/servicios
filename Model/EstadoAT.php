@@ -32,29 +32,22 @@ class EstadoAT extends Base\ModelClass
 
     use Base\ModelTrait;
 
-    /**
-     * @var bool
-     */
+    /** @var string */
+    public $color;
+
+    /** @var bool */
     public $editable;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $nombre;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $nick;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $predeterminado;
 
     public function clear()
@@ -96,7 +89,8 @@ class EstadoAT extends Base\ModelClass
 
     public function test(): bool
     {
-        $this->nombre = $this->toolBox()->utils()->noHtml($this->nombre);
+        $this->color = self::toolBox()::utils()::noHtml($this->color);
+        $this->nombre = self::toolBox()::utils()::noHtml($this->nombre);
         return parent::test();
     }
 
