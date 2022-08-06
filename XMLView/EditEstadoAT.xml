@@ -24,10 +24,10 @@
             <column name="id" display="none" order="100">
                 <widget type="text" fieldname="id" readonly="dinamic"/>
             </column>
-            <column name="name" order="110">
+            <column name="name" numcolumns="3" order="110">
                 <widget type="text" fieldname="nombre" required="true"/>
             </column>
-            <column name="color" order="130">
+            <column name="color" numcolumns="3" order="120">
                 <widget type="select" fieldname="color" translate="true">
                     <values title="color-primary">primary</values>
                     <values title="color-secondary">secondary</values>
@@ -39,16 +39,30 @@
                     <values title="color-dark">dark</values>
                 </widget>
             </column>
-            <column name="user" order="140">
-                <widget type="select" fieldname="nick">
+            <column name="editable" order="130">
+                <widget type="checkbox" fieldname="editable"/>
+            </column>
+            <column name="default" order="140">
+                <widget type="checkbox" fieldname="predeterminado"/>
+            </column>
+        </group>
+        <group name="advanced" numcolumns="12" valign="bottom">
+            <column name="assigned" numcolumns="3" order="100">
+                <widget type="select" fieldname="asignado">
                     <values source="users" fieldcode="nick" fieldtitle="nick"/>
                 </widget>
             </column>
-            <column name="editable" order="160">
-                <widget type="checkbox" fieldname="editable"/>
+            <column name="notify-agent" order="110">
+                <widget type="checkbox" fieldname="notificaragente"/>
             </column>
-            <column name="default" order="170">
-                <widget type="checkbox" fieldname="predeterminado"/>
+            <column name="notify-assigned" order="120">
+                <widget type="checkbox" fieldname="notificarasignado"/>
+            </column>
+            <column name="notify-customer" order="130">
+                <widget type="checkbox" fieldname="notificarcliente"/>
+            </column>
+            <column name="notify-user" order="140">
+                <widget type="checkbox" fieldname="notificarusuario"/>
             </column>
         </group>
     </columns>

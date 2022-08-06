@@ -29,8 +29,10 @@ use FacturaScripts\Core\Model\Base;
  */
 class EstadoAT extends Base\ModelClass
 {
-
     use Base\ModelTrait;
+
+    /** @var string */
+    public $asignado;
 
     /** @var string */
     public $color;
@@ -44,8 +46,17 @@ class EstadoAT extends Base\ModelClass
     /** @var string */
     public $nombre;
 
-    /** @var string */
-    public $nick;
+    /** @var bool */
+    public $notificaragente;
+
+    /** @var bool */
+    public $notificarasignado;
+
+    /** @var bool */
+    public $notificarcliente;
+
+    /** @var bool */
+    public $notificarusuario;
 
     /** @var bool */
     public $predeterminado;
@@ -54,6 +65,10 @@ class EstadoAT extends Base\ModelClass
     {
         parent::clear();
         $this->editable = true;
+        $this->notificaragente = false;
+        $this->notificarasignado = false;
+        $this->notificarcliente = false;
+        $this->notificarusuario = false;
         $this->predeterminado = false;
     }
 

@@ -6,6 +6,10 @@
 -->
 <table>
     <column>
+        <name>asignado</name>
+        <type>character varying(50)</type>
+    </column>
+    <column>
         <name>color</name>
         <type>character varying(10)</type>
     </column>
@@ -23,8 +27,24 @@
         <type>character varying(50)</type>
     </column>
     <column>
-        <name>nick</name>
-        <type>character varying(50)</type>
+        <name>notificaragente</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
+    <column>
+        <name>notificarasignado</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
+    <column>
+        <name>notificarcliente</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
+    <column>
+        <name>notificarusuario</name>
+        <type>boolean</type>
+        <default>false</default>
     </column>
     <column>
         <name>predeterminado</name>
@@ -36,6 +56,6 @@
     </constraint>
     <constraint>
         <name>ca_serviciosat_estados_users</name>
-        <type>FOREIGN KEY (nick) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
+        <type>FOREIGN KEY (asignado) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
 </table>

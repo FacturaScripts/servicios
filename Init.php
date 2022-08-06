@@ -23,6 +23,7 @@ use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Base\InitClass;
+use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Dinamic\Lib\ExportManager;
@@ -155,17 +156,21 @@ class Init extends InitClass
 
     private function updateEmailNotifications()
     {
+        $i18n = ToolBox::i18n();
         $notificationModel = new EmailNotification();
-        $keys = ['new-service-assignee', 'service-update-user', 'service-update-agent', 'service-update-customer'];
+        $keys = [
+            'new-service-assignee', 'new-service-agent', 'new-service-customer',
+            'new-service-status', 'new-service-user'
+        ];
         foreach ($keys as $key) {
             if ($notificationModel->loadFromCode($key)) {
                 continue;
             }
 
             $notificationModel->name = $key;
-            $notificationModel->body = '';
-            $notificationModel->subject = $key;
-            $notificationModel->enabled = true;
+            $notificationModel->body = $i18n->trans($key . '-body');
+            $notificationModel->subject = $i18n->trans($key);
+            $notificationModel->enabled = false;
             $notificationModel->save();
         }
     }

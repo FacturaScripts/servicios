@@ -33,7 +33,6 @@ use FacturaScripts\Dinamic\Model\Variante;
  */
 class TrabajoAT extends Base\ModelOnChangeClass
 {
-
     use Base\ModelTrait;
 
     const STATUS_NONE = 0;
@@ -45,74 +44,46 @@ class TrabajoAT extends Base\ModelOnChangeClass
     const STATUS_ESTIMATION = 6;
     const STATUS_SUBTRACT_STOCK = -1;
 
-    /**
-     * @var float
-     */
+    /** @var float */
     public $cantidad;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $codagente;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $descripcion;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $estado;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $fechafin;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $fechainicio;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $horafin;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $horainicio;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $idservicio;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $idtrabajo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $nick;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $observaciones;
 
-    /**
-     * @var float
-     */
+    /** @var float */
     public $precio;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $referencia;
 
     public function clear()
@@ -238,6 +209,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
     protected function updateStock(?string $referencia, float $cantidad, int $estado)
     {
+        // ¿El control de stock en servicios está desactivado?
         if (AppSettings::get('servicios', 'disablestockmanagement', false)) {
             return;
         }
