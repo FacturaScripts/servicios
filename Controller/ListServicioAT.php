@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
+use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
 /**
  * Description of ListServicioAT
@@ -91,6 +92,23 @@ class ListServicioAT extends ListController
 
         $this->addFilterNumber($viewName, 'netogt', 'net', 'neto', '>=');
         $this->views[$viewName]->addFilterNumber('netolt', 'net', 'neto', '<=');
+
+        // asignamos colores
+        $estadoModel = new EstadoAT();
+        foreach ($estadoModel->all() as $estado) {
+            if (empty($estado->color)) {
+                continue;
+            }
+
+            $this->views[$viewName]->getRow('status')->options[] = [
+                'tag' => 'option',
+                'children' => [],
+                'color' => $estado->color,
+                'fieldname' => 'idestado',
+                'text' => $estado->id,
+                'title' => $estado->nombre
+            ];
+        }
     }
 
     protected function createViewsWorks(string $viewName = 'ListTrabajoAT')

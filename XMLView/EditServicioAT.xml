@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -23,84 +23,84 @@
         <group name="data" numcolumns="12">
             <column name="customer" titleurl="ListCliente" numcolumns="2" order="100">
                 <widget type="autocomplete" fieldname="codcliente" onclick="EditCliente" required="true">
-                    <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
+                    <values source="clientes" fieldcode="codcliente" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="machine" title="machine" order="110">
                 <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaAT">
-                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="machine2" title="machine" order="120">
                 <widget type="autocomplete" fieldname="idmaquina2" onclick="EditMaquinaAT">
-                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="machine3" title="machine" display="none" order="130">
                 <widget type="autocomplete" fieldname="idmaquina3" onclick="EditMaquinaAT">
-                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="machine4" title="machine" display="none" order="140">
                 <widget type="autocomplete" fieldname="idmaquina4" onclick="EditMaquinaAT">
-                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre" />
+                    <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="date" numcolumns="2" order="150">
-                <widget type="date" fieldname="fecha" required="true" />
+                <widget type="date" fieldname="fecha" required="true"/>
             </column>
             <column name="hour" numcolumns="2" order="160">
-                <widget type="time" fieldname="hora" required="true" />
+                <widget type="time" fieldname="hora" required="true"/>
             </column>
             <column name="status" numcolumns="2" order="180">
                 <widget type="select" fieldname="idestado" required="true">
-                    <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre" />
+                    <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
                 </widget>
             </column>
         </group>
         <group name="notes" numcolumns="12">
             <column name="description" numcolumns="6" order="100">
-                <widget type="textarea" fieldname="descripcion" rows="6" />
+                <widget type="textarea" fieldname="descripcion" rows="6"/>
             </column>
             <column name="material" numcolumns="6" order="110">
-                <widget type="textarea" fieldname="material" rows="6" />
+                <widget type="textarea" fieldname="material" rows="6"/>
             </column>
             <column name="solution" numcolumns="6" order="120">
-                <widget type="textarea" fieldname="solucion" rows="6" />
+                <widget type="textarea" fieldname="solucion" rows="6"/>
             </column>
             <column name="observations" numcolumns="6" order="130">
-                <widget type="textarea" fieldname="observaciones" rows="6" />
+                <widget type="textarea" fieldname="observaciones" rows="6"/>
             </column>
         </group>
         <group name="more" numcolumns="12">
             <column name="user" order="100">
                 <widget type="select" fieldname="nick">
-                    <values source="users" fieldcode="nick" fieldtitle="nick" />
+                    <values source="users" fieldcode="nick" fieldtitle="nick"/>
                 </widget>
             </column>
-            <column name="asigned" order="110">
+            <column name="assigned" order="110">
                 <widget type="select" fieldname="asignado">
-                    <values source="users" fieldcode="nick" fieldtitle="nick" />
+                    <values source="users" fieldcode="nick" fieldtitle="nick"/>
                 </widget>
             </column>
             <column name="agent" titleurl="ListAgente" order="120">
                 <widget type="select" fieldname="codagente" onclick="EditAgente">
-                    <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />
+                    <values source="agentes" fieldcode="codagente" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="warehouse" titleurl="ListAlmacen" order="130">
                 <widget type="select" fieldname="codalmacen" onclick="EditAlmacen" required="true">
-                    <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre" />
+                    <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="company" display="none" order="140">
                 <widget type="select" fieldname="idempresa" onclick="EditEmpresa" required="true" readonly="dinamic">
-                    <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto" />
+                    <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto"/>
                 </widget>
             </column>
             <column name="priority" numcolumns="2" order="150">
                 <widget type="select" fieldname="idprioridad" required="true">
-                    <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre" />
+                    <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="net" order="160">
