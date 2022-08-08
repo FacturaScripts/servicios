@@ -86,6 +86,9 @@ class TrabajoAT extends Base\ModelOnChangeClass
     /** @var string */
     public $referencia;
 
+    /** @var string */
+    protected $messageLog = 'updated-model';
+
     public function clear()
     {
         parent::clear();
@@ -155,6 +158,27 @@ class TrabajoAT extends Base\ModelOnChangeClass
         return parent::onChange($field);
     }
 
+    protected function onChangeCantidad()
+    {
+        // añadimos el cambio al log
+        $this->messageLog = self::toolBox()->i18n()->trans('changed-quantity-work-to', [
+            '%reference%' => $this->referencia,
+            '%oldQuantity%' => $this->previousData['cantidad'],
+            '%newQuantity%' => $this->cantidad,
+            '%work%' => $this->idtrabajo
+        ]);
+    }
+
+    protected function onChangeReferencia()
+    {
+        // añadimos el cambio al log
+        $this->messageLog = self::toolBox()->i18n()->trans('changed-referencia-work-to', [
+            '%oldReference%' => $this->previousData['referencia'],
+            '%newReference%' => $this->referencia,
+            '%work%' => $this->idtrabajo
+        ]);
+    }
+
     protected function onDelete()
     {
         parent::onDelete();
@@ -168,17 +192,14 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $service = $this->getServicio();
         $service->calculatePriceNet();
 
-        // add audit log
-        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-work-created', [
-            '%model%' => $this->modelClassName(),
+        $log = new ServicioATLog();
+        $log->idservicio = $this->idservicio;
+        $log->message = self::toolBox()->i18n()->trans('new-work-created', [
             '%key%' => $this->primaryColumnValue(),
-            '%desc%' => $this->primaryDescription(),
-            '%service-model%' => $service->modelClassName(),
-            '%service-key%' => $service->idservicio,
-            'model-class' => $service->modelClassName(),
-            'model-code' => $service->primaryColumnValue(),
-            'model-data' => $this->toArray()
+            '%service-key%' => $service->idservicio
         ]);
+        $log->context = $this;
+        $log->save();
 
         parent::onInsert();
     }
@@ -188,15 +209,19 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $service = $this->getServicio();
         $service->calculatePriceNet();
 
-        // add audit log
-        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('updated-model', [
-            '%model%' => $this->modelClassName(),
-            '%key%' => $this->primaryColumnValue(),
-            '%desc%' => $this->primaryDescription(),
-            'model-class' => $service->modelClassName(),
-            'model-code' => $service->primaryColumnValue(),
-            'model-data' => $this->toArray()
-        ]);
+        if ($this->cantidad != $this->previousData['cantidad']) {
+            $this->onChangeCantidad();
+        }
+
+        if ($this->referencia != $this->previousData['referencia']) {
+            $this->onChangeReferencia();
+        }
+
+        $log = new ServicioATLog();
+        $log->idservicio = $this->idservicio;
+        $log->message = $this->messageLog;
+        $log->context = $this;
+        $log->save();
 
         parent::onUpdate();
     }
