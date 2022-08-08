@@ -146,6 +146,31 @@ class ServicioAT extends Base\ModelOnChangeClass
         return parent::delete();
     }
 
+    public function getAgent(string $codagente = null): Agente
+    {
+        $codagente = is_null($codagente) ? $this->codagente : $codagente;
+        $agent = new Agente();
+        $agent->loadFromCode($codagente);
+        return $agent;
+    }
+
+    public function getAsignado(string $asignado = null): User
+    {
+        $asignado = is_null($asignado) ? $this->asignado : $asignado;
+        $user = new User();
+        $user->loadFromCode($asignado);
+        return $user;
+    }
+
+    /**
+     * @return PrioridadAT[]
+     */
+    public function getAvailablePriority(): array
+    {
+        $priority = new PrioridadAT();
+        return $priority->all([], [], 0, 0);
+    }
+
     /**
      * @return EstadoAT[]
      */
@@ -153,6 +178,14 @@ class ServicioAT extends Base\ModelOnChangeClass
     {
         $status = new EstadoAT();
         return $status->all([], [], 0, 0);
+    }
+
+    public function getCustomer(string $codcliente = null): Cliente
+    {
+        $codcliente = is_null($codcliente) ? $this->codcliente : $codcliente;
+        $customer = new Cliente();
+        $customer->loadFromCode($codcliente);
+        return $customer;
     }
 
     /**
@@ -175,29 +208,15 @@ class ServicioAT extends Base\ModelOnChangeClass
         return $result;
     }
 
-    /**
-     * @return EstadoAT
-     */
-    public function getStatus()
+    public function getStatus(int $idestado = null): EstadoAT
     {
+        $idestado = $idestado ?? $this->idestado;
         $status = new EstadoAT();
-        $status->loadFromCode($this->idestado);
+        $status->loadFromCode($idestado);
         return $status;
     }
 
-    /**
-     * @return PrioridadAT[]
-     */
-    public function getAvailablePriority(): array
-    {
-        $priority = new PrioridadAT();
-        return $priority->all([], [], 0, 0);
-    }
-
-    /**
-     * @return PrioridadAT
-     */
-    public function getPriority()
+    public function getPriority(): PrioridadAT
     {
         $priority = new PrioridadAT();
         $priority->loadFromCode($this->idprioridad);
@@ -220,6 +239,14 @@ class ServicioAT extends Base\ModelOnChangeClass
         $where = [new DataBaseWhere('idservicio', $this->idservicio)];
         $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
         return $trabajo->all($where, $order, 0, 0);
+    }
+
+    public function getUser(string $nick = null): User
+    {
+        $nick = is_null($nick) ? $this->nick : $nick;
+        $user = new User();
+        $user->loadFromCode($nick);
+        return $user;
     }
 
     public function install(): string
@@ -263,79 +290,106 @@ class ServicioAT extends Base\ModelOnChangeClass
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
     }
 
-    /**
-     * @param string $field
-     *
-     * @return bool
-     */
-    protected function onChange($field)
+    protected function onChangeAsignado()
     {
-        switch ($field) {
-            case 'asignado':
-                if ($this->asignado) {
-                    $this->notifyAssignedUser('new-service-assignee');
-                }
-                break;
+        $newAssigned = $this->getAsignado();
+        $oldAssigned = $this->getAsignado($this->previousData['asignado'] ?? '');
 
-            case 'codagente':
-                if ($this->codagente) {
-                    $this->notifyAgent('new-service-agent');
-                }
-                break;
+        // añadimos el cambio al log
+        $this->messageLog = self::toolBox()->i18n()->trans('changed-assigned-to', [
+            '%oldAssigned%' => $oldAssigned->nick ?? '-',
+            '%newAssigned%' => $newAssigned->nick ?? '-'
+        ]);
 
-            case 'codcliente':
-                if ($this->codcliente) {
-                    $this->notifyCustomer('new-service-customer');
-                }
-                break;
-
-            case 'idestado':
-                return $this->onChangeIdestado();
-
-            case 'nick':
-                if ($this->nick) {
-                    $this->notifyUser('new-service-user');
-                }
-                break;
+        // enviamos las notificaciones
+        if ($this->asignado) {
+            $this->notifyAssignedUser('new-service-assignee');
         }
-
-        return parent::onChange($field);
     }
 
-    protected function onChangeIdestado(): bool
+    protected function onChangeCodagente()
     {
-        $status = $this->getStatus();
+        $newAgent = $this->getAgent();
+        $oldAgent = $this->getAgent($this->previousData['codagente'] ?? '');
+
+        // añadimos el cambio al log
+        $this->messageLog = self::toolBox()->i18n()->trans('changed-agent-to', [
+            '%oldAgent%' => $oldAgent->nombre ?? '-',
+            '%newAgent%' => $newAgent->nombre ?? '-'
+        ]);
+
+        // enviamos las notificaciones
+        if ($this->codagente) {
+            $this->notifyAgent('new-service-agent');
+        }
+    }
+
+    protected function onChangeCodcliente()
+    {
+        $newCustomer = $this->getCustomer();
+        $oldCustomer = $this->getCustomer($this->previousData['codcliente'] ?? '');
+
+        // añadimos el cambio al log
+        $this->messageLog = self::toolBox()->i18n()->trans('changed-customer-to', [
+            '%oldCustomer%' => $oldCustomer->nombre ?? '-',
+            '%newCustomer%' => $newCustomer->nombre ?? '-'
+        ]);
+
+        // enviamos las notificaciones
+        if ($this->codcliente) {
+            $this->notifyCustomer('new-service-customer');
+        }
+    }
+
+    protected function onChangeIdestado()
+    {
+        $newStatus = $this->getStatus();
+        $oldStatus = $this->getStatus($this->previousData['idestado']);
 
         // añadimos el cambio al log
         $this->messageLog = self::toolBox()->i18n()->trans('changed-status-to', [
-            '%status%' => $status->nombre,
-            '%model%' => $this->modelClassName(),
-            '%key%' => $this->primaryColumnValue(),
-            '%desc%' => $this->primaryDescription(),
+            '%oldStatus%' => $oldStatus->nombre,
+            '%newStatus%' => $newStatus->nombre
         ]);
 
         // asignamos el valor de editable
-        $this->editable = $status->editable;
+        $this->editable = $newStatus->editable;
 
         // si el estado tiene un asignado, lo asignamos
-        if ($status->asignado) {
-            $this->asignado = $status->asignado;
+        if ($newStatus->asignado) {
+            $this->asignado = $newStatus->asignado;
         }
 
         // enviamos las notificaciones
-        if ($this->asignado && $status->notificarasignado) {
+        if ($this->asignado && $newStatus->notificarasignado) {
             $this->notifyAssignedUser('new-service-status');
         }
-        if ($this->codagente && $status->notificaragente) {
+        if ($this->codagente && $newStatus->notificaragente) {
             $this->notifyAgent('new-service-status');
         }
-        if ($this->codcliente && $status->notificarcliente) {
+        if ($this->codcliente && $newStatus->notificarcliente) {
             $this->notifyCustomer('new-service-status');
         }
-        if ($this->nick && $status->notificarusuario) {
+        if ($this->nick && $newStatus->notificarusuario) {
             $this->notifyUser('new-service-status');
         }
-        return true;
+    }
+
+    protected function onChangeUser()
+    {
+        $newUser = $this->getUser();
+        $oldUser = $this->getUser($this->previousData['nick'] ?? '');
+
+        // añadimos el cambio al log
+        $this->messageLog = self::toolBox()->i18n()->trans('changed-user-to', [
+            '%oldUser%' => $oldUser->nick ?? '-',
+            '%newUser%' => $newUser->nick ?? '-'
+        ]);
+
+        // enviamos las notificaciones
+        if ($this->nick) {
+            $this->notifyUser('new-service-user');
+        }
     }
 
     protected function onInsert()
@@ -351,30 +405,42 @@ class ServicioAT extends Base\ModelOnChangeClass
             $this->notifyCustomer('new-service-customer');
         }
 
-        // añadimos entrada al log
-        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info('new-service-created', [
-            '%model%' => $this->modelClassName(),
-            '%key%' => $this->primaryColumnValue(),
-            '%desc%' => '',
-            'model-class' => $this->modelClassName(),
-            'model-code' => $this->primaryColumnValue(),
-            'model-data' => $this->toArray()
-        ]);
+        $log = new ServicioATLog();
+        $log->idservicio = $this->idservicio;
+        $log->message = self::toolBox()->i18n()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
+        $log->context = $this;
+        $log->save();
 
         parent::onInsert();
     }
 
     protected function onUpdate()
     {
-        // add audit log
-        self::toolBox()->i18nLog(self::AUDIT_CHANNEL)->info($this->messageLog, [
-            '%model%' => $this->modelClassName(),
-            '%key%' => $this->primaryColumnValue(),
-            '%desc%' => '',
-            'model-class' => $this->modelClassName(),
-            'model-code' => $this->primaryColumnValue(),
-            'model-data' => $this->toArray()
-        ]);
+        if ($this->asignado != $this->previousData['asignado']) {
+            $this->onChangeAsignado();
+        }
+
+        if ($this->codagente != $this->previousData['codagente']) {
+            $this->onChangeCodagente();
+        }
+
+        if ($this->codcliente != $this->previousData['codcliente']) {
+            $this->onChangeCodcliente();
+        }
+
+        if ($this->idestado != $this->previousData['idestado']) {
+            $this->onChangeIdestado();
+        }
+
+        if ($this->nick != $this->previousData['nick']) {
+            $this->onChangeUser();
+        }
+
+        $log = new ServicioATLog();
+        $log->idservicio = $this->idservicio;
+        $log->message = $this->messageLog;
+        $log->context = $this;
+        $log->save();
 
         parent::onUpdate();
     }

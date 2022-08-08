@@ -23,7 +23,6 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\DocFilesTrait;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
-use FacturaScripts\Core\Lib\ExtendedController\LogAuditTrait;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -37,7 +36,6 @@ class EditServicioAT extends EditController
 {
 
     use DocFilesTrait;
-    use LogAuditTrait;
 
     public function getModelClassName(): string
     {
@@ -96,7 +94,7 @@ class EditServicioAT extends EditController
         $this->createViewsInvoices();
         $this->createViewsDeliveryNotes();
         $this->createViewsEstimations();
-        $this->createViewLogAudit();
+        $this->createViewLogs();
     }
 
     protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente')
@@ -157,6 +155,18 @@ class EditServicioAT extends EditController
             'icon' => 'fas fa-magic',
             'label' => 'make-invoice'
         ]);
+    }
+
+    public function createViewLogs(string $viewName = 'ListServicioATLog')
+    {
+        $this->addListView($viewName, 'ServicioATLog', 'history', 'fas fa-history');
+        $this->views[$viewName]->addOrderBy(['creationdate'], 'date', 2);
+        $this->views[$viewName]->addSearchFields(['context', 'message']);
+
+        // disable buttons
+        $this->setSettings($viewName, 'btnDelete', false);
+        $this->setSettings($viewName, 'btnNew', false);
+        $this->setSettings($viewName, 'checkBoxes', false);
     }
 
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
@@ -274,8 +284,10 @@ class EditServicioAT extends EditController
                 $this->loadDataDocFiles($view, $this->getModelClassName(), $idservicio);
                 break;
 
-            case 'ListLogMessage':
-                $this->loadDataLogAudit($view, $this->getModelClassName(), $idservicio);
+            case 'ListServicioATLog':
+                $where = [new DataBaseWhere('idservicio', $idservicio)];
+                $orderBy = ['creationdate' => 'DESC'];
+                $view->loadData('', $where, $orderBy);
                 break;
 
             case 'EditTrabajoAT':
