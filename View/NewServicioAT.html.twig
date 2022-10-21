@@ -303,19 +303,19 @@
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('name') }}
-                    <input type="text" name="nombre" class="form-control"/>
+                    <input type="text" name="nombre" class="form-control" maxlength="100" required/>
                 </div>
             </div>
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('serial-number') }}
-                    <input type="text" name="numserie" class="form-control"/>
+                    <input type="text" name="numserie" class="form-control" maxlength="100"/>
                 </div>
             </div>
             <div class="col-sm">
                 <div class="form-group">
                     {{ i18n.trans('reference') }}
-                    <input type="text" name="referencia" class="form-control"/>
+                    <input type="text" name="referencia" class="form-control" maxlength="30"/>
                 </div>
             </div>
             <div class="col-sm">
