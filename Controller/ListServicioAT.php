@@ -86,6 +86,7 @@ class ListServicioAT extends ListController
 
         $users = $this->codeModel->all('users', 'nick', 'nick');
         $this->addFilterSelect($viewName, 'nick', 'user', 'nick', $users);
+        $this->addFilterSelect($viewName, 'asignado', 'assigned', 'asignado', $users);
 
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
