@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
@@ -98,9 +99,6 @@ class ServicioAT extends Base\ModelOnChangeClass
     /** @var string */
     public $solucion;
 
-    /** @var string */
-    protected $messageLog = 'updated-model';
-
     public function calculatePriceNet()
     {
         $this->neto = 0.0;
@@ -149,9 +147,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     public function getAgent(string $codagente = null): Agente
     {
         $codagente = is_null($codagente) ? $this->codagente : $codagente;
-        $agent = new Agente();
-        $agent->loadFromCode($codagente);
-        return $agent;
+        return Agentes::get($codagente);
     }
 
     public function getAsignado(string $asignado = null): User
@@ -231,7 +227,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     }
 
     /**
-     * @return DinTrabajoAT[]
+     * @return TrabajoAT[]
      */
     public function getTrabajos(): array
     {
@@ -257,6 +253,15 @@ class ServicioAT extends Base\ModelOnChangeClass
         new PrioridadAT();
 
         return parent::install();
+    }
+
+    public function log(string $message): bool
+    {
+        $log = new ServicioATLog();
+        $log->idservicio = $this->idservicio;
+        $log->message = $message;
+        $log->context = $this;
+        return $log->save();
     }
 
     public static function primaryColumn(): string
@@ -290,106 +295,28 @@ class ServicioAT extends Base\ModelOnChangeClass
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
     }
 
-    protected function onChangeAsignado()
+    protected function onChange($field)
     {
-        $newAssigned = $this->getAsignado();
-        $oldAssigned = $this->getAsignado($this->previousData['asignado'] ?? '');
+        if ($field == 'idestado') {
+            $newStatus = $this->getStatus();
 
-        // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-assigned-to', [
-            '%oldAssigned%' => $oldAssigned->nick ?? '-',
-            '%newAssigned%' => $newAssigned->nick ?? '-'
-        ]);
+            // asignamos el valor de editable
+            $this->editable = $newStatus->editable;
 
-        // enviamos las notificaciones
-        if ($this->asignado) {
-            $this->notifyAssignedUser('new-service-assignee');
-        }
-    }
+            // si el estado tiene un asignado, lo asignamos
+            if ($newStatus->asignado) {
+                $this->asignado = $newStatus->asignado;
+            }
 
-    protected function onChangeCodagente()
-    {
-        $newAgent = $this->getAgent();
-        $oldAgent = $this->getAgent($this->previousData['codagente'] ?? '');
-
-        // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-agent-to', [
-            '%oldAgent%' => $oldAgent->nombre ?? '-',
-            '%newAgent%' => $newAgent->nombre ?? '-'
-        ]);
-
-        // enviamos las notificaciones
-        if ($this->codagente) {
-            $this->notifyAgent('new-service-agent');
-        }
-    }
-
-    protected function onChangeCodcliente()
-    {
-        $newCustomer = $this->getCustomer();
-        $oldCustomer = $this->getCustomer($this->previousData['codcliente'] ?? '');
-
-        // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-customer-to', [
-            '%oldCustomer%' => $oldCustomer->nombre ?? '-',
-            '%newCustomer%' => $newCustomer->nombre ?? '-'
-        ]);
-
-        // enviamos las notificaciones
-        if ($this->codcliente) {
-            $this->notifyCustomer('new-service-customer');
-        }
-    }
-
-    protected function onChangeIdestado()
-    {
-        $newStatus = $this->getStatus();
-        $oldStatus = $this->getStatus($this->previousData['idestado']);
-
-        // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-status-to', [
-            '%oldStatus%' => $oldStatus->nombre,
-            '%newStatus%' => $newStatus->nombre
-        ]);
-
-        // asignamos el valor de editable
-        $this->editable = $newStatus->editable;
-
-        // si el estado tiene un asignado, lo asignamos
-        if ($newStatus->asignado) {
-            $this->asignado = $newStatus->asignado;
+            // añadimos el cambio al log
+            $messageLog = self::toolBox()->i18n()->trans('changed-status-to', [
+                '%oldStatus%' => $this->getStatus($this->previousData['idestado'])->nombre,
+                '%newStatus%' => $newStatus->nombre
+            ]);
+            $this->log($messageLog);
         }
 
-        // enviamos las notificaciones
-        if ($this->asignado && $newStatus->notificarasignado) {
-            $this->notifyAssignedUser('new-service-status');
-        }
-        if ($this->codagente && $newStatus->notificaragente) {
-            $this->notifyAgent('new-service-status');
-        }
-        if ($this->codcliente && $newStatus->notificarcliente) {
-            $this->notifyCustomer('new-service-status');
-        }
-        if ($this->nick && $newStatus->notificarusuario) {
-            $this->notifyUser('new-service-status');
-        }
-    }
-
-    protected function onChangeUser()
-    {
-        $newUser = $this->getUser();
-        $oldUser = $this->getUser($this->previousData['nick'] ?? '');
-
-        // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-user-to', [
-            '%oldUser%' => $oldUser->nick ?? '-',
-            '%newUser%' => $newUser->nick ?? '-'
-        ]);
-
-        // enviamos las notificaciones
-        if ($this->nick) {
-            $this->notifyUser('new-service-user');
-        }
+        return parent::onChange($field);
     }
 
     protected function onInsert()
@@ -405,11 +332,8 @@ class ServicioAT extends Base\ModelOnChangeClass
             $this->notifyCustomer('new-service-customer');
         }
 
-        $log = new ServicioATLog();
-        $log->idservicio = $this->idservicio;
-        $log->message = self::toolBox()->i18n()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
-        $log->context = $this;
-        $log->save();
+        $message = self::toolBox()->i18n()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
+        $this->log($message);
 
         parent::onInsert();
     }
@@ -417,35 +341,97 @@ class ServicioAT extends Base\ModelOnChangeClass
     protected function onUpdate()
     {
         if ($this->asignado != $this->previousData['asignado']) {
-            $this->onChangeAsignado();
+            $this->onUpdateAsignado();
         }
 
         if ($this->codagente != $this->previousData['codagente']) {
-            $this->onChangeCodagente();
+            $this->onUpdateCodagente();
         }
 
         if ($this->codcliente != $this->previousData['codcliente']) {
-            $this->onChangeCodcliente();
-        }
-
-        if ($this->idestado != $this->previousData['idestado']) {
-            $this->onChangeIdestado();
+            $this->onUpdateCodcliente();
         }
 
         if ($this->nick != $this->previousData['nick']) {
-            $this->onChangeUser();
+            $this->onUpdateUser();
         }
-
-        $log = new ServicioATLog();
-        $log->idservicio = $this->idservicio;
-        $log->message = $this->messageLog;
-        $log->context = $this;
-        $log->save();
 
         parent::onUpdate();
     }
 
-    protected function notifyAgent(string $notification)
+    protected function onUpdateAsignado(): void
+    {
+        $newAssigned = $this->getAsignado();
+        $oldAssigned = $this->getAsignado($this->previousData['asignado'] ?? '');
+
+        // añadimos el cambio al log
+        $messageLog = self::toolBox()->i18n()->trans('changed-assigned-to', [
+            '%oldAssigned%' => $oldAssigned->nick ?? '-',
+            '%newAssigned%' => $newAssigned->nick ?? '-'
+        ]);
+        $this->log($messageLog);
+
+        // enviamos las notificaciones
+        if ($this->asignado) {
+            $this->notifyAssignedUser('new-service-assignee');
+        }
+    }
+
+    protected function onUpdateCodagente(): void
+    {
+        $newAgent = $this->getAgent();
+        $oldAgent = $this->getAgent($this->previousData['codagente'] ?? '');
+
+        // añadimos el cambio al log
+        $messageLog = self::toolBox()->i18n()->trans('changed-agent-to', [
+            '%oldAgent%' => $oldAgent->nombre ?? '-',
+            '%newAgent%' => $newAgent->nombre ?? '-'
+        ]);
+        $this->log($messageLog);
+
+        // enviamos las notificaciones
+        if ($this->codagente) {
+            $this->notifyAgent('new-service-agent');
+        }
+    }
+
+    protected function onUpdateCodcliente(): void
+    {
+        $newCustomer = $this->getCustomer();
+        $oldCustomer = $this->getCustomer($this->previousData['codcliente'] ?? '');
+
+        // añadimos el cambio al log
+        $messageLog = self::toolBox()->i18n()->trans('changed-customer-to', [
+            '%oldCustomer%' => $oldCustomer->nombre ?? '-',
+            '%newCustomer%' => $newCustomer->nombre ?? '-'
+        ]);
+        $this->log($messageLog);
+
+        // enviamos las notificaciones
+        if ($this->codcliente) {
+            $this->notifyCustomer('new-service-customer');
+        }
+    }
+
+    protected function onUpdateUser(): void
+    {
+        $newUser = $this->getUser();
+        $oldUser = $this->getUser($this->previousData['nick'] ?? '');
+
+        // añadimos el cambio al log
+        $messageLog = self::toolBox()->i18n()->trans('changed-user-to', [
+            '%oldUser%' => $oldUser->nick ?? '-',
+            '%newUser%' => $newUser->nick ?? '-'
+        ]);
+        $this->log($messageLog);
+
+        // enviamos las notificaciones
+        if ($this->nick) {
+            $this->notifyUser('new-service-user');
+        }
+    }
+
+    protected function notifyAgent(string $notification): void
     {
         $agent = new Agente();
         if (false === $agent->loadFromCode($this->codagente) || empty($agent->email)) {
@@ -461,7 +447,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         ]);
     }
 
-    protected function notifyAssignedUser(string $notification)
+    protected function notifyAssignedUser(string $notification): void
     {
         $assigned = new User();
         if (false === $assigned->loadFromCode($this->asignado)) {
@@ -477,7 +463,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         ]);
     }
 
-    protected function notifyCustomer(string $notification)
+    protected function notifyCustomer(string $notification): void
     {
         $customer = $this->getSubject();
         if (empty($customer) || empty($customer->email)) {
@@ -493,7 +479,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         ]);
     }
 
-    protected function notifyUser(string $notification)
+    protected function notifyUser(string $notification): void
     {
         $user = new User();
         if (false === $user->loadFromCode($this->nick)) {

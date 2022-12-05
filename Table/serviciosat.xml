@@ -85,7 +85,7 @@
     </column>
     <column>
         <name>neto</name>
-        <type>double</type>
+        <type>double precision</type>
         <default>0.0</default>
     </column>
     <column>
