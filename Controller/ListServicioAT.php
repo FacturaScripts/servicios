@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,7 +29,6 @@ use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
  */
 class ListServicioAT extends ListController
 {
-
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -74,7 +73,7 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['idprioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
         $this->addOrderBy($viewName, ['neto'], 'net');
-        $this->addSearchFields($viewName, ['descripcion', 'idservicio', 'material', 'observaciones', 'solucion']);
+        $this->addSearchFields($viewName, ['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion']);
 
         // filters
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');

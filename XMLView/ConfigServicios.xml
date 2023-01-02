@@ -5,7 +5,10 @@
             <column name="name" display="none" order="0">
                 <widget type="text" fieldname="name" readonly="true" required="true"/>
             </column>
-            <column name="new-work-status" numcolumns="4" order="100">
+            <column name="pattern" numcolumns="4" order="100">
+                <widget type="text" fieldname="patron"/>
+            </column>
+            <column name="new-work-status" numcolumns="4" order="110">
                 <widget type="select" fieldname="workstatus" translate="true" required="true">
                     <values title="do-nothing">0</values>
                     <values title="make-invoice">1</values>

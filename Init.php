@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios;
 
+use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
@@ -147,10 +148,16 @@ class Init extends InitClass
 
     private function setupSettings()
     {
-        $appSettings = $this->toolBox()->appSettings();
-        $footerText = $appSettings->get('servicios', 'footertext', '');
-        $appSettings->set('servicios', 'footertext', $footerText);
-        $appSettings->set('servicios', 'workstatus', 1);
+        $defaults = [
+            'footertext' => '',
+            'patron' => 'SER{ANYO}-{NUM}',
+            'workstatus' => 1
+        ];
+
+        $appSettings = new AppSettings();
+        foreach ($defaults as $key => $value) {
+            $appSettings->get('servicios', $key, $value);
+        }
         $appSettings->save();
     }
 

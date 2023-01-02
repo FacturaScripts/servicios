@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,9 +19,11 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
+use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Cliente;
@@ -50,6 +52,9 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     /** @var string */
     public $codcliente;
+
+    /** @var string */
+    public $codigo;
 
     /** @var string */
     public $descripcion;
@@ -271,7 +276,7 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     public function primaryDescriptionColumn(): string
     {
-        return 'idservicio';
+        return 'codigo';
     }
 
     public static function tableName(): string
@@ -281,8 +286,23 @@ class ServicioAT extends Base\ModelOnChangeClass
 
     public function test(): bool
     {
+        if (empty($this->codigo)) {
+            // obtenemos el patrón de la configuración
+            $pattern = AppSettings::get('servicios', 'patron', 'SER-{NUM}');
+
+            // si no tenemos id, asignamos uno nuevo
+            if (empty($this->idservicio)) {
+                $this->idservicio = $this->newCode();
+            }
+
+            // generamos el código
+            $this->codigo = CodePatterns::trans($pattern, $this, [
+                'numero' => 'idservicio'
+            ]);
+        }
+
         $utils = $this->toolBox()->utils();
-        $fields = ['descripcion', 'material', 'observaciones', 'solucion'];
+        $fields = ['codigo', 'descripcion', 'material', 'observaciones', 'solucion'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }

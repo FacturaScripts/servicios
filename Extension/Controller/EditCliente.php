@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
@@ -28,10 +29,9 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
  */
 class EditCliente
 {
-
     protected function createViews(): Closure
     {
-        return function() {
+        return function () {
             $this->createViewsMachines();
             $this->createViewsServices();
         };
@@ -39,7 +39,7 @@ class EditCliente
 
     protected function createViewsMachines(): Closure
     {
-        return function($viewName = 'ListMaquinaAT') {
+        return function ($viewName = 'ListMaquinaAT') {
             $this->addListView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
             $this->views[$viewName]->addOrderBy(['idmaquina'], 'code', 2);
             $this->views[$viewName]->addOrderBy(['fecha'], 'date');
@@ -54,12 +54,12 @@ class EditCliente
 
     protected function createViewsServices(): Closure
     {
-        return function($viewName = 'ListServicioAT') {
+        return function ($viewName = 'ListServicioAT') {
             $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
             $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
             $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
             $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
-            $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
+            $this->views[$viewName]->searchFields = ['codigo', 'descripcion', 'idservicio', 'observaciones'];
 
             /// disable customer column
             $this->views[$viewName]->disableColumn('customer');
@@ -68,7 +68,7 @@ class EditCliente
 
     protected function loadData(): Closure
     {
-        return function($viewName, $view) {
+        return function ($viewName, $view) {
             switch ($viewName) {
                 case 'ListMaquinaAT':
                 case 'ListServicioAT':
