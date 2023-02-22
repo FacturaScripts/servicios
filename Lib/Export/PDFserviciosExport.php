@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2021-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,17 +20,18 @@
 namespace FacturaScripts\Plugins\Servicios\Lib\Export;
 
 use FacturaScripts\Core\Base\Utils;
+use FacturaScripts\Core\Lib\Export\PDFExport;
+use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
 /**
  * Description of PDFserviciosExport
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Carlos Garcia Gomez           <carlos@facturascripts.com>
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
-class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
+class PDFserviciosExport extends PDFExport
 {
-
     /**
      * @param ServicioAT $model
      * @param array $columns
@@ -42,7 +43,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     {
         $this->newPage();
         $this->insertHeader($model->idempresa);
-        $this->pdf->ezText("\n" . $title . ': ' . $model->codigo . "\n", self::FONT_SIZE + 6);
+        $this->pdf->ezText("\n" . $title . ': ' . ($model->codigo ?? $model->idservicio) . "\n", self::FONT_SIZE + 6);
         $this->newLine();
 
         $subject = $model->getSubject();
@@ -121,7 +122,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
         if ($addLine) {
             $this->newLine();
         }
-        $this->pdf->ezText(\nl2br($text) . "\n", self::FONT_SIZE + 2);
+        $this->pdf->ezText(nl2br($text) . "\n", self::FONT_SIZE + 2);
     }
 
     protected function tableOptions($headings = 0): array

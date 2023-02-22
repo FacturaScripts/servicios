@@ -130,6 +130,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
             $this->{$field} = $this->toolBox()->utils()->noHtml($this->{$field});
         }
 
+        if (empty($this->horafin)) {
+            $this->horafin = null;
+        }
+
         if ($this->referencia) {
             $variante = $this->getVariante();
             $this->descripcion = empty($this->descripcion) ? $variante->description() : $this->descripcion;
