@@ -61,6 +61,13 @@ class ServiceToInvoice
         $newAlbaran->idempresa = $service->idempresa;
         $newAlbaran->idservicio = $service->idservicio;
         $newAlbaran->nick = $service->nick;
+
+        if (property_exists($service, 'idproyecto')
+            && property_exists($newAlbaran, 'idproyecto')
+            && $service->idproyecto) {
+            $newAlbaran->idproyecto = $service->idproyecto;
+        }
+
         if (false === $newAlbaran->save()) {
             $database->rollback();
             return false;
@@ -111,6 +118,13 @@ class ServiceToInvoice
         $newEstimation->idempresa = $service->idempresa;
         $newEstimation->idservicio = $service->idservicio;
         $newEstimation->nick = $service->nick;
+
+        if (property_exists($service, 'idproyecto')
+            && property_exists($newEstimation, 'idproyecto')
+            && $service->idproyecto) {
+            $newEstimation->idproyecto = $service->idproyecto;
+        }
+
         if (false === $newEstimation->save()) {
             $database->rollback();
             return false;
@@ -161,6 +175,13 @@ class ServiceToInvoice
         $newInvoice->idempresa = $service->idempresa;
         $newInvoice->idservicio = $service->idservicio;
         $newInvoice->nick = $service->nick;
+
+        if (property_exists($service, 'idproyecto')
+            && property_exists($newInvoice, 'idproyecto')
+            && $service->idproyecto) {
+            $newInvoice->idproyecto = $service->idproyecto;
+        }
+
         if (false === $newInvoice->save()) {
             $database->rollback();
             return false;
