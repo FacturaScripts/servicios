@@ -42,7 +42,7 @@ class PDFserviciosExport extends \FacturaScripts\Core\Lib\Export\PDFExport
     {
         $this->newPage();
         $this->insertHeader($model->idempresa);
-        $this->pdf->ezText("\n" . $title . ': ' . $model->idservicio . "\n", self::FONT_SIZE + 6);
+        $this->pdf->ezText("\n" . $title . ': ' . $model->codigo . "\n", self::FONT_SIZE + 6);
         $this->newLine();
 
         $subject = $model->getSubject();
