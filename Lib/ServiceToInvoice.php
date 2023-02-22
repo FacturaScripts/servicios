@@ -62,7 +62,9 @@ class ServiceToInvoice
         $newAlbaran->idservicio = $service->idservicio;
         $newAlbaran->nick = $service->nick;
 
-        if ($service->idproyecto) {
+        if (property_exists($service, 'idproyecto')
+            && property_exists($newAlbaran, 'idproyecto')
+            && $service->idproyecto) {
             $newAlbaran->idproyecto = $service->idproyecto;
         }
 
@@ -117,7 +119,9 @@ class ServiceToInvoice
         $newEstimation->idservicio = $service->idservicio;
         $newEstimation->nick = $service->nick;
 
-        if ($service->idproyecto) {
+        if (property_exists($service, 'idproyecto')
+            && property_exists($newEstimation, 'idproyecto')
+            && $service->idproyecto) {
             $newEstimation->idproyecto = $service->idproyecto;
         }
 
@@ -172,7 +176,9 @@ class ServiceToInvoice
         $newInvoice->idservicio = $service->idservicio;
         $newInvoice->nick = $service->nick;
 
-        if ($service->idproyecto) {
+        if (property_exists($service, 'idproyecto')
+            && property_exists($newInvoice, 'idproyecto')
+            && $service->idproyecto) {
             $newInvoice->idproyecto = $service->idproyecto;
         }
 
