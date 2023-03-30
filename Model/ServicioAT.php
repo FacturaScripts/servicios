@@ -146,7 +146,15 @@ class ServicioAT extends Base\ModelOnChangeClass
             }
         }
 
-        return parent::delete();
+        if (false === parent::delete()) {
+            return false;
+        }
+
+        // añadimos el cambio al log
+        $messageLog = self::toolBox()->i18n()->trans('deleted-service');
+        $this->log($messageLog);
+
+        return true;
     }
 
     public function getAgent(string $codagente = null): Agente
