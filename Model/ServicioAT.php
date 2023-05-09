@@ -499,7 +499,8 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $agent->email, $agent->nombre, [
-            'number' => $this->codigo,
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -515,7 +516,8 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $assigned->email, $assigned->nick, [
-            'number' => $this->codigo,
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -531,7 +533,8 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $customer->email, $customer->nombre, [
-            'number' => $this->codigo,
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
             'customer' => $customer->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -547,7 +550,8 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $user->email, $user->nick, [
-            'number' => $this->codigo,
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
