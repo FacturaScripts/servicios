@@ -159,6 +159,7 @@ class NewServicioAT extends Controller
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
         $newServicio->idmaquina = $id;
+        $newServicio->idproyecto = $this->request->get('idproyecto');
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
             $this->redirect($newServicio->url());
@@ -199,6 +200,7 @@ class NewServicioAT extends Controller
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
         $newServicio->idmaquina = $idmaquina;
+        $newServicio->idproyecto = $this->request->get('idproyecto');
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
             $this->redirect($newServicio->url());
@@ -229,6 +231,7 @@ class NewServicioAT extends Controller
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
         $newServicio->idmaquina = $newMachine->idmaquina;
+        $newServicio->idproyecto = $this->request->get('idproyecto');
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
             $this->redirect($newServicio->url());
@@ -244,6 +247,7 @@ class NewServicioAT extends Controller
         $newServicio->codalmacen = $this->user->codalmacen;
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
+        $newServicio->idproyecto = $this->request->get('idproyecto');
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
             $this->redirect($newServicio->url());
