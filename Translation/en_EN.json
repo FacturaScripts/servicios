@@ -7,6 +7,7 @@
     "changed-status-to": "Change of status, before %oldStatus%, now %newStatus%",
     "changed-user-to": "The user %oldUser% has been changed to the user %newUser%",
     "customer-has-no-machines": "Customer has no machines",
+    "deleted-service": "Deleted service",
     "disable-stock-management": "Do not control stock (in jobs)",
     "from-hour": "From hour",
     "make-delivery-note": "Make delivery note",

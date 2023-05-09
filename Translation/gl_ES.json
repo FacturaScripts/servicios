@@ -7,6 +7,7 @@
     "changed-status-to": "Cambio de estado, antes %oldStatus%, agora %newStatus%",
     "changed-user-to": "Cambiouse o usuario %oldUser% polo usuario %newUser%",
     "customer-has-no-machines": "O cliente non ten máquinas",
+    "deleted-service": "Servizo eliminado",
     "disable-stock-management": "Non controlar stock (en traballos)",
     "from-hour": "Hora inicio",
     "make-delivery-note": "Facer albará",

@@ -7,6 +7,7 @@
     "changed-status-to": "Canvi d'estat abans %oldStatus%, ara %newStatus%",
     "changed-user-to": "L'usuari %oldUser% ha canviat per l'usuari %newUser%",
     "customer-has-no-machines": "El client no té màquines",
+    "deleted-service": "Servicio eliminado",
     "disable-stock-management": "No controlar stock (en trabajos)",
     "from-hour": "Hora inici",
     "make-delivery-note": "Fes un albarà",
