@@ -384,6 +384,10 @@ class ServicioAT extends Base\ModelOnChangeClass
             $this->onUpdateUser();
         }
 
+        if ($this->idestado != $this->previousData['idestado']) {
+            $this->onUpdateStatus();
+        }
+
         parent::onUpdate();
     }
 
@@ -441,6 +445,34 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
     }
 
+    protected function onUpdateStatus()
+    {
+        $notification = 'new-service-status';
+
+        // obtenemos el estado
+        $newStatus = $this->getStatus();
+
+        // notificamos al agente
+        if ($newStatus->notificaragente) {
+            $this->notifyAgent($notification);
+        }
+
+        // notificamos al asignado
+        if ($newStatus->notificarasignado) {
+            $this->notifyAssignedUser($notification);
+        }
+
+        // notificamos al cliente
+        if ($newStatus->notificarcliente) {
+            $this->notifyCustomer($notification);
+        }
+
+        // notificamos al usuario
+        if ($newStatus->notificarusuario) {
+            $this->notifyUser($notification);
+        }
+    }
+
     protected function onUpdateUser(): void
     {
         $newUser = $this->getUser();
@@ -467,7 +499,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $agent->email, $agent->nombre, [
-            'number' => $this->idservicio,
+            'number' => $this->codigo,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -483,7 +515,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $assigned->email, $assigned->nick, [
-            'number' => $this->idservicio,
+            'number' => $this->codigo,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -499,7 +531,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $customer->email, $customer->nombre, [
-            'number' => $this->idservicio,
+            'number' => $this->codigo,
             'customer' => $customer->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -515,7 +547,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         MailNotifier::send($notification, $user->email, $user->nick, [
-            'number' => $this->idservicio,
+            'number' => $this->codigo,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
