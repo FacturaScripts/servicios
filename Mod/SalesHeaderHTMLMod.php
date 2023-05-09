@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2022-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,7 +26,6 @@ use FacturaScripts\Core\Model\User;
 
 class SalesHeaderHTMLMod implements SalesModInterface
 {
-
     public function apply(SalesDocument &$model, array $formData, User $user)
     {
     }
@@ -57,7 +56,7 @@ class SalesHeaderHTMLMod implements SalesModInterface
     {
         return property_exists($model, 'idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
             . '<div class="form-group">'
-            . '<a href="/EditServicioAT?code=' . $model->{'idservicio'} . '">' . $i18n->trans('service') . '</a>'
+            . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '">' . $i18n->trans('service') . '</a>'
             . '<input type="text" value="' . $model->{'idservicio'} . '" class="form-control" disabled />'
             . '</div>'
             . '</div>' : '';
