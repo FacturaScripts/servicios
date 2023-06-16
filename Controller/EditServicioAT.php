@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -34,7 +34,6 @@ use FacturaScripts\Dinamic\Model\TrabajoAT;
  */
 class EditServicioAT extends EditController
 {
-
     use DocFilesTrait;
 
     public function getModelClassName(): string
@@ -200,8 +199,13 @@ class EditServicioAT extends EditController
         return $result;
     }
 
-    protected function disableAllColumns(string $mainViewName, string $exclude = '')
+    protected function disableAllColumns(string $mainViewName, string $exclude = ''): void
     {
+        // si no existe la vista, salimos
+        if (!isset($this->views[$mainViewName])) {
+            return;
+        }
+
         foreach ($this->views[$mainViewName]->getColumns() as $group) {
             foreach ($group->columns as $col) {
                 if ($col->name === $exclude || $col->display === 'none') {
