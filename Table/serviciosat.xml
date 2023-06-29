@@ -105,6 +105,10 @@
         <type>PRIMARY KEY (idservicio)</type>
     </constraint>
     <constraint>
+        <name>ca_serviciosat_agentes</name>
+        <type>FOREIGN KEY (codagente) REFERENCES agentes (codagente) ON DELETE SET NULL ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
         <name>ca_serviciosat_almacenes</name>
         <type>FOREIGN KEY (codalmacen) REFERENCES almacenes (codaLmacen) ON DELETE RESTRICT ON UPDATE CASCADE</type>
     </constraint>
@@ -145,8 +149,8 @@
         <type>FOREIGN KEY (asignado) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_serviciosat_prioridades</name>
-        <type>FOREIGN KEY (idprioridad) REFERENCES serviciosat_prioridades (id) ON DELETE RESTRICT ON UPDATE CASCADE</type>
+        <name>ca_serviciosat_idprioridad</name>
+        <type>FOREIGN KEY (idprioridad) REFERENCES serviciosat_prioridades (id) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
         <name>uniq_codigo_serviciosat</name>

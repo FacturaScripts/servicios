@@ -68,11 +68,15 @@
         <type>PRIMARY KEY (idtrabajo)</type>
     </constraint>
     <constraint>
-        <name>ca_serviciosat_servicios</name>
+        <name>ca_serviciosat_trabajos_idservicio</name>
         <type>FOREIGN KEY (idservicio) REFERENCES serviciosat (idservicio) ON DELETE CASCADE ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
-        <name>ca_serviciosat_variantes</name>
+        <name>ca_serviciosat_trabajos_referencia</name>
         <type>FOREIGN KEY (referencia) REFERENCES variantes (referencia) ON DELETE SET NULL ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>ca_serviciosat_trabajos_codagentes</name>
+        <type>FOREIGN KEY (codagente) REFERENCES agentes (codagente) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
 </table>
