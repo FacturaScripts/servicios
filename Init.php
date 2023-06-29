@@ -33,14 +33,13 @@ use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\EmailNotification;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
 /**
  * Description of Init
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class Init extends InitClass
+final class Init extends InitClass
 {
     const ROLE_NAME = 'Servicios';
 
@@ -69,6 +68,9 @@ class Init extends InitClass
 
     public function update()
     {
+        $this->fixMissingAgents();
+        $this->fixMissingCustomers();
+
         new Model\EstadoAT();
         new Model\MaquinaAT();
         new Model\PrioridadAT();
@@ -79,21 +81,10 @@ class Init extends InitClass
 
         $this->setupSettings();
         $this->createRoleForPlugin();
-        $this->fixMissingCustomers();
-        $this->calculateNetServices();
         $this->updateEmailNotifications();
     }
 
-    private function calculateNetServices()
-    {
-        $service = new ServicioAT();
-        $where = [new DataBaseWhere('neto', 0.0)];
-        foreach ($service->all($where, [], 0, 0) as $service) {
-            $service->calculatePriceNet();
-        }
-    }
-
-    private function createRoleForPlugin()
+    private function createRoleForPlugin(): void
     {
         $dataBase = new DataBase();
         $dataBase->beginTransaction();
@@ -139,14 +130,34 @@ class Init extends InitClass
         $dataBase->commit();
     }
 
-    private function fixMissingCustomers()
+    private function fixMissingAgents(): void
     {
+        // si no existe la tabla, no hacemos nada
+        $db = new DataBase();
+        foreach (['serviciosat', 'serviciosat_trabajos'] as $table) {
+            if (false === $db->tableExists($table)) {
+                break;
+            }
+
+            $sql = 'UPDATE ' . $table . ' SET codagente = NULL WHERE codagente IS NOT NULL AND codagente NOT IN (SELECT codagente FROM agentes);';
+            $db->exec($sql);
+        }
+    }
+
+    private function fixMissingCustomers(): void
+    {
+        // si no existe la tabla, no hacemos nada
+        $db = new DataBase();
+        if (false === $db->tableExists('serviciosat')) {
+            return;
+        }
+
         $db = new DataBase();
         $sql = 'UPDATE serviciosat SET codcliente = NULL WHERE codcliente IS NOT NULL AND codcliente NOT IN (SELECT codcliente FROM clientes);';
         $db->exec($sql);
     }
 
-    private function setupSettings()
+    private function setupSettings(): void
     {
         $defaults = [
             'footertext' => '',
@@ -161,7 +172,7 @@ class Init extends InitClass
         $appSettings->save();
     }
 
-    private function updateEmailNotifications()
+    private function updateEmailNotifications(): void
     {
         $i18n = ToolBox::i18n();
         $notificationModel = new EmailNotification();

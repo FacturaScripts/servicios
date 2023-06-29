@@ -23,14 +23,14 @@ use FacturaScripts\Core\Base\CronClass;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
-class Cron extends CronClass
+final class Cron extends CronClass
 {
-    const JOB_NAME = 'update-services-code';
+    const JOB_PREFIX = 'update-services-';
     const JOB_INTERVAL = '1 year';
 
     public function run()
     {
-        if ($this->isTimeForJob(self::JOB_NAME, self::JOB_INTERVAL)) {
+        if ($this->isTimeForJob(self::JOB_PREFIX . 'codes', self::JOB_INTERVAL)) {
 
             // buscamos todos los servicios con codigo = null
             $serviceModel = new ServicioAT();
@@ -42,7 +42,20 @@ class Cron extends CronClass
                 $service->save();
             }
 
-            $this->jobDone(self::JOB_NAME);
+            $this->jobDone(self::JOB_PREFIX . 'codes');
+        }
+
+        if ($this->isTimeForJob(self::JOB_PREFIX . 'net', self::JOB_INTERVAL)) {
+
+            // buscamos todos los servicios con neto = 0.0
+            $serviceModel = new ServicioAT();
+            $where = [new DataBaseWhere('neto', 0.0)];
+            $orderBy = ['idservicio' => 'DESC'];
+            foreach ($serviceModel->all($where, $orderBy, 0, 500) as $service) {
+                $service->calculatePriceNet();
+            }
+
+            $this->jobDone(self::JOB_PREFIX . 'net');
         }
     }
 }
