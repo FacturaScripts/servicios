@@ -96,7 +96,7 @@ class EditServicioAT extends EditController
         $this->createViewLogs();
     }
 
-    protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente')
+    protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente'): void
     {
         $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-dolly-flatbed');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
@@ -116,7 +116,7 @@ class EditServicioAT extends EditController
         ]);
     }
 
-    protected function createViewsEstimations(string $viewName = 'ListPresupuestoCliente')
+    protected function createViewsEstimations(string $viewName = 'ListPresupuestoCliente'): void
     {
         $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'far fa-file-powerpoint');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
@@ -136,7 +136,7 @@ class EditServicioAT extends EditController
         ]);
     }
 
-    protected function createViewsInvoices(string $viewName = 'ListFacturaCliente')
+    protected function createViewsInvoices(string $viewName = 'ListFacturaCliente'): void
     {
         $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-file-invoice-dollar');
         $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
@@ -156,7 +156,7 @@ class EditServicioAT extends EditController
         ]);
     }
 
-    public function createViewLogs(string $viewName = 'ListServicioATLog')
+    public function createViewLogs(string $viewName = 'ListServicioATLog'): void
     {
         $this->addListView($viewName, 'ServicioATLog', 'history', 'fas fa-history');
         $this->views[$viewName]->addOrderBy(['creationdate'], 'date', 2);
@@ -168,7 +168,7 @@ class EditServicioAT extends EditController
         $this->setSettings($viewName, 'checkBoxes', false);
     }
 
-    protected function createViewsWorks(string $viewName = 'EditTrabajoAT')
+    protected function createViewsWorks(string $viewName = 'EditTrabajoAT'): void
     {
         $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
 
@@ -315,6 +315,10 @@ class EditServicioAT extends EditController
             case 'ListPresupuestoCliente':
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
                 $view->loadData('', $where);
+                break;
+
+            default:
+                parent::loadData($viewName, $view);
                 break;
         }
     }
