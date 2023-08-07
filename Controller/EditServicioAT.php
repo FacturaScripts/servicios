@@ -316,10 +316,6 @@ class EditServicioAT extends EditController
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
                 $view->loadData('', $where);
                 break;
-
-            default:
-                parent::loadData($viewName, $view);
-                break;
         }
     }
 
