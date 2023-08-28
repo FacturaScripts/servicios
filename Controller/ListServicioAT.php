@@ -80,6 +80,8 @@ class ListServicioAT extends ListController
         $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idprioridad', 'priority', 'idprioridad', $priority);
+        $type = $this->codeModel->all('serviciosat_tipos', 'id', 'tipo');
+        $this->addFilterSelect($viewName, 'idtipo', 'type', 'idtipo', $type);
         $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idestado', 'status', 'idestado', $status);
 
