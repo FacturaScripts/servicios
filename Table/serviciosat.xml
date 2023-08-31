@@ -100,6 +100,14 @@
         <name>solucion</name>
         <type>text</type>
     </column>
+    <column>
+        <name>telefono1</name>
+        <type>character varying(30)</type>
+    </column>
+    <column>
+        <name>telefono2</name>
+        <type>character varying(30)</type>
+    </column>
     <constraint>
         <name>serviciosat_pkey</name>
         <type>PRIMARY KEY (idservicio)</type>

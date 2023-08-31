@@ -78,7 +78,9 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['idprioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
         $this->addOrderBy($viewName, ['neto'], 'net');
-        $this->addSearchFields($viewName, ['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion']);
+        $this->addSearchFields($viewName, [
+            'codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'
+        ]);
 
         // filtros
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
@@ -122,7 +124,9 @@ class ListServicioAT extends ListController
         $this->addOrderBy($viewName, ['idprioridad'], 'priority');
         $this->addOrderBy($viewName, ['idservicio'], 'code');
         $this->addOrderBy($viewName, ['neto'], 'net');
-        $this->addSearchFields($viewName, ['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion']);
+        $this->addSearchFields($viewName, [
+            'codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'
+        ]);
 
         // filtros
         $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
