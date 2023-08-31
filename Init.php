@@ -161,6 +161,7 @@ final class Init extends InitClass
     {
         $defaults = [
             'footertext' => '',
+            'longnumero' => 6,
             'patron' => 'SER{ANYO}-{NUM}',
             'workstatus' => 1
         ];

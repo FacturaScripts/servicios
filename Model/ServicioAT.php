@@ -323,7 +323,8 @@ class ServicioAT extends Base\ModelOnChangeClass
 
             // generamos el código
             $this->codigo = CodePatterns::trans($pattern, $this, [
-                'numero' => 'idservicio'
+                'numero' => 'idservicio',
+                'long' => AppSettings::get('servicios', 'longnumero', 6)
             ]);
         }
 
