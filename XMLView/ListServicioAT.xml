@@ -26,57 +26,86 @@
         <column name="code" order="100">
             <widget type="text" fieldname="codigo"/>
         </column>
-        <column name="company" display="none" order="110">
+        <column name="company" display="none" order="105">
             <widget type="select" fieldname="idempresa">
                 <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto"/>
             </widget>
         </column>
-        <column name="warehouse" display="none" order="120">
+        <column name="warehouse" display="none" order="110">
             <widget type="select" fieldname="codalmacen">
                 <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="customer" order="130">
+        <column name="customer" order="115">
             <widget type="autocomplete" fieldname="codcliente">
                 <values source="clientes" fieldcode="codcliente" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="machine" order="140">
+        <column name="machine" order="120">
             <widget type="autocomplete" fieldname="idmaquina">
                 <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="description" order="150">
+        <column name="machine2" title="machine" display="none" order="125">
+            <widget type="autocomplete" fieldname="idmaquina2">
+                <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
+            </widget>
+        </column>
+        <column name="machine3" title="machine" display="none" order="130">
+            <widget type="autocomplete" fieldname="idmaquina2">
+                <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
+            </widget>
+        </column>
+        <column name="machine4" title="machine" display="none" order="135">
+            <widget type="autocomplete" fieldname="idmaquina2">
+                <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
+            </widget>
+        </column>
+        <column name="description" order="140">
             <widget type="textarea" fieldname="descripcion"/>
         </column>
-        <column name="observations" display="none" order="160">
+        <column name="material" display="none" order="145">
+            <widget type="textarea" fieldname="material" rows="6"/>
+        </column>
+        <column name="solution" display="none" order="150">
+            <widget type="textarea" fieldname="solucion" rows="6"/>
+        </column>
+        <column name="observations" display="none" order="155">
             <widget type="textarea" fieldname="observaciones"/>
         </column>
-        <column name="user" display="none" order="170">
+        <column name="user" display="none" order="160">
             <widget type="select" fieldname="codagente">
                 <values source="users" fieldcode="nick" fieldtitle="nick"/>
             </widget>
         </column>
-        <column name="agent" display="none" order="180">
+        <column name="assigned" display="none" order="165">
+            <widget type="select" fieldname="asignado">
+                <values source="users" fieldcode="nick" fieldtitle="nick"/>
+            </widget>
+        </column>
+        <column name="agent" display="none" order="170">
             <widget type="select" fieldname="codagente">
                 <values source="agentes" fieldcode="codagente" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="status" order="190">
+        <column name="status" order="175">
             <widget type="select" fieldname="idestado">
                 <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="priority" display="right" order="190">
+        <column name="priority" display="none" order="180">
             <widget type="select" fieldname="idprioridad">
                 <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="net" order="200">
+        <column name="net" order="185">
             <widget type="money" fieldname="neto"/>
         </column>
-        <column name="date" display="right" order="210">
+        <column name="date" display="right" order="190">
             <widget type="date" fieldname="fecha"/>
+        </column>
+        <column name="hour" display="none" order="195">
+            <widget type="time" fieldname="hora"/>
         </column>
     </columns>
     <rows>
