@@ -293,18 +293,6 @@ class ServicioAT extends Base\ModelOnChangeClass
         return 'codigo';
     }
 
-    public function save(): bool
-    {
-        // si los teléfonos están vacíos, los rellenamos con los del cliente
-        if ($this->editable && empty($this->telefono1) && empty($this->telefono2)) {
-            $customer = $this->getSubject();
-            $this->telefono1 = $customer->telefono1;
-            $this->telefono2 = $customer->telefono2;
-        }
-
-        return parent::save();
-    }
-
     public static function tableName(): string
     {
         return 'serviciosat';
@@ -328,11 +316,21 @@ class ServicioAT extends Base\ModelOnChangeClass
             ]);
         }
 
+        // si los teléfonos están vacíos, los rellenamos con los del cliente
+        if ($this->editable && empty($this->telefono1) && empty($this->telefono2)) {
+            $customer = $this->getSubject();
+            $this->telefono1 = $customer->telefono1;
+            $this->telefono2 = $customer->telefono2;
+        }
+
         $utils = $this->toolBox()->utils();
         $fields = ['codigo', 'descripcion', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }
+
+        // comprobamos que editable se corresponda con el estado
+        $this->editable = $this->getStatus()->editable;
 
         return parent::test();
     }

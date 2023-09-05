@@ -104,7 +104,7 @@
                 <values source="serviciosat_prioridades" fieldcode="id" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="net" order="195">
+        <column name="net" display="right" order="195">
             <widget type="money" fieldname="neto"/>
         </column>
         <column name="date" display="right" order="200">

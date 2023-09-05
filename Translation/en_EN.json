@@ -10,6 +10,7 @@
     "deleted-service": "Deleted service",
     "disable-stock-management": "Do not control stock (in jobs)",
     "from-hour": "From hour",
+    "generated-services": "%quantity% servicios generados.",
     "make-delivery-note": "Make delivery note",
     "make-estimation": "Make estimation",
     "make-invoice": "Make invoice",
