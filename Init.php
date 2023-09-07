@@ -74,6 +74,7 @@ final class Init extends InitClass
         new Model\EstadoAT();
         new Model\MaquinaAT();
         new Model\PrioridadAT();
+        new Model\TipoAT();
         new Model\ServicioAT();
         new PresupuestoCliente();
         new AlbaranCliente();

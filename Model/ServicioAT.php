@@ -84,6 +84,9 @@ class ServicioAT extends Base\ModelOnChangeClass
     public $idmaquina4;
 
     /** @var int */
+    public $idtipo;
+
+    /** @var int */
     public $idprioridad;
 
     /** @var int */
@@ -142,6 +145,14 @@ class ServicioAT extends Base\ModelOnChangeClass
                 break;
             }
         }
+
+        // set default type
+        foreach ($this->getAvailableTypes() as $type) {
+            if ($type->predeterminado) {
+                $this->idtipo = $type->id;
+                break;
+            }
+        }
     }
 
     public function delete(): bool
@@ -184,6 +195,15 @@ class ServicioAT extends Base\ModelOnChangeClass
     {
         $priority = new PrioridadAT();
         return $priority->all([], [], 0, 0);
+    }
+
+    /**
+     * @return TipoAT[]
+     */
+    public function getAvailableTypes(): array
+    {
+        $type = new TipoAT();
+        return $type->all([], [], 0, 0);
     }
 
     /**
@@ -238,6 +258,13 @@ class ServicioAT extends Base\ModelOnChangeClass
         return $priority;
     }
 
+    public function getType(): TipoAT
+    {
+        $type = new TipoAT();
+        $type->loadFromCode($this->idtipo);
+        return $type;
+    }
+
     public function getSubject(): Cliente
     {
         $cliente = new Cliente();
@@ -270,6 +297,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         new MaquinaAT();
         new EstadoAT();
         new PrioridadAT();
+        new TipoAT();
 
         return parent::install();
     }
