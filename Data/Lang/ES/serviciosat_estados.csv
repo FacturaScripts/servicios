@@ -1,5 +1,5 @@
-id;nombre;predeterminado;editable
-1;Pendiente;true;true
-2;Procesando;false;true
-3;Completado;false;false
-4;Rechazado;false;false
+id;nombre;predeterminado;editable;color
+1;"Pendiente";true;true;"info"
+2;"Procesando";false;true;"warning"
+3;"Completado";false;false;"success"
+4;"Rechazado";false;false;"danger"

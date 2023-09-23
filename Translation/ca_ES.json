@@ -10,6 +10,7 @@
     "deleted-service": "Servei eliminat",
     "disable-stock-management": "No controlar estoc (en feines)",
     "from-hour": "Hora inici",
+    "generated-services": "%quantity% servicios generados.",
     "make-delivery-note": "Fer albarà",
     "make-estimation": "Fer pressupost",
     "make-invoice": "Fer factura",

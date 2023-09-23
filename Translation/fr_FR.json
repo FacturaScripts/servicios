@@ -10,6 +10,7 @@
     "deleted-service": "Servicio eliminado",
     "disable-stock-management": "No controlar stock (en trabajos)",
     "from-hour": "À partir de l'heure",
+    "generated-services": "%quantity% servicios generados.",
     "make-delivery-note": "Faire un bon de livraison",
     "make-estimation": "Faire un devis",
     "make-invoice": "Faire une facture",

@@ -34,33 +34,39 @@
                     <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo" />
                 </widget>
             </column>
-            <column name="machine" title="machine" order="110">
+            <column name="phone" order="110">
+                <widget type="text" fieldname="telefono1" maxlegth="30"/>
+            </column>
+            <column name="phone2" order="120">
+                <widget type="text" fieldname="telefono2" maxlegth="30"/>
+            </column>
+            <column name="machine" title="machine" order="130">
                 <widget type="autocomplete" fieldname="idmaquina" onclick="EditMaquinaAT">
                     <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
-            <column name="machine2" title="machine" order="120">
+            <column name="machine2" title="machine" display="none" order="140">
                 <widget type="autocomplete" fieldname="idmaquina2" onclick="EditMaquinaAT">
                     <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
-            <column name="machine3" title="machine" display="none" order="130">
+            <column name="machine3" title="machine" display="none" order="150">
                 <widget type="autocomplete" fieldname="idmaquina3" onclick="EditMaquinaAT">
                     <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
-            <column name="machine4" title="machine" display="none" order="140">
+            <column name="machine4" title="machine" display="none" order="160">
                 <widget type="autocomplete" fieldname="idmaquina4" onclick="EditMaquinaAT">
                     <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
                 </widget>
             </column>
-            <column name="date" numcolumns="2" order="150">
+            <column name="date" order="170">
                 <widget type="date" fieldname="fecha" required="true"/>
             </column>
-            <column name="hour" numcolumns="2" order="160">
+            <column name="hour" order="180">
                 <widget type="time" fieldname="hora" required="true"/>
             </column>
-            <column name="status" numcolumns="2" order="180">
+            <column name="status" numcolumns="2" order="190">
                 <widget type="select" fieldname="idestado" required="true">
                     <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
                 </widget>

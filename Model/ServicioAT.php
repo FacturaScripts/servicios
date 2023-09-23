@@ -107,6 +107,12 @@ class ServicioAT extends Base\ModelOnChangeClass
     /** @var string */
     public $solucion;
 
+    /** @var string */
+    public $telefono1;
+
+    /** @var string */
+    public $telefono2;
+
     public function calculatePriceNet()
     {
         $this->neto = 0.0;
@@ -333,15 +339,26 @@ class ServicioAT extends Base\ModelOnChangeClass
 
             // generamos el código
             $this->codigo = CodePatterns::trans($pattern, $this, [
-                'numero' => 'idservicio'
+                'numero' => 'idservicio',
+                'long' => AppSettings::get('servicios', 'longnumero', 6)
             ]);
         }
 
+        // si los teléfonos están vacíos, los rellenamos con los del cliente
+        if ($this->editable && empty($this->telefono1) && empty($this->telefono2)) {
+            $customer = $this->getSubject();
+            $this->telefono1 = $customer->telefono1;
+            $this->telefono2 = $customer->telefono2;
+        }
+
         $utils = $this->toolBox()->utils();
-        $fields = ['codigo', 'descripcion', 'material', 'observaciones', 'solucion'];
+        $fields = ['codigo', 'descripcion', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'];
         foreach ($fields as $key) {
             $this->{$key} = $utils->noHtml($this->{$key});
         }
+
+        // comprobamos que editable se corresponda con el estado
+        $this->editable = $this->getStatus()->editable;
 
         return parent::test();
     }
