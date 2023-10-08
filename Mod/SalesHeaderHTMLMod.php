@@ -38,7 +38,17 @@ class SalesHeaderHTMLMod implements SalesModInterface
     {
     }
 
+    public function newBtnFields(): array
+    {
+        return [];
+    }
+
     public function newFields(): array
+    {
+        return [];
+    }
+
+    public function newModalFields(): array
     {
         return ['servicio'];
     }
