@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2022-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,7 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base\ModelClass;
 use FacturaScripts\Core\Model\Base\ModelTrait;
-use FacturaScripts\Dinamic\Lib\IPFilter;
+use FacturaScripts\Core\Session;
 
 /**
  * Description of ServicioATLog
@@ -71,7 +71,7 @@ class ServicioATLog extends ModelClass
     {
         parent::clear();
         $this->creationdate = date(ModelClass::DATETIME_STYLE);
-        $this->ip = IPFilter::getClientIp();
+        $this->ip = Session::getClientIp();
     }
 
     public static function primaryColumn(): string
