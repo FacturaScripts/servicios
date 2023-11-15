@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
+          tag_name: 2.8
           release_name: Servicios - ${{ env.VERSION }}
           body: |
             Nova version ${{ env.VERSION }}!
