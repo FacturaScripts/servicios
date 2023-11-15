@@ -1,9 +1,9 @@
-name: Novo release de Avisos
+name: Release Servicios.zip
 on:
   workflow_dispatch:
     
 jobs:
-  build:
+  releasing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
