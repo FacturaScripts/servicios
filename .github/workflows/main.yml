@@ -11,7 +11,7 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          version=$(grep -o "^version\s*=\s*'[^']*'" facturascripts.ini | cut -d "'" -f 2)
+          version=$(grep ^version facturascripts.ini | cut -d= -f2)
           echo "VERSION=v$version" >> $GITHUB_ENV
       - name: Criar ZIP
         run: |
