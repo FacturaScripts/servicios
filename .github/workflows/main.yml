@@ -16,7 +16,7 @@ jobs:
       - name: Criar ZIP
         run: |
           mkdir Servicios
-          rsync --exclude Servicios ./* Servicios/
+          rsync -Rr --exclude Servicios ./* Servicios/
           zip -r Servicios.zip Servicios
       - name: Create tag
         id: create_release
