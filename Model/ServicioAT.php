@@ -19,7 +19,6 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
@@ -306,7 +305,7 @@ class ServicioAT extends ModelOnChangeClass
     {
         if (empty($this->codigo)) {
             // obtenemos el patrón de la configuración
-            $pattern = AppSettings::get('servicios', 'patron', 'SER-{NUM}');
+            $pattern = Tools::settings('servicios', 'patron', 'SER-{NUM}');
 
             // si no tenemos id, asignamos uno nuevo
             if (empty($this->idservicio)) {
@@ -316,7 +315,7 @@ class ServicioAT extends ModelOnChangeClass
             // generamos el código
             $this->codigo = CodePatterns::trans($pattern, $this, [
                 'numero' => 'idservicio',
-                'long' => AppSettings::get('servicios', 'longnumero', 6)
+                'long' => Tools::settings('servicios', 'longnumero', 6)
             ]);
         }
 

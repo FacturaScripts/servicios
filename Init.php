@@ -19,14 +19,13 @@
 
 namespace FacturaScripts\Plugins\Servicios;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Base\InitClass;
-use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ExportManager;
 use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
@@ -166,16 +165,14 @@ final class Init extends InitClass
             'workstatus' => 1
         ];
 
-        $appSettings = new AppSettings();
         foreach ($defaults as $key => $value) {
-            $appSettings->get('servicios', $key, $value);
+            Tools::settings('servicios', $key, $value);
         }
-        $appSettings->save();
+        Tools::settingsSave();
     }
 
     private function updateEmailNotifications(): void
     {
-        $i18n = ToolBox::i18n();
         $notificationModel = new EmailNotification();
         $keys = [
             'new-service-assignee', 'new-service-agent', 'new-service-customer',
@@ -187,8 +184,8 @@ final class Init extends InitClass
             }
 
             $notificationModel->name = $key;
-            $notificationModel->body = $i18n->trans($key . '-body');
-            $notificationModel->subject = $i18n->trans($key);
+            $notificationModel->body = Tools::lang()->trans($key . '-body');
+            $notificationModel->subject = Tools::lang()->trans($key);
             $notificationModel->enabled = false;
             $notificationModel->save();
         }

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\CodeModel;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
@@ -33,25 +34,15 @@ use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
  */
 class NewServicioAT extends Controller
 {
-
-    /**
-     * @var Cliente
-     */
+    /** @var Cliente */
     public $cliente;
 
-    /**
-     * @var CodeModel
-     */
+    /** @var CodeModel */
     public $codeModel;
 
-    /**
-     * @var MaquinaAT[]
-     */
+    /** @var MaquinaAT[] */
     public $maquinas = [];
 
-    /**
-     * @return string
-     */
     public function getNewCustomerUrl(): string
     {
         $customer = new Cliente();
@@ -95,7 +86,7 @@ class NewServicioAT extends Controller
         }
     }
 
-    protected function autocompleteCustomerAction()
+    protected function autocompleteCustomerAction(): void
     {
         $this->setTemplate(false);
 
@@ -104,19 +95,19 @@ class NewServicioAT extends Controller
         $query = $this->request->get('query');
         foreach ($cliente->codeModelSearch($query, 'codcliente') as $value) {
             $list[] = [
-                'key' => $this->toolBox()->utils()->fixHtml($value->code),
-                'value' => $this->toolBox()->utils()->fixHtml($value->description)
+                'key' => Tools::fixHtml($value->code),
+                'value' => Tools::fixHtml($value->description)
             ];
         }
 
         if (empty($list)) {
-            $list[] = ['key' => null, 'value' => $this->toolBox()->i18n()->trans('no-data')];
+            $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
         }
 
         $this->response->setContent(\json_encode($list));
     }
 
-    protected function autocompleteMachineAction()
+    protected function autocompleteMachineAction(): void
     {
         $this->setTemplate(false);
 
@@ -126,19 +117,19 @@ class NewServicioAT extends Controller
         $where = [new DataBaseWhere('descripcion|nombre|numserie|referencia', $query, 'XLIKE')];
         foreach ($machine->all($where) as $mac) {
             $list[] = [
-                'key' => $this->toolBox()->utils()->fixHtml($mac->idmaquina),
-                'value' => $this->toolBox()->utils()->fixHtml($mac->nombre)
+                'key' => Tools::fixHtml($mac->idmaquina),
+                'value' => Tools::fixHtml($mac->nombre)
             ];
         }
 
         if (empty($list)) {
-            $list[] = ['key' => null, 'value' => $this->toolBox()->i18n()->trans('no-data')];
+            $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
         }
 
-        $this->response->setContent(\json_encode($list));
+        $this->response->setContent(json_encode($list));
     }
 
-    protected function defaultAction()
+    protected function defaultAction(): void
     {
         $id = $this->request->get('idmaquina');
         if (empty($id)) {
@@ -166,10 +157,10 @@ class NewServicioAT extends Controller
             return;
         }
 
-        $this->toolBox()->i18nLog()->warning('record-save-error');
+        Tools::log()->warning('record-save-error');
     }
 
-    protected function loadCustomer()
+    protected function loadCustomer(): void
     {
         $this->cliente = new Cliente();
         $code = $this->request->get('codcliente');
@@ -178,7 +169,7 @@ class NewServicioAT extends Controller
         }
 
         if (false === $this->cliente->loadFromCode($code)) {
-            $this->toolBox()->i18nLog()->warning('customer-not-found');
+            Tools::log()->warning('customer-not-found');
             return;
         }
 
@@ -188,7 +179,7 @@ class NewServicioAT extends Controller
         $this->maquinas = $machine->all($where, [], 0, 0);
     }
 
-    protected function machineAction()
+    protected function machineAction(): void
     {
         $idmaquina = $this->request->request->get('idmaquina');
         if (empty($idmaquina)) {
@@ -207,10 +198,10 @@ class NewServicioAT extends Controller
             return;
         }
 
-        $this->toolBox()->i18nLog()->warning('record-save-error');
+        Tools::log()->warning('record-save-error');
     }
 
-    protected function newMachineAction()
+    protected function newMachineAction(): void
     {
         $codfabricante = $this->request->request->get('codfabricante');
 
@@ -222,7 +213,7 @@ class NewServicioAT extends Controller
         $newMachine->numserie = $this->request->request->get('numserie');
         $newMachine->referencia = $this->request->request->get('referencia');
         if (false === $newMachine->save()) {
-            $this->toolBox()->i18nLog()->warning('record-save-error');
+            Tools::log()->warning('record-save-error');
             return;
         }
 
@@ -238,10 +229,10 @@ class NewServicioAT extends Controller
             return;
         }
 
-        $this->toolBox()->i18nLog()->warning('record-save-error');
+        Tools::log()->warning('record-save-error');
     }
 
-    protected function noMachineAction()
+    protected function noMachineAction(): void
     {
         $newServicio = new ServicioAT();
         $newServicio->codalmacen = $this->user->codalmacen;
@@ -254,6 +245,6 @@ class NewServicioAT extends Controller
             return;
         }
 
-        $this->toolBox()->i18nLog()->warning('record-save-error');
+        Tools::log()->warning('record-save-error');
     }
 }

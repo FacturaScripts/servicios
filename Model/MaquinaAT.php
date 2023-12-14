@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Fabricante;
 
 /**
@@ -29,58 +30,39 @@ use FacturaScripts\Dinamic\Model\Fabricante;
  */
 class MaquinaAT extends Base\ModelClass
 {
-
     use Base\ModelTrait;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $codagente;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $codcliente;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $codfabricante;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $descripcion;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $fecha;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $idmaquina;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $nombre;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $numserie;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $referencia;
 
     public function clear()
     {
         parent::clear();
-        $this->fecha = date(self::DATE_STYLE);
+        $this->fecha = Tools::date();
     }
 
     public function getFabricante(): Fabricante
@@ -107,10 +89,9 @@ class MaquinaAT extends Base\ModelClass
 
     public function test(): bool
     {
-        $utils = $this->toolBox()->utils();
         $fields = ['descripcion', 'nombre', 'numserie', 'referencia'];
         foreach ($fields as $key) {
-            $this->{$key} = $utils->noHtml($this->{$key});
+            $this->{$key} = Tools::noHtml($this->{$key});
         }
 
         return parent::test();

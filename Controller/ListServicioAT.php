@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
 /**
@@ -91,7 +92,7 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados editables
         $valuesWhere = [
-            ['label' => $this->toolBox()->i18n()->trans('only-active'), 'where' => [new DataBaseWhere('editable', true)]],
+            ['label' => Tools::lang()->trans('only-active'), 'where' => [new DataBaseWhere('editable', true)]],
             ['label' => '------', 'where' => [new DataBaseWhere('editable', true)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
@@ -137,7 +138,7 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados no editables
         $valuesWhere = [
-            ['label' => $this->toolBox()->i18n()->trans('only-closed'), 'where' => [new DataBaseWhere('editable', false)]],
+            ['label' => Tools::lang()->trans('only-closed'), 'where' => [new DataBaseWhere('editable', false)]],
             ['label' => '------', 'where' => [new DataBaseWhere('editable', false)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
