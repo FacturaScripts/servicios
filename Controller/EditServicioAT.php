@@ -276,6 +276,10 @@ class EditServicioAT extends EditController
                     $view->model->nick = $this->user->nick;
                 } elseif (false === $view->model->editable) {
                     $this->disableAllColumns($mainViewName, 'status');
+
+                    if (false === array_key_exists('EditTrabajoAT', $this->views)) {
+                        break;
+                    }
                     $this->disableAllColumns('EditTrabajoAT');
 
                     // disable buttons
