@@ -23,6 +23,7 @@ use FacturaScripts\Plugins\Randomizer\Lib\Random\NewItems;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
 use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
+use FacturaScripts\Plugins\Servicios\Model\TipoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 use Faker;
@@ -41,6 +42,12 @@ class Servicios extends NewItems
      * @var PrioridadAT[]
      */
     private static $priorities = null;
+    
+    /**
+    *
+    * @var TipoAT[]
+    */
+   private static $types = null;
 
     /**
      *
@@ -67,6 +74,7 @@ class Servicios extends NewItems
             $service->codalmacen = static::codalmacen();
             $service->idestado = static::idestado();
             $service->idprioridad = static::idprioridad();
+            $service->idtipo = static::idtipo();
             $service->fecha = static::fecha();
             $service->hora = static::hora();
             $service->descripcion = $faker->text;
@@ -194,6 +202,22 @@ class Servicios extends NewItems
 
         \shuffle(self::$priorities);
         return self::$priorities[0]->id;
+    }
+
+    /**
+     * Returns a random type for a service.
+     *
+     * @return int
+     */
+    protected static function idtipo()
+    {
+        if (null === self::$types) {
+            $type = new TipoAT();
+            self::$types = $type->all();
+        }
+
+        \shuffle(self::$types);
+        return self::$types[0]->id;
     }
 
     /**

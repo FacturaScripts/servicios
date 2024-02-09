@@ -89,7 +89,8 @@ class ListServicioAT extends ListController
 
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
         $this->addFilterSelect($viewName, 'idprioridad', 'priority', 'idprioridad', $priority);
-
+        $type = $this->codeModel->all('serviciosat_tipos', 'id', 'tipo');
+        $this->addFilterSelect($viewName, 'idtipo', 'type', 'idtipo', $type);
         // obtenemos los estados editables
         $valuesWhere = [
             ['label' => Tools::lang()->trans('only-active'), 'where' => [new DataBaseWhere('editable', true)]],

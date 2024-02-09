@@ -33,6 +33,7 @@ class AdminServicios extends PanelController
 
     private const VIEW_CONFIG = 'ConfigServicios';
     private const VIEW_LIST_PRIORITIES = 'EditPrioridadAT';
+    private const VIEW_LIST_TYPES = 'EditTipoAT';
     private const VIEW_LIST_STATUS = 'EditEstadoAT';
 
     public function getPageData(): array
@@ -53,6 +54,7 @@ class AdminServicios extends PanelController
         $this->createViewEditConfig();
         $this->createViewStatus();
         $this->createViewPriorities();
+        $this->createViewTypes();
     }
 
     private function createViewEditConfig(string $viewName = self::VIEW_CONFIG)
@@ -67,6 +69,12 @@ class AdminServicios extends PanelController
     private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES)
     {
         $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol');
+        $this->views[$viewName]->setInLine(true);
+    }
+
+    private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES)
+    {
+        $this->addEditListView($viewName, 'TipoAT', 'type', 'fas fa-list-ol');
         $this->views[$viewName]->setInLine(true);
     }
 
@@ -91,6 +99,7 @@ class AdminServicios extends PanelController
                 break;
 
             case self::VIEW_LIST_PRIORITIES:
+            case self::VIEW_LIST_TYPES:
             case self::VIEW_LIST_STATUS:
                 $view->loadData('', [], ['id' => 'DESC']);
                 break;
