@@ -6,6 +6,7 @@
 namespace FacturaScripts\Plugins\Servicios\Lib\Tickets;
 
 use FacturaScripts\Core\Model\Base\ModelClass;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\Tickets\BaseTicket;
 use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Ticket;
@@ -60,6 +61,16 @@ class Service extends BaseTicket
 
         if ($model->material) {
             static::$escpos->text(static::sanitize(static::$i18n->trans('material') . ': ' . $model->material) . "\n");
+        }
+    }
+
+    protected static function setFooter(ModelClass $model, TicketPrinter $printer): void
+    {
+        parent::setFooter($model, $printer);
+
+        // si hay un texto personalizado de pie de ticket, lo añadimos
+        if (false === empty(Tools::settings('servicios', 'footertext'))) {
+            static::$escpos->text("\n" . static::sanitize(Tools::settings('servicios', 'footertext')) . "\n");
         }
     }
 }
