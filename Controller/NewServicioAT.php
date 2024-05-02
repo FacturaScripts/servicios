@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -67,22 +67,28 @@ class NewServicioAT extends Controller
         $action = $this->request->get('action');
         switch ($action) {
             case 'autocomplete-customer':
-                return $this->autocompleteCustomerAction();
+                $this->autocompleteCustomerAction();
+                break;
 
             case 'autocomplete-machine':
-                return $this->autocompleteMachineAction();
+                $this->autocompleteMachineAction();
+                break;
 
             case 'machine':
-                return $this->machineAction();
+                $this->machineAction();
+                break;
 
             case 'new-machine':
-                return $this->newMachineAction();
+                $this->newMachineAction();
+                break;
 
             case 'no-machine':
-                return $this->noMachineAction();
+                $this->noMachineAction();
+                break;
 
             default:
-                return $this->defaultAction();
+                $this->defaultAction();
+                break;
         }
     }
 

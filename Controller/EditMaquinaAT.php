@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -57,14 +57,12 @@ class EditMaquinaAT extends EditController
 
     protected function createViewsServices(string $viewName = 'ListServicioAT')
     {
-        $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
-        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
-        $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
-        $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
-        $this->views[$viewName]->searchFields = ['descripcion', 'idservicio', 'observaciones'];
-
-        // disable customer column
-        $this->views[$viewName]->disableColumn('machine');
+        $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
+            ->addSearchFields(['descripcion', 'idservicio', 'observaciones'])
+            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addOrderBy(['prioridad'], 'priority')
+            ->addOrderBy(['idservicio'], 'code')
+            ->disableColumn('machine');
     }
 
     /**

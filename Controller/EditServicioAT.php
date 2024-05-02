@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -99,14 +99,12 @@ class EditServicioAT extends EditController
 
     protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente'): void
     {
-        $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-dolly-flatbed');
-        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
-        $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
-
-        // disable buttons
-        $this->setSettings($viewName, 'btnDelete', false);
-        $this->setSettings($viewName, 'btnNew', false);
-        $this->setSettings($viewName, 'checkBoxes', false);
+        $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-dolly-flatbed')
+            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones'])
+            ->setSettings('btnDelete', false)
+            ->setSettings('btnNew', false)
+            ->setSettings('checkBoxes', false);
 
         $this->addButton($viewName, [
             'action' => 'make-delivery-note',
@@ -119,14 +117,12 @@ class EditServicioAT extends EditController
 
     protected function createViewsEstimations(string $viewName = 'ListPresupuestoCliente'): void
     {
-        $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'far fa-file-powerpoint');
-        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
-        $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
-
-        // disable buttons
-        $this->setSettings($viewName, 'btnDelete', false);
-        $this->setSettings($viewName, 'btnNew', false);
-        $this->setSettings($viewName, 'checkBoxes', false);
+        $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'far fa-file-powerpoint')
+            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones'])
+            ->setSettings('btnDelete', false)
+            ->setSettings('btnNew', false)
+            ->setSettings('checkBoxes', false);
 
         $this->addButton($viewName, [
             'action' => 'make-estimation',
@@ -139,14 +135,12 @@ class EditServicioAT extends EditController
 
     protected function createViewsInvoices(string $viewName = 'ListFacturaCliente'): void
     {
-        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-file-invoice-dollar');
-        $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
-        $this->views[$viewName]->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones']);
-
-        // disable buttons
-        $this->setSettings($viewName, 'btnDelete', false);
-        $this->setSettings($viewName, 'btnNew', false);
-        $this->setSettings($viewName, 'checkBoxes', false);
+        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-file-invoice-dollar')
+            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones'])
+            ->setSettings('btnDelete', false)
+            ->setSettings('btnNew', false)
+            ->setSettings('checkBoxes', false);
 
         $this->addButton($viewName, [
             'action' => 'make-invoice',
@@ -159,22 +153,18 @@ class EditServicioAT extends EditController
 
     public function createViewLogs(string $viewName = 'ListServicioATLog'): void
     {
-        $this->addListView($viewName, 'ServicioATLog', 'history', 'fas fa-history');
-        $this->views[$viewName]->addOrderBy(['creationdate'], 'date', 2);
-        $this->views[$viewName]->addSearchFields(['context', 'message']);
-
-        // disable buttons
-        $this->setSettings($viewName, 'btnDelete', false);
-        $this->setSettings($viewName, 'btnNew', false);
-        $this->setSettings($viewName, 'checkBoxes', false);
+        $this->addListView($viewName, 'ServicioATLog', 'history', 'fas fa-history')
+            ->addOrderBy(['creationdate'], 'date', 2)
+            ->addSearchFields(['context', 'message'])
+            ->setSettings('btnDelete', false)
+            ->setSettings('btnNew', false)
+            ->setSettings('checkBoxes', false);
     }
 
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT'): void
     {
-        $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
-
-        // disable column
-        $this->views[$viewName]->disableColumn('service');
+        $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope')
+            ->disableColumn('service');
     }
 
     /**

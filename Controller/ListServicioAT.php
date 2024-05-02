@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -53,42 +53,26 @@ class ListServicioAT extends ListController
 
     protected function createViewsMachines(string $viewName = 'ListMaquinaAT'): void
     {
-        $this->addView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
-        $this->addOrderBy($viewName, ['idmaquina'], 'code', 2);
-        $this->addOrderBy($viewName, ['fecha'], 'date');
-        $this->addOrderBy($viewName, ['nombre'], 'name');
-        $this->addOrderBy($viewName, ['referencia'], 'reference');
-        $this->addSearchFields($viewName, ['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia']);
-
-        // filtros
-        $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
-
         $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
-        $this->addFilterSelect($viewName, 'codfabricante', 'manufacturer', 'codfabricante', $manufacturers);
-
-        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
-
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
+
+        $this->addView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical')
+            ->addOrderBy(['idmaquina'], 'code', 2)
+            ->addOrderBy(['fecha'], 'date')
+            ->addOrderBy(['nombre'], 'name')
+            ->addOrderBy(['referencia'], 'reference')
+            ->addSearchFields(['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia'])
+            ->addFilterPeriod('fecha', 'date', 'fecha')
+            ->addFilterSelect('codfabricante', 'manufacturer', 'codfabricante', $manufacturers)
+            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
+            ->addFilterSelect('codagente', 'agent', 'codagente', $agents);
     }
 
     protected function createViewsServices(string $viewName = 'ListServicioAT'): void
     {
-        $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
-        $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
-        $this->addOrderBy($viewName, ['idprioridad'], 'priority');
-        $this->addOrderBy($viewName, ['idservicio'], 'code');
-        $this->addOrderBy($viewName, ['neto'], 'net');
-        $this->addSearchFields($viewName, [
-            'codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'
-        ]);
-
-        // filtros
-        $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
-        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
-
+        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+        $users = $this->codeModel->all('users', 'nick', 'nick');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
-        $this->addFilterSelect($viewName, 'idprioridad', 'priority', 'idprioridad', $priority);
 
         // obtenemos los estados editables
         $valuesWhere = [
@@ -103,38 +87,31 @@ class ListServicioAT extends ListController
                 ];
             }
         }
-        $this->addFilterSelectWhere($viewName, 'status', $valuesWhere);
 
-        $users = $this->codeModel->all('users', 'nick', 'nick');
-        $this->addFilterSelect($viewName, 'nick', 'user', 'nick', $users);
-        $this->addFilterSelect($viewName, 'asignado', 'assigned', 'asignado', $users);
-
-        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
-
-        $this->addFilterNumber($viewName, 'netogt', 'net', 'neto', '>=');
-        $this->views[$viewName]->addFilterNumber('netolt', 'net', 'neto', '<=');
+        $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
+            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addOrderBy(['idprioridad'], 'priority')
+            ->addOrderBy(['idservicio'], 'code')
+            ->addOrderBy(['neto'], 'net')
+            ->addSearchFields(['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'])
+            ->addFilterPeriod('fecha', 'date', 'fecha')
+            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
+            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
+            ->addFilterSelectWhere('status', $valuesWhere)
+            ->addFilterSelect('nick', 'user', 'nick', $users)
+            ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
+            ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+            ->addFilterNumber('netogt', 'net', 'neto', '>=')
+            ->addFilterNumber('netolt', 'net', 'neto', '<=');
 
         $this->setServicesColors($viewName);
     }
 
     protected function createViewsServicesClosed(string $viewName = 'ListServicioAT-closed'): void
     {
-        $this->addView($viewName, 'ServicioAT', 'closed', 'fas fa-lock');
-        $this->addOrderBy($viewName, ['fecha', 'hora'], 'date', 2);
-        $this->addOrderBy($viewName, ['idprioridad'], 'priority');
-        $this->addOrderBy($viewName, ['idservicio'], 'code');
-        $this->addOrderBy($viewName, ['neto'], 'net');
-        $this->addSearchFields($viewName, [
-            'codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'
-        ]);
-
-        // filtros
-        $this->addFilterPeriod($viewName, 'fecha', 'date', 'fecha');
-        $this->addFilterAutocomplete($viewName, 'codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre');
-
+        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+        $users = $this->codeModel->all('users', 'nick', 'nick');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
-        $this->addFilterSelect($viewName, 'idprioridad', 'priority', 'idprioridad', $priority);
 
         // obtenemos los estados no editables
         $valuesWhere = [
@@ -149,39 +126,40 @@ class ListServicioAT extends ListController
                 ];
             }
         }
-        $this->addFilterSelectWhere($viewName, 'status', $valuesWhere);
 
-        $users = $this->codeModel->all('users', 'nick', 'nick');
-        $this->addFilterSelect($viewName, 'nick', 'user', 'nick', $users);
-        $this->addFilterSelect($viewName, 'asignado', 'assigned', 'asignado', $users);
-
-        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
-
-        $this->addFilterNumber($viewName, 'netogt', 'net', 'neto', '>=');
-        $this->views[$viewName]->addFilterNumber('netolt', 'net', 'neto', '<=');
+        $this->addView($viewName, 'ServicioAT', 'closed', 'fas fa-lock')
+            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addOrderBy(['idprioridad'], 'priority')
+            ->addOrderBy(['idservicio'], 'code')
+            ->addOrderBy(['neto'], 'net')
+            ->addSearchFields(['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'])
+            ->addFilterPeriod('fecha', 'date', 'fecha')
+            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
+            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
+            ->addFilterSelectWhere('status', $valuesWhere)
+            ->addFilterSelect('nick', 'user', 'nick', $users)
+            ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
+            ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+            ->addFilterNumber('netogt', 'net', 'neto', '>=')
+            ->addFilterNumber('netolt', 'net', 'neto', '<=');
 
         $this->setServicesColors($viewName);
     }
 
     protected function createViewsWorks(string $viewName = 'ListTrabajoAT'): void
     {
-        $this->addView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope');
-        $this->addOrderBy($viewName, ['fechainicio', 'horainicio'], 'from-date');
-        $this->addOrderBy($viewName, ['fechafin', 'horafin'], 'until-date', 2);
-        $this->addOrderBy($viewName, ['idservicio', 'idtrabajo'], 'service');
-        $this->addSearchFields($viewName, ['descripcion', 'observaciones', 'referencia']);
-
-        // filtros
-        $users = $this->codeModel->all('users', 'nick', 'nick');
-        $this->addFilterSelect($viewName, 'nick', 'user', 'nick', $users);
-
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $this->addFilterSelect($viewName, 'codagente', 'agent', 'codagente', $agents);
+        $users = $this->codeModel->all('users', 'nick', 'nick');
 
-        // desactivamos los botones nuevo y eliminar
-        $this->setSettings($viewName, 'btnDelete', false);
-        $this->setSettings($viewName, 'btnNew', false);
+        $this->addView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope')
+            ->addOrderBy(['fechainicio', 'horainicio'], 'from-date')
+            ->addOrderBy(['fechafin', 'horafin'], 'until-date', 2)
+            ->addOrderBy(['idservicio', 'idtrabajo'], 'service')
+            ->addSearchFields(['descripcion', 'observaciones', 'referencia'])
+            ->addFilterSelect('nick', 'user', 'nick', $users)
+            ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+            ->setSettings('btnDelete', false)
+            ->setSettings('btnNew', false);
     }
 
     protected function getServiceStatus(): array
