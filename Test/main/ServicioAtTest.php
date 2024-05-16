@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
@@ -47,10 +47,10 @@ final class ServicioAtTest extends TestCase
 
         // creamos un servicio
         $service = new ServicioAT();
-        $service->codalmacen = AppSettings::get('default', 'codalmacen');
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
         $service->codcliente = $customer->codcliente;
         $service->descripcion = 'Test service';
-        $service->idempresa = AppSettings::get('default', 'idempresa');
+        $service->idempresa = Tools::settings('default', 'idempresa');
         $this->assertTrue($service->save());
 
         // comprobamos que se ha creado
@@ -71,10 +71,10 @@ final class ServicioAtTest extends TestCase
 
         // creamos un servicio
         $service = new ServicioAT();
-        $service->codalmacen = AppSettings::get('default', 'codalmacen');
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
         $service->codcliente = $customer->codcliente;
         $service->descripcion = 'Test service';
-        $service->idempresa = AppSettings::get('default', 'idempresa');
+        $service->idempresa = Tools::settings('default', 'idempresa');
         $this->assertTrue($service->save());
 
         // buscamos un estado no editable

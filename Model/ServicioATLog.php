@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2022-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,7 +21,8 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base\ModelClass;
 use FacturaScripts\Core\Model\Base\ModelTrait;
-use FacturaScripts\Dinamic\Lib\IPFilter;
+use FacturaScripts\Core\Session;
+use FacturaScripts\Core\Tools;
 
 /**
  * Description of ServicioATLog
@@ -32,64 +33,57 @@ class ServicioATLog extends ModelClass
 {
     use ModelTrait;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $context;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $creationdate;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $id;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     public $idservicio;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $ip;
 
-    /**
-     * @var string
-     */
-    public $nick;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     public $message;
+
+    /** @var string */
+    public $nick;
 
     public function clear()
     {
         parent::clear();
-        $this->creationdate = date(ModelClass::DATETIME_STYLE);
-        $this->ip = IPFilter::getClientIp();
+        $this->creationdate = Tools::dateTime();
+        $this->ip = Session::getClientIp();
+        $this->nick = Session::user()->nick;
+    }
+
+    public function getService(): ServicioAT
+    {
+        $service = new ServicioAT();
+        $service->loadFromCode($this->idservicio);
+        return $service;
     }
 
     public static function primaryColumn(): string
     {
-        return "id";
+        return 'id';
     }
 
     public static function tableName(): string
     {
-        return "serviciosat_logs";
+        return 'serviciosat_logs';
     }
 
     public function test(): bool
     {
-        $utils = $this->toolBox()->utils();
-        $this->nick = $this->context->nick ?? null;
         $this->context = json_encode($this->context);
-        $this->message = $utils->noHtml($this->message);
+        $this->message = Tools::noHtml($this->message);
+
         return parent::test();
     }
 
@@ -100,12 +94,5 @@ class ServicioATLog extends ModelClass
         }
 
         return parent::url($type, $list);
-    }
-
-    protected function getService(): ServicioAT
-    {
-        $service = new ServicioAT();
-        $service->loadFromCode($this->idservicio);
-        return $service;
     }
 }

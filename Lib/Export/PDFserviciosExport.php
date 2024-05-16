@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Plugins\Servicios\Lib\Export;
 
-use FacturaScripts\Core\Base\Utils;
 use FacturaScripts\Core\Lib\Export\PDFExport;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
@@ -51,7 +51,7 @@ class PDFserviciosExport extends PDFExport
         $this->pdf->ezText('');
 
         $machinesData = $this->machinesData($model);
-        if ($machinesData && $this->toolBox()->appSettings()->get('servicios', 'printmachineinfo', false)) {
+        if ($machinesData && Tools::settings('servicios', 'printmachineinfo', false)) {
             $this->printTableSection('machines', $machinesData);
         }
 
@@ -59,16 +59,16 @@ class PDFserviciosExport extends PDFExport
         $this->printTextSection('material', $model->material);
         $this->printTextSection('solution', $model->solucion);
 
-        if ($this->toolBox()->appSettings()->get('servicios', 'printobservations', false)) {
+        if (Tools::settings('servicios', 'printobservations', false)) {
             $this->printTextSection('observations', $model->observaciones);
         }
 
         $worksData = $this->worksData($model);
-        if ($worksData && $this->toolBox()->appSettings()->get('servicios', 'printworks', false)) {
+        if ($worksData && Tools::settings('servicios', 'printworks', false)) {
             $this->printTableSection('work', $worksData);
         }
 
-        $footer = $this->toolBox()->appSettings()->get('servicios', 'footertext', '');
+        $footer = Tools::settings('servicios', 'footertext', '');
         $this->printTextSection("", $footer, false);
 
         return false;
@@ -149,7 +149,7 @@ class PDFserviciosExport extends PDFExport
         return [
             ['key' => $this->i18n->trans('date'), 'value' => $model->fecha],
             ['key' => $this->i18n->trans('hour'), 'value' => $model->hora],
-            ['key' => $this->i18n->trans('customer'), 'value' => Utils::fixHtml($subject->nombre)],
+            ['key' => $this->i18n->trans('customer'), 'value' => Tools::fixHtml($subject->nombre)],
             ['key' => $tipoidfiscal, 'value' => $subject->cifnif],
             ['key' => $this->i18n->trans('address'), 'value' => $subject->getDefaultAddress()->direccion],
             ['key' => $this->i18n->trans('phone'), 'value' => $subject->telefono1]

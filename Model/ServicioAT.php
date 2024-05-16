@@ -19,10 +19,12 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Agentes;
-use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
+use FacturaScripts\Core\Model\Base\ModelOnChangeClass;
+use FacturaScripts\Core\Model\Base\ModelTrait;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
@@ -36,10 +38,10 @@ use FacturaScripts\Plugins\Servicios\Lib\ServiceTool;
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class ServicioAT extends Base\ModelOnChangeClass
+class ServicioAT extends ModelOnChangeClass
 {
-    use Base\ModelTrait;
-    use Base\CompanyRelationTrait;
+    use ModelTrait;
+    use CompanyRelationTrait;
 
     /** @var string */
     public $asignado;
@@ -113,7 +115,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     /** @var string */
     public $telefono2;
 
-    public function calculatePriceNet()
+    public function calculatePriceNet(): void
     {
         $this->neto = 0.0;
         foreach ($this->getTrabajos() as $trabajo) {
@@ -125,8 +127,9 @@ class ServicioAT extends Base\ModelOnChangeClass
     public function clear()
     {
         parent::clear();
-        $this->fecha = date(self::DATE_STYLE);
-        $this->hora = date(self::HOUR_STYLE);
+
+        $this->fecha = Tools::date();
+        $this->hora = Tools::hour();
         $this->neto = 0.0;
 
         // set default status
@@ -168,7 +171,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         }
 
         // añadimos el cambio al log
-        $messageLog = self::toolBox()->i18n()->trans('deleted-service');
+        $messageLog = Tools::lang()->trans('deleted-service');
         $this->log($messageLog);
 
         return true;
@@ -330,7 +333,7 @@ class ServicioAT extends Base\ModelOnChangeClass
     {
         if (empty($this->codigo)) {
             // obtenemos el patrón de la configuración
-            $pattern = AppSettings::get('servicios', 'patron', 'SER-{NUM}');
+            $pattern = Tools::settings('servicios', 'patron', 'SER-{NUM}');
 
             // si no tenemos id, asignamos uno nuevo
             if (empty($this->idservicio)) {
@@ -340,7 +343,7 @@ class ServicioAT extends Base\ModelOnChangeClass
             // generamos el código
             $this->codigo = CodePatterns::trans($pattern, $this, [
                 'numero' => 'idservicio',
-                'long' => AppSettings::get('servicios', 'longnumero', 6)
+                'long' => Tools::settings('servicios', 'longnumero', 6)
             ]);
         }
 
@@ -351,10 +354,9 @@ class ServicioAT extends Base\ModelOnChangeClass
             $this->telefono2 = $customer->telefono2;
         }
 
-        $utils = $this->toolBox()->utils();
         $fields = ['codigo', 'descripcion', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'];
         foreach ($fields as $key) {
-            $this->{$key} = $utils->noHtml($this->{$key});
+            $this->{$key} = Tools::noHtml($this->{$key});
         }
 
         // comprobamos que editable se corresponda con el estado
@@ -382,7 +384,7 @@ class ServicioAT extends Base\ModelOnChangeClass
             }
 
             // añadimos el cambio al log
-            $messageLog = self::toolBox()->i18n()->trans('changed-status-to', [
+            $messageLog = Tools::lang()->trans('changed-status-to', [
                 '%oldStatus%' => $this->getStatus($this->previousData['idestado'])->nombre,
                 '%newStatus%' => $newStatus->nombre
             ]);
@@ -405,7 +407,7 @@ class ServicioAT extends Base\ModelOnChangeClass
             $this->notifyCustomer('new-service-customer');
         }
 
-        $message = self::toolBox()->i18n()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
+        $message = Tools::lang()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
         $this->log($message);
 
         parent::onInsert();
@@ -442,7 +444,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         $oldAssigned = $this->getAsignado($this->previousData['asignado'] ?? '');
 
         // añadimos el cambio al log
-        $messageLog = self::toolBox()->i18n()->trans('changed-assigned-to', [
+        $messageLog = Tools::lang()->trans('changed-assigned-to', [
             '%oldAssigned%' => $oldAssigned->nick ?? '-',
             '%newAssigned%' => $newAssigned->nick ?? '-'
         ]);
@@ -460,7 +462,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         $oldAgent = $this->getAgent($this->previousData['codagente'] ?? '');
 
         // añadimos el cambio al log
-        $messageLog = self::toolBox()->i18n()->trans('changed-agent-to', [
+        $messageLog = Tools::lang()->trans('changed-agent-to', [
             '%oldAgent%' => $oldAgent->nombre ?? '-',
             '%newAgent%' => $newAgent->nombre ?? '-'
         ]);
@@ -478,7 +480,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         $oldCustomer = $this->getCustomer($this->previousData['codcliente'] ?? '');
 
         // añadimos el cambio al log
-        $messageLog = self::toolBox()->i18n()->trans('changed-customer-to', [
+        $messageLog = Tools::lang()->trans('changed-customer-to', [
             '%oldCustomer%' => $oldCustomer->nombre ?? '-',
             '%newCustomer%' => $newCustomer->nombre ?? '-'
         ]);
@@ -524,7 +526,7 @@ class ServicioAT extends Base\ModelOnChangeClass
         $oldUser = $this->getUser($this->previousData['nick'] ?? '');
 
         // añadimos el cambio al log
-        $messageLog = self::toolBox()->i18n()->trans('changed-user-to', [
+        $messageLog = Tools::lang()->trans('changed-user-to', [
             '%oldUser%' => $oldUser->nick ?? '-',
             '%newUser%' => $newUser->nick ?? '-'
         ]);

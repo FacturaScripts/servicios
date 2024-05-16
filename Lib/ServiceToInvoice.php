@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,8 +21,8 @@ namespace FacturaScripts\Plugins\Servicios\Lib;
 
 use FacturaScripts\Core\Base\Calculator;
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Core\Model\Base\SalesDocument;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -37,7 +37,6 @@ use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
  */
 class ServiceToInvoice
 {
-
     /**
      * @param ServicioAT $service
      *
@@ -62,9 +61,9 @@ class ServiceToInvoice
         $newAlbaran->idservicio = $service->idservicio;
         $newAlbaran->nick = $service->nick;
 
-        if (property_exists($service, 'idproyecto')
-            && property_exists($newAlbaran, 'idproyecto')
-            && $service->idproyecto) {
+        if (property_exists($service, 'idproyecto') &&
+            property_exists($newAlbaran, 'idproyecto') &&
+            $service->idproyecto) {
             $newAlbaran->idproyecto = $service->idproyecto;
         }
 
@@ -87,7 +86,7 @@ class ServiceToInvoice
         }
 
         if (false === $found) {
-            ToolBox::i18nLog()->warning('no-works-to-delivery-note');
+            Tools::log()->warning('no-works-to-delivery-note');
             $database->rollback();
             return false;
         }
@@ -119,9 +118,9 @@ class ServiceToInvoice
         $newEstimation->idservicio = $service->idservicio;
         $newEstimation->nick = $service->nick;
 
-        if (property_exists($service, 'idproyecto')
-            && property_exists($newEstimation, 'idproyecto')
-            && $service->idproyecto) {
+        if (property_exists($service, 'idproyecto') &&
+            property_exists($newEstimation, 'idproyecto') &&
+            $service->idproyecto) {
             $newEstimation->idproyecto = $service->idproyecto;
         }
 
@@ -144,7 +143,7 @@ class ServiceToInvoice
         }
 
         if (false === $found) {
-            ToolBox::i18nLog()->warning('no-works-to-estimation');
+            Tools::log()->warning('no-works-to-estimation');
             $database->rollback();
             return false;
         }
@@ -176,9 +175,9 @@ class ServiceToInvoice
         $newInvoice->idservicio = $service->idservicio;
         $newInvoice->nick = $service->nick;
 
-        if (property_exists($service, 'idproyecto')
-            && property_exists($newInvoice, 'idproyecto')
-            && $service->idproyecto) {
+        if (property_exists($service, 'idproyecto') &&
+            property_exists($newInvoice, 'idproyecto') &&
+            $service->idproyecto) {
             $newInvoice->idproyecto = $service->idproyecto;
         }
 
@@ -201,7 +200,7 @@ class ServiceToInvoice
         }
 
         if (false === $found) {
-            ToolBox::i18nLog()->warning('no-works-to-invoice');
+            Tools::log()->warning('no-works-to-invoice');
             $database->rollback();
             return false;
         }

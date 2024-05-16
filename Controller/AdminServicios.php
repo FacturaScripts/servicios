@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2021-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -59,17 +59,15 @@ class AdminServicios extends PanelController
 
     private function createViewEditConfig(string $viewName = self::VIEW_CONFIG)
     {
-        $this->addEditView($viewName, 'Settings', 'general');
-
-        // disable buttons
-        $this->setSettings($viewName, 'btnDelete', false);
-        $this->setSettings($viewName, 'btnNew', false);
+        $this->addEditView($viewName, 'Settings', 'general')
+            ->setSettings('btnDelete', false)
+            ->setSettings('btnNew', false);
     }
 
     private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES)
     {
-        $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol');
-        $this->views[$viewName]->setInLine(true);
+        $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol')
+            ->setInLine(true);
     }
 
     private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES)
@@ -80,8 +78,8 @@ class AdminServicios extends PanelController
 
     private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS)
     {
-        $this->addEditListView($viewName, 'EstadoAT', 'states', 'fas fa-tags');
-        $this->views[$viewName]->setInLine(true);
+        $this->addEditListView($viewName, 'EstadoAT', 'states', 'fas fa-tags')
+            ->setInLine(true);
     }
 
     /**

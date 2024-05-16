@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Core\Tools;
 
 /**
  * Description of PrioridadAT
@@ -29,19 +30,15 @@ use FacturaScripts\Core\Model\Base;
  */
 class PrioridadAT extends Base\ModelClass
 {
-
     use Base\ModelTrait;
 
+    /** @var int */
     public $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $nombre;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $predeterminado;
 
     public function clear()
@@ -82,7 +79,8 @@ class PrioridadAT extends Base\ModelClass
 
     public function test(): bool
     {
-        $this->nombre = $this->toolBox()->utils()->noHtml($this->nombre);
+        $this->nombre = Tools::noHtml($this->nombre);
+
         return parent::test();
     }
 
