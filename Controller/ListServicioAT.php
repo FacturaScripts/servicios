@@ -130,6 +130,9 @@ class ListServicioAT extends ListController
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
+        $this->addFilterSelect($viewName, 'idprioridad', 'priority', 'idprioridad', $priority);
+        $type = $this->codeModel->all('serviciosat_tipos', 'id', 'tipo');
+        $this->addFilterSelect($viewName, 'idtipo', 'type', 'idtipo', $type);
 
         // obtenemos los estados no editables
         $valuesWhere = [
