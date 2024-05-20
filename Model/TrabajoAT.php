@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,9 +19,9 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\Variante;
@@ -93,9 +93,9 @@ class TrabajoAT extends Base\ModelOnChangeClass
     {
         parent::clear();
         $this->cantidad = 1.0;
-        $this->estado = (int)self::toolBox()::appSettings()::get('servicios', 'workstatus');
-        $this->fechainicio = date(self::DATE_STYLE);
-        $this->horainicio = date(self::HOUR_STYLE);
+        $this->estado = (int)Tools::settings('servicios', 'workstatus');
+        $this->fechainicio = Tools::date();
+        $this->horainicio = Tools::hour();
         $this->precio = 0.0;
     }
 
@@ -127,7 +127,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     public function test(): bool
     {
         foreach (['descripcion', 'observaciones', 'referencia'] as $field) {
-            $this->{$field} = $this->toolBox()->utils()->noHtml($this->{$field});
+            $this->{$field} = Tools::noHtml($this->{$field});
         }
 
         if (empty($this->horafin)) {
@@ -165,7 +165,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     protected function onChangeCantidad()
     {
         // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-quantity-work-to', [
+        $this->messageLog = Tools::lang()->trans('changed-quantity-work-to', [
             '%reference%' => $this->referencia,
             '%oldQuantity%' => $this->previousData['cantidad'],
             '%newQuantity%' => $this->cantidad,
@@ -176,7 +176,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     protected function onChangeReferencia()
     {
         // añadimos el cambio al log
-        $this->messageLog = self::toolBox()->i18n()->trans('changed-referencia-work-to', [
+        $this->messageLog = Tools::lang()->trans('changed-referencia-work-to', [
             '%oldReference%' => $this->previousData['referencia'],
             '%newReference%' => $this->referencia,
             '%work%' => $this->idtrabajo
@@ -198,7 +198,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
 
         $log = new ServicioATLog();
         $log->idservicio = $this->idservicio;
-        $log->message = self::toolBox()->i18n()->trans('new-work-created', [
+        $log->message = Tools::lang()->trans('new-work-created', [
             '%key%' => $this->primaryColumnValue(),
             '%service-key%' => $service->idservicio
         ]);
@@ -236,10 +236,10 @@ class TrabajoAT extends Base\ModelOnChangeClass
         parent::setPreviousData(array_merge($fields, $more));
     }
 
-    protected function updateStock(?string $referencia, float $cantidad, int $estado)
+    protected function updateStock(?string $referencia, float $cantidad, int $estado): void
     {
         // ¿El control de stock en servicios está desactivado?
-        if (AppSettings::get('servicios', 'disablestockmanagement', false)) {
+        if (Tools::settings('servicios', 'disablestockmanagement', false)) {
             return;
         }
 

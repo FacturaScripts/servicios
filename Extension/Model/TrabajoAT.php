@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,7 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Extension\Model;
 
 use Closure;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Base\ToolBox;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\StockAvanzado\Model\MovimientoStock;
 
 class TrabajoAT
@@ -93,7 +93,7 @@ class TrabajoAT
                 $movement->referencia = $this->referencia;
                 $movement->docid = $this->idtrabajo;
                 $movement->docmodel = 'TrabajoAT';
-                $movement->documento = ToolBox::i18n()->trans('service') . ' #' . $this->idservicio;
+                $movement->documento = Tools::lang()->trans('service') . ' #' . $this->idservicio;
                 $movement->idproducto = $this->getVariante()->idproducto;
             }
 

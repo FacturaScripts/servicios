@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,16 +19,18 @@
 
 namespace FacturaScripts\Plugins\Servicios;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Base\InitClass;
-use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
+use FacturaScripts\Core\Plugins;
+use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Controller\SendTicket;
 use FacturaScripts\Dinamic\Lib\ExportManager;
 use FacturaScripts\Dinamic\Lib\StockMovementManager;
+use FacturaScripts\Dinamic\Lib\Tickets\Service;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\EmailNotification;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -48,7 +50,12 @@ final class Init extends InitClass
         // extensions
         $this->loadExtension(new Extension\Controller\EditCliente());
 
-        if (class_exists('FacturaScripts\\Dinamic\\Controller\\Randomizer')) {
+        // tickets
+        if (Plugins::isEnabled('Tickets')) {
+            SendTicket::addFormat(Service::class, 'ServicioAT', 'service');
+        }
+
+        if (Plugins::isEnabled('Randomizer')) {
             $this->loadExtension(new Extension\Controller\Randomizer());
         }
 
@@ -60,7 +67,7 @@ final class Init extends InitClass
 
         // mod y extensión para StockAvanzado
         $stockMovementClass = 'FacturaScripts\\Dinamic\\Lib\\StockMovementManager';
-        if (class_exists($stockMovementClass) && method_exists($stockMovementClass, 'addMod')) {
+        if (Plugins::isEnabled('StockAvanzado')) {
             StockMovementManager::addMod(new Mod\StockMovementMod());
             $this->loadExtension(new Extension\Model\TrabajoAT());
         }
@@ -167,16 +174,14 @@ final class Init extends InitClass
             'workstatus' => 1
         ];
 
-        $appSettings = new AppSettings();
         foreach ($defaults as $key => $value) {
-            $appSettings->get('servicios', $key, $value);
+            Tools::settings('servicios', $key, $value);
         }
-        $appSettings->save();
+        Tools::settingsSave();
     }
 
     private function updateEmailNotifications(): void
     {
-        $i18n = ToolBox::i18n();
         $notificationModel = new EmailNotification();
         $keys = [
             'new-service-assignee', 'new-service-agent', 'new-service-customer',
@@ -188,8 +193,8 @@ final class Init extends InitClass
             }
 
             $notificationModel->name = $key;
-            $notificationModel->body = $i18n->trans($key . '-body');
-            $notificationModel->subject = $i18n->trans($key);
+            $notificationModel->body = Tools::lang()->trans($key . '-body');
+            $notificationModel->subject = Tools::lang()->trans($key);
             $notificationModel->enabled = false;
             $notificationModel->save();
         }
