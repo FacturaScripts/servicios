@@ -113,6 +113,7 @@ class ListServicioAT extends ListController
             ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
             ->addFilterSelectWhere('status', $valuesWhere)
+            ->addFilterSelect($viewName, 'idtipo', 'type', 'idtipo', $type)
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
             ->addFilterSelect('idtipo', 'type', 'idtipo', $type)
