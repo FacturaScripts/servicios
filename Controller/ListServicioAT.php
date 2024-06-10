@@ -197,6 +197,8 @@ class ListServicioAT extends ListController
             ->addSearchFields(['descripcion', 'observaciones', 'referencia'])
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+            ->addFilterPeriod('fechainicio', 'start-date', 'fechainicio')
+            ->addFilterPeriod('fechafin', 'end-date', 'fechafin')
             ->setSettings('btnDelete', false)
             ->setSettings('btnNew', false);
         $users = $this->codeModel->all('users', 'nick', 'nick');
