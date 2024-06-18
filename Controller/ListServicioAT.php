@@ -113,7 +113,6 @@ class ListServicioAT extends ListController
             ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
             ->addFilterSelectWhere('status', $valuesWhere)
-            ->addFilterSelect($viewName, 'idtipo', 'type', 'idtipo', $type)
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
             ->addFilterSelect('idtipo', 'type', 'idtipo', $type)
@@ -131,8 +130,6 @@ class ListServicioAT extends ListController
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
-        $type = $this->codeModel->all('serviciosat_tipos', 'id', 'tipo');
-        
 
         // obtenemos los estados no editables
         $valuesWhere = [
@@ -159,7 +156,6 @@ class ListServicioAT extends ListController
             ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
             ->addFilterSelectWhere('status', $valuesWhere)
-            ->addFilterSelect('idtipo', 'type', 'idtipo', $type)
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
@@ -197,8 +193,6 @@ class ListServicioAT extends ListController
             ->addSearchFields(['descripcion', 'observaciones', 'referencia'])
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
-            ->addFilterPeriod('fechainicio', 'start-date', 'fechainicio')
-            ->addFilterPeriod('fechafin', 'end-date', 'fechafin')
             ->setSettings('btnDelete', false)
             ->setSettings('btnNew', false);
         $users = $this->codeModel->all('users', 'nick', 'nick');
