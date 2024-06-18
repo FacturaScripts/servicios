@@ -21,29 +21,29 @@
 <view>
     <columns>
         <column name="id" display="none" order="0">
-            <widget type="text" fieldname="idservicio" />
+            <widget type="text" fieldname="idservicio"/>
         </column>
         <column name="code" order="100">
-            <widget type="text" fieldname="codigo" />
+            <widget type="text" fieldname="codigo"/>
         </column>
         <column name="company" display="none" order="105">
             <widget type="select" fieldname="idempresa">
-                <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto" />
+                <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto"/>
             </widget>
         </column>
         <column name="warehouse" display="none" order="110">
             <widget type="select" fieldname="codalmacen">
-                <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre" />
+                <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre"/>
             </widget>
         </column>
-        <column name="type" display="right" order="125">
+        <column name="type" display="right" order="112">
             <widget type="select" fieldname="idtipo">
-                <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo" />
+                <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo"/>
             </widget>
         </column>
         <column name="customer" order="115">
             <widget type="autocomplete" fieldname="codcliente">
-                <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
+                <values source="clientes" fieldcode="codcliente" fieldtitle="nombre"/>
             </widget>
         </column>
         <column name="phone" display="none" order="120">

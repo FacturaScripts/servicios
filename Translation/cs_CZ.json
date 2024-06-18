@@ -7,7 +7,7 @@
     "changed-status-to": "Cambio de estado, antes %oldStatus%, ahora %newStatus%",
     "changed-user-to": "Se ha cambiado el usuario %oldUser% por el usuario %newUser%",
     "customer-has-no-machines": "El cliente no tiene máquinas",
-    "deleted-service": "Služba smazána",
+    "deleted-service": "Servicio eliminado",
     "disable-stock-management": "No controlar stock (en trabajos)",
     "from-hour": "Hora inicio",
     "generated-services": "%quantity% servicios generados.",

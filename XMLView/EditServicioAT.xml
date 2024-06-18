@@ -21,17 +21,12 @@
 <view>
     <columns>
         <group name="data" numcolumns="12">
-            <column name="code" display="none" order="80">
-                <widget type="text" fieldname="codigo" required="true" />
+            <column name="code" display="none" order="90">
+                <widget type="text" fieldname="codigo" required="true"/>
             </column>
-            <column name="customer" titleurl="ListCliente" numcolumns="2" order="90">
+            <column name="customer" titleurl="ListCliente" numcolumns="2" order="100">
                 <widget type="autocomplete" fieldname="codcliente" onclick="EditCliente" required="true">
-                    <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
-                </widget>
-            </column>
-            <column name="type" numcolumns="2" order="100">
-                <widget type="select" fieldname="idtipo" required="true">
-                    <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo" />
+                    <values source="clientes" fieldcode="codcliente" fieldtitle="nombre"/>
                 </widget>
             </column>
             <column name="phone" order="110">
@@ -69,6 +64,11 @@
             <column name="status" numcolumns="2" order="190">
                 <widget type="select" fieldname="idestado" required="true">
                     <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
+                </widget>
+            </column>
+            <column name="type" numcolumns="2" order="200">
+                <widget type="select" fieldname="idtipo" required="true">
+                    <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo" />
                 </widget>
             </column>
         </group>
