@@ -2,7 +2,6 @@
 /**
  * This file is part of Servicios plugin for FacturaScripts
  * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,7 +21,6 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
@@ -68,17 +66,6 @@ class ListServicioAT extends ListController
             ->addFilterSelect('codfabricante', 'manufacturer', 'codfabricante', $manufacturers)
             ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents);
-
-        $this->addView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical')
-            ->addOrderBy(['idmaquina'], 'code', 2)
-            ->addOrderBy(['fecha'], 'date')
-            ->addOrderBy(['nombre'], 'name')
-            ->addOrderBy(['referencia'], 'reference')
-            ->addSearchFields(['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia'])
-            ->addFilterPeriod('fecha', 'date', 'fecha')
-            ->addFilterSelect('codfabricante', 'manufacturer', 'codfabricante', $manufacturers)
-            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
-            ->addFilterSelect('codagente', 'agent', 'codagente', $agents);
     }
 
     protected function createViewsServices(string $viewName = 'ListServicioAT'): void
@@ -90,7 +77,6 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados editables
         $valuesWhere = [
-            ['label' => Tools::lang()->trans('only-active'), 'where' => [new DataBaseWhere('editable', true)]],
             ['label' => Tools::lang()->trans('only-active'), 'where' => [new DataBaseWhere('editable', true)]],
             ['label' => '------', 'where' => [new DataBaseWhere('editable', true)]],
         ];
@@ -127,13 +113,10 @@ class ListServicioAT extends ListController
     {
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
-        $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $users = $this->codeModel->all('users', 'nick', 'nick');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
 
         // obtenemos los estados no editables
         $valuesWhere = [
-            ['label' => Tools::lang()->trans('only-closed'), 'where' => [new DataBaseWhere('editable', false)]],
             ['label' => Tools::lang()->trans('only-closed'), 'where' => [new DataBaseWhere('editable', false)]],
             ['label' => '------', 'where' => [new DataBaseWhere('editable', false)]],
         ];
@@ -162,39 +145,12 @@ class ListServicioAT extends ListController
             ->addFilterNumber('netogt', 'net', 'neto', '>=')
             ->addFilterNumber('netolt', 'net', 'neto', '<=');
 
-        $this->addView($viewName, 'ServicioAT', 'closed', 'fas fa-lock')
-            ->addOrderBy(['fecha', 'hora'], 'date', 2)
-            ->addOrderBy(['idprioridad'], 'priority')
-            ->addOrderBy(['idservicio'], 'code')
-            ->addOrderBy(['neto'], 'net')
-            ->addSearchFields(['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'])
-            ->addFilterPeriod('fecha', 'date', 'fecha')
-            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
-            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
-            ->addFilterSelectWhere('status', $valuesWhere)
-            ->addFilterSelect('nick', 'user', 'nick', $users)
-            ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
-            ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
-            ->addFilterNumber('netogt', 'net', 'neto', '>=')
-            ->addFilterNumber('netolt', 'net', 'neto', '<=');
-
         $this->setServicesColors($viewName);
     }
 
     protected function createViewsWorks(string $viewName = 'ListTrabajoAT'): void
     {
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $users = $this->codeModel->all('users', 'nick', 'nick');
-
-        $this->addView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope')
-            ->addOrderBy(['fechainicio', 'horainicio'], 'from-date')
-            ->addOrderBy(['fechafin', 'horafin'], 'until-date', 2)
-            ->addOrderBy(['idservicio', 'idtrabajo'], 'service')
-            ->addSearchFields(['descripcion', 'observaciones', 'referencia'])
-            ->addFilterSelect('nick', 'user', 'nick', $users)
-            ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
-            ->setSettings('btnDelete', false)
-            ->setSettings('btnNew', false);
         $users = $this->codeModel->all('users', 'nick', 'nick');
 
         $this->addView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope')
