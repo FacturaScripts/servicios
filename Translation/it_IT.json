@@ -1,5 +1,5 @@
 {
-    "calculate-hours": "calcola-ore",
+    "calculate-hours": "calculate-hours",
     "changed-agent-to": "Se ha cambiado el agente %oldAgent% por el agente %newAgent%",
     "changed-assigned-to": "Se ha cambiado el usuario asignado %oldAssigned% por el usuario asignado %newAssigned%",
     "changed-customer-to": "Se ha cambiado el cliente %oldCustomer% por el cliente %newCustomer%",

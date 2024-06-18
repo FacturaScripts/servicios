@@ -69,13 +69,7 @@ class AdminServicios extends PanelController
         $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol')
             ->setInLine(true);
     }
-
-    private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES)
-    {
-        $this->addEditListView($viewName, 'TipoAT', 'type', 'fas fa-list-ol');
-        $this->views[$viewName]->setInLine(true);
-    }
-
+    
     private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES)
     {
         $this->addEditListView($viewName, 'TipoAT', 'type', 'fas fa-list-ol');

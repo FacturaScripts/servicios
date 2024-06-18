@@ -22,8 +22,8 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Plugins\Randomizer\Lib\Random\NewItems;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
-use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
 use FacturaScripts\Plugins\Servicios\Model\TipoAT;
+use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 use Faker;
@@ -42,12 +42,12 @@ class Servicios extends NewItems
      * @var PrioridadAT[]
      */
     private static $priorities = null;
-    
+
     /**
     *
     * @var TipoAT[]
     */
-   private static $types = null;
+    private static $types = null;
 
     /**
      *
@@ -203,7 +203,7 @@ class Servicios extends NewItems
         \shuffle(self::$priorities);
         return self::$priorities[0]->id;
     }
-
+    
     /**
      * Returns a random type for a service.
      *
