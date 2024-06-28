@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : serviciosat_tipos.xml
+    Description:
+        Estructura de la tabla serviciosat_tipos.
+-->
+<table>
+    <column>
+        <name>id</name>
+        <type>serial</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>predeterminado</name>
+        <type>boolean</type>
+    </column>
+    <column>
+        <name>tipo</name>
+        <type>character varying(50)</type>
+    </column>
+    <constraint>
+        <name>serviciosat_tipos_pkey</name>
+        <type>PRIMARY KEY (id)</type>
+    </constraint>
+</table>
