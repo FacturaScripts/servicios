@@ -22,10 +22,10 @@ namespace FacturaScripts\Plugins\Servicios;
 use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Base\InitClass;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Core\Plugins;
+use FacturaScripts\Core\Template\InitClass;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Controller\SendTicket;
 use FacturaScripts\Dinamic\Lib\ExportManager;
@@ -45,7 +45,7 @@ final class Init extends InitClass
 {
     const ROLE_NAME = 'Servicios';
 
-    public function init()
+    public function init(): void
     {
         // extensions
         $this->loadExtension(new Extension\Controller\EditCliente());
@@ -66,14 +66,17 @@ final class Init extends InitClass
         SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
 
         // mod y extensión para StockAvanzado
-        $stockMovementClass = 'FacturaScripts\\Dinamic\\Lib\\StockMovementManager';
         if (Plugins::isEnabled('StockAvanzado')) {
             StockMovementManager::addMod(new Mod\StockMovementMod());
             $this->loadExtension(new Extension\Model\TrabajoAT());
         }
     }
 
-    public function update()
+    public function uninstall(): void
+    {
+    }
+
+    public function update(): void
     {
         $this->fixMissingAgents();
         $this->fixMissingCustomers();
