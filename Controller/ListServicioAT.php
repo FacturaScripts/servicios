@@ -90,7 +90,7 @@ class ListServicioAT extends ListController
         }
 
         $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
-            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addOrderBy(['fecha', 'hora'], 'date', 1)
             ->addOrderBy(['idprioridad'], 'priority')
             ->addOrderBy(['idservicio'], 'code')
             ->addOrderBy(['neto'], 'net')
@@ -130,7 +130,7 @@ class ListServicioAT extends ListController
         }
 
         $this->addView($viewName, 'ServicioAT', 'closed', 'fas fa-lock')
-            ->addOrderBy(['fecha', 'hora'], 'date', 2)
+            ->addOrderBy(['fecha', 'hora'], 'date', 1)
             ->addOrderBy(['idprioridad'], 'priority')
             ->addOrderBy(['idservicio'], 'code')
             ->addOrderBy(['neto'], 'net')
