@@ -10,7 +10,7 @@
     "deleted-service": "Služba smazána",
     "disable-stock-management": "No controlar stock (en trabajos)",
     "from-hour": "Hora inicio",
-    "generated-services": "%quantity% servicios generados.",
+    "generated-services": "Vygenerováno %quantity% služeb.",
     "make-delivery-note": "Hacer albarán",
     "make-estimation": "Hacer presupuesto",
     "make-invoice": "Hacer factura",
