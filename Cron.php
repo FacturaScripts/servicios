@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Plugins\Servicios;
 
-use FacturaScripts\Core\Base\CronClass;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Template\CronClass;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
 final class Cron extends CronClass
@@ -28,35 +28,33 @@ final class Cron extends CronClass
     const JOB_PREFIX = 'update-services-';
     const JOB_INTERVAL = '1 year';
 
-    public function run()
+    public function run(): void
     {
-        if ($this->isTimeForJob(self::JOB_PREFIX . 'codes', self::JOB_INTERVAL)) {
+        $this->job(self::JOB_PREFIX . 'codes')
+            ->every(self::JOB_INTERVAL)
+            ->run(function () {
+                // buscamos todos los servicios con codigo = null
+                $serviceModel = new ServicioAT();
+                $where = [new DataBaseWhere('codigo', null, 'IS')];
+                $orderBy = ['idservicio' => 'DESC'];
+                foreach ($serviceModel->all($where, $orderBy, 0, 500) as $service) {
 
-            // buscamos todos los servicios con codigo = null
-            $serviceModel = new ServicioAT();
-            $where = [new DataBaseWhere('codigo', null, 'IS')];
-            $orderBy = ['idservicio' => 'DESC'];
-            foreach ($serviceModel->all($where, $orderBy, 0, 500) as $service) {
+                    // guardamos, para que se genere el codigo
+                    $service->save();
+                }
+            });
 
-                // guardamos, para que se genere el codigo
-                $service->save();
-            }
-
-            $this->jobDone(self::JOB_PREFIX . 'codes');
-        }
-
-        if ($this->isTimeForJob(self::JOB_PREFIX . 'net', self::JOB_INTERVAL)) {
-
-            // buscamos todos los servicios con neto = 0.0
-            $serviceModel = new ServicioAT();
-            $where = [new DataBaseWhere('neto', 0.0)];
-            $orderBy = ['idservicio' => 'DESC'];
-            foreach ($serviceModel->all($where, $orderBy, 0, 500) as $service) {
-                $service->calculatePriceNet();
-            }
-
-            $this->jobDone(self::JOB_PREFIX . 'net');
-        }
+        $this->job(self::JOB_PREFIX . 'net')
+            ->every(self::JOB_INTERVAL)
+            ->run(function () {
+                // buscamos todos los servicios con neto = 0.0
+                $serviceModel = new ServicioAT();
+                $where = [new DataBaseWhere('neto', 0.0)];
+                $orderBy = ['idservicio' => 'DESC'];
+                foreach ($serviceModel->all($where, $orderBy, 0, 500) as $service) {
+                    $service->calculatePriceNet();
+                }
+            });
     }
 }
 
