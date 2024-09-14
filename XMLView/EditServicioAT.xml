@@ -66,6 +66,11 @@
                     <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
                 </widget>
             </column>
+            <column name="type" numcolumns="2" order="200">
+                <widget type="select" fieldname="idtipo" required="true">
+                    <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo" />
+                </widget>
+            </column>
         </group>
         <group name="notes" numcolumns="12">
             <column name="description" numcolumns="6" order="100">

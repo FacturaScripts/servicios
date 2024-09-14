@@ -36,6 +36,11 @@
                 <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre"/>
             </widget>
         </column>
+        <column name="type" display="right" order="112">
+            <widget type="select" fieldname="idtipo">
+                <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo"/>
+            </widget>
+        </column>
         <column name="customer" order="115">
             <widget type="autocomplete" fieldname="codcliente">
                 <values source="clientes" fieldcode="codcliente" fieldtitle="nombre"/>

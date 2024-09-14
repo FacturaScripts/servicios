@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view>
+  <columns>
+    <group name="data" numcolumns="12" valign="bottom">
+      <column name="id" display="none" order="100">
+        <widget type="text" fieldname="id" readonly="dinamic" />
+      </column>
+      <column name="type" order="110">
+        <widget type="text" fieldname="tipo" required="true" />
+      </column>
+      <column name="default" order="120">
+        <widget type="checkbox" fieldname="predeterminado" />
+      </column>
+    </group>
+  </columns>
+</view>
