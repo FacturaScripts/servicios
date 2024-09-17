@@ -170,13 +170,31 @@ class PDFserviciosExport extends PDFExport
     {
         $result = [];
         foreach ($model->getTrabajos() as $work) {
-            $result[] = [
+            $data = [
                 $this->i18n->trans('from-date') => $work->fechainicio,
                 $this->i18n->trans('from-hour') => $work->horainicio,
                 $this->i18n->trans('until-date') => $work->fechafin,
                 $this->i18n->trans('until-hour') => $work->horafin,
                 $this->i18n->trans('observations') => $work->observaciones
             ];
+
+            if (Tools::settings('servicios', 'print_work_reference', false)) {
+                $data[$this->i18n->trans('reference') ] = $work->referencia;
+            }
+
+            if (Tools::settings('servicios', 'print_work_description', false)) {
+                $data[$this->i18n->trans('description')] = $work->descripcion;
+            }
+
+            if (Tools::settings('servicios', 'print_work_quantity', false)) {
+                $data[$this->i18n->trans('quantity')] = $work->cantidad;
+            }
+
+            if (Tools::settings('servicios', 'print_work_price', false)) {
+                $data[$this->i18n->trans('price')] = $work->precio;
+            }
+
+            $result[] = $data;
         }
         return $result;
     }
