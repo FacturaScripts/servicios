@@ -151,7 +151,7 @@ class ServicioAT extends ModelOnChangeClass
         
         // set default type
         foreach ($this->getAvailableTypes() as $type) {
-            if ($type->predeterminado) {
+            if ($type->default) {
                 $this->idtipo = $type->id;
                 break;
             }

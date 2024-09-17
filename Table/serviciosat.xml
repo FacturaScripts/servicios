@@ -166,8 +166,7 @@
     </constraint>
     <constraint>
         <name>ca_serviciosat_idtipo</name>
-        <type>FOREIGN KEY (idtipo) REFERENCES serviciosat_tipos (id) ON DELETE SET NULL ON UPDATE
-            CASCADE</type>
+        <type>FOREIGN KEY (idtipo) REFERENCES serviciosat_tipos (id) ON DELETE SET NULL ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
         <name>uniq_codigo_serviciosat</name>

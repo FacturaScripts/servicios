@@ -11,11 +11,11 @@
         <null>NO</null>
     </column>
     <column>
-        <name>predeterminado</name>
+        <name>default</name>
         <type>boolean</type>
     </column>
     <column>
-        <name>tipo</name>
+        <name>name</name>
         <type>character varying(50)</type>
     </column>
     <constraint>
