@@ -36,7 +36,13 @@
             <column name="print-observations" order="130">
                 <widget type="checkbox" fieldname="printobservations"/>
             </column>
-            <column name="disable-stock-management" order="140">
+            <column name="print-agent" order="140">
+                <widget type="checkbox" fieldname="print_agent"/>
+            </column>
+            <column name="print-assigned" order="150">
+                <widget type="checkbox" fieldname="print_assigned"/>
+            </column>
+            <column name="disable-stock-management" order="160">
                 <widget type="checkbox" fieldname="disablestockmanagement"/>
             </column>
         </group>
