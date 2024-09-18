@@ -38,7 +38,7 @@
         </column>
         <column name="type" display="right" order="112">
             <widget type="select" fieldname="idtipo">
-                <values source="serviciosat_tipos" fieldcode="id" fieldtitle="tipo"/>
+                <values source="serviciosat_tipos" fieldcode="id" fieldtitle="name"/>
             </widget>
         </column>
         <column name="customer" order="115">

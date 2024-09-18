@@ -72,7 +72,7 @@ class ListServicioAT extends ListController
     {
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
-        $type = $this->codeModel->all('serviciosat_tipos', 'id', 'tipo');
+        $types = $this->codeModel->all('serviciosat_tipos', 'id', 'name');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
 
         // obtenemos los estados editables
@@ -101,7 +101,7 @@ class ListServicioAT extends ListController
             ->addFilterSelectWhere('status', $valuesWhere)
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
-            ->addFilterSelect('idtipo', 'type', 'idtipo', $type)
+            ->addFilterSelect('idtipo', 'type', 'idtipo', $types)
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
             ->addFilterNumber('netogt', 'net', 'neto', '>=')
             ->addFilterNumber('netolt', 'net', 'neto', '<=');
