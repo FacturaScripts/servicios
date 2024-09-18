@@ -46,8 +46,7 @@ class PDFserviciosExport extends PDFExport
         $this->pdf->ezText("\n" . $title . ': ' . ($model->codigo ?? $model->idservicio) . "\n", self::FONT_SIZE + 6);
         $this->newLine();
 
-        $subject = $model->getSubject();
-        $this->insertParallelTable($this->serviceData($model, $subject), '', $this->tableOptions());
+        $this->insertParallelTable($this->serviceData($model), '', $this->tableOptions());
         $this->pdf->ezText('');
 
         $machinesData = $this->machinesData($model);
@@ -136,17 +135,12 @@ class PDFserviciosExport extends PDFExport
         ];
     }
 
-    /**
-     * @param ServicioAT $model
-     * @param Cliente $subject
-     *
-     * @return array
-     */
-    private function serviceData(&$model, &$subject): array
+    private function serviceData(ServicioAT $model): array
     {
+        $subject = $model->getSubject();
         $tipoidfiscal = empty($subject->tipoidfiscal) ? $this->i18n->trans('cifnif') : $subject->tipoidfiscal;
 
-        return [
+        $data = [
             ['key' => $this->i18n->trans('date'), 'value' => $model->fecha],
             ['key' => $this->i18n->trans('hour'), 'value' => $model->hora],
             ['key' => $this->i18n->trans('customer'), 'value' => Tools::fixHtml($subject->nombre)],
@@ -154,6 +148,17 @@ class PDFserviciosExport extends PDFExport
             ['key' => $this->i18n->trans('address'), 'value' => $subject->getDefaultAddress()->direccion],
             ['key' => $this->i18n->trans('phone'), 'value' => $subject->telefono1]
         ];
+
+        if (Tools::settings('servicios', 'print_agent', false)) {
+            $agent = $model->getAgent();
+            $data[] = ['key' => $this->i18n->trans('agent'), 'value' => $agent->nombre];
+        }
+
+        if (Tools::settings('servicios', 'print_assigned', false)) {
+            $data[] = ['key' => $this->i18n->trans('assigned'), 'value' => $model->asignado];
+        }
+
+        return $data;
     }
 
     /**
@@ -165,13 +170,31 @@ class PDFserviciosExport extends PDFExport
     {
         $result = [];
         foreach ($model->getTrabajos() as $work) {
-            $result[] = [
+            $data = [
                 $this->i18n->trans('from-date') => $work->fechainicio,
                 $this->i18n->trans('from-hour') => $work->horainicio,
                 $this->i18n->trans('until-date') => $work->fechafin,
                 $this->i18n->trans('until-hour') => $work->horafin,
                 $this->i18n->trans('observations') => $work->observaciones
             ];
+
+            if (Tools::settings('servicios', 'print_work_reference', false)) {
+                $data[$this->i18n->trans('reference') ] = $work->referencia;
+            }
+
+            if (Tools::settings('servicios', 'print_work_description', false)) {
+                $data[$this->i18n->trans('description')] = $work->descripcion;
+            }
+
+            if (Tools::settings('servicios', 'print_work_quantity', false)) {
+                $data[$this->i18n->trans('quantity')] = $work->cantidad;
+            }
+
+            if (Tools::settings('servicios', 'print_work_price', false)) {
+                $data[$this->i18n->trans('price')] = $work->precio;
+            }
+
+            $result[] = $data;
         }
         return $result;
     }

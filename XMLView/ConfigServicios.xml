@@ -23,21 +23,41 @@
                 </widget>
             </column>
         </group>
-        <group name="print" title="print" icon="fas fa-print" numcolumns="12" valign="bottom">
+        <group name="print-services" title="print-services" icon="fas fa-print" numcolumns="12" valign="bottom">
             <column name="footer-text" numcolumns="12" order="100">
                 <widget type="textarea" fieldname="footertext" rows="4"/>
             </column>
-            <column name="print-works" order="110">
-                <widget type="checkbox" fieldname="printworks"/>
-            </column>
-            <column name="print-machine-info" order="120">
+            <column name="print-machine-info" order="110">
                 <widget type="checkbox" fieldname="printmachineinfo"/>
             </column>
-            <column name="print-observations" order="130">
+            <column name="print-observations" order="120">
                 <widget type="checkbox" fieldname="printobservations"/>
             </column>
-            <column name="disable-stock-management" order="140">
+            <column name="print-agent" order="130">
+                <widget type="checkbox" fieldname="print_agent"/>
+            </column>
+            <column name="print-assigned" order="140">
+                <widget type="checkbox" fieldname="print_assigned"/>
+            </column>
+            <column name="disable-stock-management" order="150">
                 <widget type="checkbox" fieldname="disablestockmanagement"/>
+            </column>
+        </group>
+        <group name="print-works" title="print-works" icon="fas fa-print" numcolumns="12" valign="bottom">
+            <column name="print-works" order="100">
+                <widget type="checkbox" fieldname="printworks"/>
+            </column>
+            <column name="print-reference" order="110">
+                <widget type="checkbox" fieldname="print_work_reference"/>
+            </column>
+            <column name="print-description" order="120">
+                <widget type="checkbox" fieldname="print_work_description"/>
+            </column>
+            <column name="print-quantity" order="130">
+                <widget type="checkbox" fieldname="print_work_quantity"/>
+            </column>
+            <column name="print-price" order="140">
+                <widget type="checkbox" fieldname="print_work_price"/>
             </column>
         </group>
     </columns>
