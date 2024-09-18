@@ -74,8 +74,8 @@
                 </div>
             </div>
         {% else %}
-            <form id="formSearchCustomer" method="post">
-                <input type="hidden" name="action" value=""/>
+            <form id="formSearchCustomer" method="post" onsubmit="animateSpinner('add')">
+                <input type="hidden" name="action" value="new-service-with-machine"/>
                 <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
                 <div class="row mt-4">
                     <div class="col-sm">
@@ -91,9 +91,11 @@
                     </div>
                     <div class="col-sm">
                         <button type="submit" class="btn btn-primary">
-                            {{ trans('continue') }}
+                            {{ trans('continue-whit-machine') }}
                         </button>
-                        &nbsp;
+                        <button type="button" class="btn btn-secondary" onclick="btnNewServiceWhitoutMachine()">
+                            {{ trans('continue-whitout-machine') }}
+                        </button>
                         <a href="{{ fsc.getNewCustomerUrl() }}" class="btn btn-success">
                             {{ trans('new-customer') }}
                         </a>
@@ -113,32 +115,22 @@
     {{ parent() }}
     <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
     <script type="text/javascript">
+        function btnNewServiceWhitoutMachine() {
+            document.forms['formSearchCustomer']['action'].value = 'new-service-without-machine';
+            document.forms['formSearchCustomer'].submit();
+        }
+
         $(document).ready(function () {
             $("#customerac").autocomplete({
                 autoFocus: true,
                 source: function (request, response) {
-                    var formData = {};
-                    var rawForm = $("form[id=formSearchCustomer]").serializeArray();
-                    $.each(rawForm, function (i, input) {
-                        formData[input.name] = input.value;
-                    });
-                    formData["action"] = "autocomplete-customer";
-                    console.log(formData);
                     $.ajax({
                         method: "POST",
-                        url: "NewServicioAT",
-                        data: formData,
+                        url: '{{ fsc.url() }}',
+                        data: {action: 'autocomplete-customer', query: request.term},
                         dataType: "json",
                         success: function (results) {
-                            var values = [];
-                            results.forEach(function (element) {
-                                if (element.key === null || element.key === element.value) {
-                                    values.push(element);
-                                } else {
-                                    values.push({key: element.key, value: element.key + " | " + element.value});
-                                }
-                            });
-                            response(values);
+                            response(results);
                         },
                         error: function (msg) {
                             alert(msg.status + " " + msg.responseText);
@@ -147,40 +139,28 @@
                 },
                 select: function (event, ui) {
                     if (ui.item.key !== null) {
-                        $("form[id=formSearchCustomer] input[name=codcliente]").val(ui.item.key);
-                        var value = ui.item.value.split(" | ");
+                        const value = ui.item.value.split(" | ");
                         if (value.length > 1) {
+                            document.forms['formSearchCustomer']['codcliente'].value = value[0];
                             ui.item.value = value[1];
-                        } else {
-                            ui.item.value = value[0];
                         }
                     }
+                },
+                open: function (event, ui) {
+                    $(this).autocomplete('widget').css('z-index', 1500);
+                    return false;
                 }
             });
+
             $("#machineac").autocomplete({
                 source: function (request, response) {
-                    var formData = {};
-                    var rawForm = $("form[id=formSearchMachine]").serializeArray();
-                    $.each(rawForm, function (i, input) {
-                        formData[input.name] = input.value;
-                    });
-                    formData["action"] = "autocomplete-machine";
-                    console.log(formData);
                     $.ajax({
                         method: "POST",
-                        url: "NewServicioAT",
-                        data: formData,
+                        url: '{{ fsc.url() }}',
+                        data: {action: 'autocomplete-machine', query: request.term},
                         dataType: "json",
                         success: function (results) {
-                            var values = [];
-                            results.forEach(function (element) {
-                                if (element.key === null || element.key === element.value) {
-                                    values.push(element);
-                                } else {
-                                    values.push({key: element.key, value: element.key + " | " + element.value});
-                                }
-                            });
-                            response(values);
+                            response(results);
                         },
                         error: function (msg) {
                             alert(msg.status + " " + msg.responseText);
@@ -189,18 +169,21 @@
                 },
                 select: function (event, ui) {
                     if (ui.item.key !== null) {
-                        $("form[id=formSearchMachine] input[name=idmaquina]").val(ui.item.key);
-                        var value = ui.item.value.split(" | ");
+                        const value = ui.item.value.split(" | ");
                         if (value.length > 1) {
+                            document.forms['formSearchMachine']['idmaquina'].value = value[0];
                             ui.item.value = value[1];
-                        } else {
-                            ui.item.value = value[0];
                         }
                     }
+                },
+                open: function (event, ui) {
+                    $(this).autocomplete('widget').css('z-index', 1500);
+                    return false;
                 }
             });
+
             $("#nomachineBtn").click(function () {
-                $(this.form.action).val('no-machine');
+                $(this.form.action).val('new-service-without-machine');
                 $(this.form).submit();
             });
         });

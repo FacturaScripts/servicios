@@ -78,16 +78,16 @@ class NewServicioAT extends Controller
                 $this->machineAction();
                 break;
 
+            case 'new-service-with-machine':
+                $this->newServiceWithMachineAction();
+                break;
+
+            case 'new-service-without-machine':
+                $this->newServiceWithoutMachineAction();
+                break;
+
             case 'new-machine':
                 $this->newMachineAction();
-                break;
-
-            case 'no-machine':
-                $this->noMachineAction();
-                break;
-
-            default:
-                $this->defaultAction();
                 break;
         }
     }
@@ -100,17 +100,14 @@ class NewServicioAT extends Controller
         $cliente = new Cliente();
         $query = $this->request->get('query');
         foreach ($cliente->codeModelSearch($query, 'codcliente') as $value) {
-            $list[] = [
-                'key' => Tools::fixHtml($value->code),
-                'value' => Tools::fixHtml($value->description)
-            ];
+            $list[$value->code] = $value->code . ' | ' . Tools::fixHtml($value->description);
         }
 
         if (empty($list)) {
             $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
         }
 
-        $this->response->setContent(\json_encode($list));
+        $this->response->setContent(json_encode($list));
     }
 
     protected function autocompleteMachineAction(): void
@@ -121,11 +118,8 @@ class NewServicioAT extends Controller
         $machine = new MaquinaAT();
         $query = $this->request->get('query');
         $where = [new DataBaseWhere('descripcion|nombre|numserie|referencia', $query, 'XLIKE')];
-        foreach ($machine->all($where) as $mac) {
-            $list[] = [
-                'key' => Tools::fixHtml($mac->idmaquina),
-                'value' => Tools::fixHtml($mac->nombre)
-            ];
+        foreach ($machine->all($where, [], 0, 0) as $mac) {
+            $list[$mac->idmaquina] = $mac->idmaquina . ' | ' . Tools::fixHtml($mac->nombre);
         }
 
         if (empty($list)) {
@@ -133,37 +127,6 @@ class NewServicioAT extends Controller
         }
 
         $this->response->setContent(json_encode($list));
-    }
-
-    protected function defaultAction(): void
-    {
-        $id = $this->request->get('idmaquina');
-        if (empty($id)) {
-            return;
-        }
-
-        $maquina = new MaquinaAT();
-        if (false === $maquina->loadFromCode($id)) {
-            return;
-        }
-
-        if (empty($maquina->codcliente) || false === $this->cliente->loadFromCode($maquina->codcliente)) {
-            return;
-        }
-
-        $newServicio = new ServicioAT();
-        $newServicio->codalmacen = $this->user->codalmacen;
-        $newServicio->codcliente = $this->cliente->codcliente;
-        $newServicio->idempresa = $this->user->idempresa;
-        $newServicio->idmaquina = $id;
-        $newServicio->idproyecto = $this->request->get('idproyecto');
-        $newServicio->nick = $this->user->nick;
-        if ($newServicio->save()) {
-            $this->redirect($newServicio->url());
-            return;
-        }
-
-        Tools::log()->warning('record-save-error');
     }
 
     protected function loadCustomer(): void
@@ -207,6 +170,53 @@ class NewServicioAT extends Controller
         Tools::log()->warning('record-save-error');
     }
 
+    protected function newServiceWithMachineAction()
+    {
+        $id = $this->request->get('idmaquina');
+        if (empty($id)) {
+            return;
+        }
+
+        $maquina = new MaquinaAT();
+        if (false === $maquina->loadFromCode($id)) {
+            return;
+        }
+
+        if (empty($maquina->codcliente) || false === $this->cliente->loadFromCode($maquina->codcliente)) {
+            return;
+        }
+
+        $newServicio = new ServicioAT();
+        $newServicio->codalmacen = $this->user->codalmacen;
+        $newServicio->codcliente = $this->cliente->codcliente;
+        $newServicio->idempresa = $this->user->idempresa;
+        $newServicio->idmaquina = $id;
+        $newServicio->idproyecto = $this->request->get('idproyecto');
+        $newServicio->nick = $this->user->nick;
+        if ($newServicio->save()) {
+            $this->redirect($newServicio->url());
+            return;
+        }
+
+        Tools::log()->warning('record-save-error');
+    }
+
+    protected function newServiceWithoutMachineAction()
+    {
+        $newServicio = new ServicioAT();
+        $newServicio->codalmacen = $this->user->codalmacen;
+        $newServicio->codcliente = $this->cliente->codcliente;
+        $newServicio->idempresa = $this->user->idempresa;
+        $newServicio->idproyecto = $this->request->get('idproyecto');
+        $newServicio->nick = $this->user->nick;
+        if ($newServicio->save()) {
+            $this->redirect($newServicio->url());
+            return;
+        }
+
+        Tools::log()->warning('record-save-error');
+    }
+
     protected function newMachineAction(): void
     {
         $codfabricante = $this->request->request->get('codfabricante');
@@ -228,22 +238,6 @@ class NewServicioAT extends Controller
         $newServicio->codcliente = $this->cliente->codcliente;
         $newServicio->idempresa = $this->user->idempresa;
         $newServicio->idmaquina = $newMachine->idmaquina;
-        $newServicio->idproyecto = $this->request->get('idproyecto');
-        $newServicio->nick = $this->user->nick;
-        if ($newServicio->save()) {
-            $this->redirect($newServicio->url());
-            return;
-        }
-
-        Tools::log()->warning('record-save-error');
-    }
-
-    protected function noMachineAction(): void
-    {
-        $newServicio = new ServicioAT();
-        $newServicio->codalmacen = $this->user->codalmacen;
-        $newServicio->codcliente = $this->cliente->codcliente;
-        $newServicio->idempresa = $this->user->idempresa;
         $newServicio->idproyecto = $this->request->get('idproyecto');
         $newServicio->nick = $this->user->nick;
         if ($newServicio->save()) {
