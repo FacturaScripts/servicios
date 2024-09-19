@@ -89,7 +89,7 @@ class EstadoAT extends Base\ModelClass
                 new DataBaseWhere('predeterminado', true),
                 new DataBaseWhere('id', $this->id, '!=')
             ];
-            foreach ($this->all($where) as $status) {
+            foreach ($this->all($where, [], 0, 0) as $status) {
                 $status->predeterminado = false;
                 $status->save();
             }

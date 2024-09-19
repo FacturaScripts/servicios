@@ -45,12 +45,18 @@ final class ServicioAtTest extends TestCase
         $customer = $this->getRandomCustomer();
         $this->assertTrue($customer->save());
 
+        // creamos un estado
+        $status = new EstadoAT();
+        $status->nombre = 'Test state';
+        $this->assertTrue($status->save(), 'Error creating EstadoAT');
+
         // creamos un servicio
         $service = new ServicioAT();
         $service->codalmacen = Tools::settings('default', 'codalmacen');
         $service->codcliente = $customer->codcliente;
         $service->descripcion = 'Test service';
         $service->idempresa = Tools::settings('default', 'idempresa');
+        $service->idestado = $status->id;
         $this->assertTrue($service->save());
 
         // comprobamos que se ha creado
@@ -61,6 +67,7 @@ final class ServicioAtTest extends TestCase
 
         // eliminamos el servicio
         $this->assertTrue($service->delete());
+        $this->assertTrue($status->delete());
     }
 
     public function testChangeStatus(): void
@@ -69,46 +76,60 @@ final class ServicioAtTest extends TestCase
         $customer = $this->getRandomCustomer();
         $this->assertTrue($customer->save());
 
+        // creamos un estado
+        $status1 = new EstadoAT();
+        $status1->nombre = 'Test state 1';
+        $this->assertTrue($status1->save(), 'Error creating EstadoAT');
+
+        // creamos un estado no editable
+        $status2 = new EstadoAT();
+        $status2->nombre = 'Test state 2';
+        $status2->editable = false;
+        $this->assertTrue($status2->save(), 'Error creating EstadoAT');
+
         // creamos un servicio
         $service = new ServicioAT();
         $service->codalmacen = Tools::settings('default', 'codalmacen');
         $service->codcliente = $customer->codcliente;
         $service->descripcion = 'Test service';
         $service->idempresa = Tools::settings('default', 'idempresa');
+        $service->idestado = $status1->id;
         $this->assertTrue($service->save());
 
         // buscamos un estado no editable
         $status = new EstadoAT();
         $where = [new DataBaseWhere('editable', false)];
-        $this->assertTrue($status->loadFromCode('', $where));
+        $this->assertTrue($status->loadFromCode('', $where), 'Error loading EstadoAT');
 
         // asignamos el estado no editable
         $service->idestado = $status->id;
-        $this->assertTrue($service->save());
+        $this->assertTrue($service->save(), 'Error saving ServicioAT');
 
         // recargamos el servicio
         $service->loadFromCode($service->idservicio);
 
         // comprobamos que el servicio ya no es editable
-        $this->assertFalse($service->editable);
+        $this->assertFalse($service->editable, 'Error checking editable ServicioAT');
 
         // buscamos un estado editable
         $status2 = new EstadoAT();
         $where = [new DataBaseWhere('editable', true)];
-        $this->assertTrue($status2->loadFromCode('', $where));
+        $this->assertTrue($status2->loadFromCode('', $where), 'Error loading EstadoAT');
 
         // asignamos el estado editable
         $service->idestado = $status2->id;
-        $this->assertTrue($service->save());
+        $this->assertTrue($service->save(), 'Error saving ServicioAT');
 
         // recargamos el servicio
         $service->loadFromCode($service->idservicio);
 
         // comprobamos que el servicio ya es editable
-        $this->assertTrue($service->editable);
+        $this->assertTrue($service->editable, 'Error checking editable ServicioAT');
 
         // eliminamos el servicio
-        $this->assertTrue($service->delete());
+        $this->assertTrue($service->delete(), 'Error deleting ServicioAT');
+        $this->assertTrue($status1->delete(), 'Error deleting EstadoAT 1');
+        $this->assertTrue($status2->delete(), 'Error deleting EstadoAT 2');
     }
 
     protected function tearDown(): void
