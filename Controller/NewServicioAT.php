@@ -21,9 +21,11 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Cache;
+use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
-use FacturaScripts\Dinamic\Model\CodeModel;
+use FacturaScripts\Dinamic\Model\RoleAccess;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
@@ -31,22 +33,98 @@ use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
  * Description of NewServicioAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Daniel Fernández Giménez <hola@danielfg.es>
  */
 class NewServicioAT extends Controller
 {
-    /** @var Cliente */
-    public $cliente;
+    /** @var array */
+    private $logLevels = ['critical', 'error', 'info', 'notice', 'warning'];
 
-    /** @var CodeModel */
-    public $codeModel;
-
-    /** @var MaquinaAT[] */
-    public $maquinas = [];
-
-    public function getNewCustomerUrl(): string
+    public function privateCore(&$response, $user, $permissions)
     {
-        $customer = new Cliente();
-        return $customer->url('new') . '?return=' . $this->getClassName();
+        parent::privateCore($response, $user, $permissions);
+
+        $action = $this->request->get('action');
+        if ($this->request->get('ajax', false)) {
+            $this->setTemplate(false);
+
+            if (false === $this->user->can('NewServicioAT')) {
+                $this->response->setContent(json_encode([
+                    'redirect' => 'ListServicioAT'
+                ]));
+                return;
+            }
+
+            switch ($action) {
+                case 'findCustomer':
+                    $data = $this->findCustomerAction();
+                    break;
+
+                case 'renderCustomerMachines':
+                    $data = $this->renderCustomerMachinesAction();
+                    break;
+
+                case 'saveNewCustomer':
+                    $data = $this->saveNewCustomerAction();
+                    break;
+
+                case 'saveNewMachine':
+                    $data = $this->saveNewMachineAction();
+                    break;
+
+                case 'saveNewService':
+                    $data = $this->saveNewServiceAction();
+                    break;
+            }
+
+            $content = array_merge(
+                ['messages' => Tools::log()->read('master', $this->logLevels)],
+                $data ?? []
+            );
+            $this->response->setContent(json_encode($content));
+            return;
+        }
+
+        if (false === $this->user->can('NewServicioAT')) {
+            $this->redirect('ListServicioAT');
+        }
+    }
+
+    public function getCompanies(): array
+    {
+        return Empresas::all();
+    }
+
+    public function getModalCustomers(): array
+    {
+        // buscamos en caché
+        $cacheKey = 'model-Cliente-sales-modal-' . $this->user->nick;
+        $clientes = Cache::get($cacheKey);
+        if (is_array($clientes)) {
+            return $clientes;
+        }
+
+        // ¿El usuario tiene permiso para ver todos los clientes?
+        $showAll = false;
+        foreach (RoleAccess::allFromUser($this->user->nick, 'EditCliente') as $access) {
+            if (false === $access->onlyownerdata) {
+                $showAll = true;
+            }
+        }
+
+        // consultamos la base de datos
+        $cliente = new Cliente();
+        $where = [new DataBaseWhere('fechabaja', null, 'IS')];
+        if ($this->permissions->onlyOwnerData && !$showAll) {
+            $where[] = new DataBaseWhere('codagente', $this->user->codagente);
+            $where[] = new DataBaseWhere('codagente', null, 'IS NOT');
+        }
+        $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC']);
+
+        // guardamos en caché
+        Cache::set($cacheKey, $clientes);
+
+        return $clientes;
     }
 
     public function getPageData(): array
@@ -58,193 +136,147 @@ class NewServicioAT extends Controller
         return $data;
     }
 
-    public function privateCore(&$response, $user, $permissions)
+    protected function findCustomerAction(): array
     {
-        parent::privateCore($response, $user, $permissions);
-        $this->codeModel = new CodeModel();
-        $this->loadCustomer();
-
-        $action = $this->request->get('action');
-        switch ($action) {
-            case 'autocomplete-customer':
-                $this->autocompleteCustomerAction();
-                break;
-
-            case 'autocomplete-machine':
-                $this->autocompleteMachineAction();
-                break;
-
-            case 'machine':
-                $this->machineAction();
-                break;
-
-            case 'new-service-with-machine':
-                $this->newServiceWithMachineAction();
-                break;
-
-            case 'new-service-without-machine':
-                $this->newServiceWithoutMachineAction();
-                break;
-
-            case 'new-machine':
-                $this->newMachineAction();
-                break;
+        // ¿El usuario tiene permiso para ver todos los clientes?
+        $showAll = false;
+        foreach (RoleAccess::allFromUser($this->user->nick, 'EditCliente') as $access) {
+            if (false === $access->onlyownerdata) {
+                $showAll = true;
+            }
         }
-    }
-
-    protected function autocompleteCustomerAction(): void
-    {
-        $this->setTemplate(false);
+        $where = [];
+        if ($this->permissions->onlyOwnerData && !$showAll) {
+            $where[] = new DataBaseWhere('codagente', $this->user->codagente);
+            $where[] = new DataBaseWhere('codagente', null, 'IS NOT');
+        }
 
         $list = [];
-        $cliente = new Cliente();
-        $query = $this->request->get('query');
-        foreach ($cliente->codeModelSearch($query, 'codcliente') as $value) {
-            $list[$value->code] = $value->code . ' | ' . Tools::fixHtml($value->description);
+        $customer = new Cliente();
+        $term = $this->request->get('term');
+        foreach ($customer->codeModelSearch($term, '', $where) as $item) {
+            $list[$item->code] = $item->code . ' | ' . Tools::fixHtml($item->description);
         }
 
-        if (empty($list)) {
-            $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
-        }
-
-        $this->response->setContent(json_encode($list));
+        return ['customers' => $list];
     }
 
-    protected function autocompleteMachineAction(): void
+    protected function renderCustomerMachinesAction(): array
     {
-        $this->setTemplate(false);
+        $html = '';
+        $orderBy = ['nombre' => 'ASC'];
+        $where = [new DataBaseWhere('codcliente', $this->request->get('codcliente'))];
+        foreach (MaquinaAT::all($where, $orderBy, 0, 0) as $machine) {
+            $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
+                . '<td>' . $machine->nombre . '</td>'
+                . '<td>' . $machine->numserie . '</td>'
+                . '<td>' . $machine->descripcion . '</td>'
+                . '</tr>';
+        }
 
-        $list = [];
+        if (empty($html)) {
+            $html = '<tr class="table-warning"><td colspan="3" class="text-center">'
+                . Tools::lang()->trans('no-data')
+                . '</td></tr>';
+        }
+
+        return [
+            'renderCustomerMachines' => true,
+            'html' => $html
+        ];
+    }
+
+    protected function saveNewCustomerAction(): array
+    {
+        if (false === $this->user->can('EditCliente', 'update')) {
+            Tools::log()->warning('no-update-permission');
+            return ['saveNewCustomer' => false];
+        }
+
+        $customer = new Cliente();
+        $customer->nombre = $this->request->get('name');
+        $customer->cifnif = $this->request->get('cifnif', '');
+        $customer->email = $this->request->get('email');
+        $customer->telefono1 = $this->request->get('phone1');
+        $customer->telefono2 = $this->request->get('phone2');
+
+        $resultExtension = $this->pipe('saveNewCustomer', $customer);
+        if ($resultExtension instanceof Cliente) {
+            $customer = $resultExtension;
+        }
+
+        if (false === $customer->save()) {
+            Tools::log()->error('save-error');
+            return ['saveNewCustomer' => false];
+        }
+
+        return [
+            'saveNewCustomer' => true,
+            'codcliente' => $customer->codcliente,
+        ];
+    }
+
+    protected function saveNewMachineAction(): array
+    {
+        if (false === $this->user->can('EditMaquinaAT', 'update')) {
+            Tools::log()->warning('no-update-permission');
+            return ['saveNewMachine' => false];
+        }
+
         $machine = new MaquinaAT();
-        $query = $this->request->get('query');
-        $where = [new DataBaseWhere('descripcion|nombre|numserie|referencia', $query, 'XLIKE')];
-        foreach ($machine->all($where, [], 0, 0) as $mac) {
-            $list[$mac->idmaquina] = $mac->idmaquina . ' | ' . Tools::fixHtml($mac->nombre);
+        $machine->codcliente = $this->request->get('codcliente');
+        $machine->nombre = $this->request->get('name');
+        $machine->numserie = $this->request->get('numserie');
+        $machine->descripcion = $this->request->get('description');
+
+        $resultExtension = $this->pipe('saveNewMachine', $machine);
+        if ($resultExtension instanceof MaquinaAT) {
+            $machine = $resultExtension;
         }
 
-        if (empty($list)) {
-            $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
+        if (false === $machine->save()) {
+            Tools::log()->error('save-error');
+            return ['saveNewMachine' => false];
         }
 
-        $this->response->setContent(json_encode($list));
+        return [
+            'saveNewMachine' => true,
+            'idmaquina' => $machine->idmaquina,
+        ];
     }
 
-    protected function loadCustomer(): void
+    protected function saveNewServiceAction(): array
     {
-        $this->cliente = new Cliente();
-        $code = $this->request->get('codcliente');
-        if (empty($code)) {
-            return;
+        if (false === $this->user->can('EditServicioAT', 'update')) {
+            Tools::log()->warning('no-update-permission');
+            return ['saveNewService' => false];
         }
 
-        if (false === $this->cliente->loadFromCode($code)) {
-            Tools::log()->warning('customer-not-found');
-            return;
+        $service = new ServicioAT();
+        $service->codalmacen = $this->request->get('codalmacen');
+        $service->codcliente = $this->request->get('codcliente');
+
+        if ($this->request->get('idmaquina')) {
+            $service->idmaquina = $this->request->get('idmaquina');
         }
 
-        // load machines
-        $machine = new MaquinaAT();
-        $where = [new DataBaseWhere('codcliente', $this->cliente->codcliente)];
-        $this->maquinas = $machine->all($where, [], 0, 0);
-    }
-
-    protected function machineAction(): void
-    {
-        $idmaquina = $this->request->request->get('idmaquina');
-        if (empty($idmaquina)) {
-            return;
+        if (empty($service->codalmacen)) {
+            $service->codalmacen = Tools::settings('default', 'codalmacen');
         }
 
-        $newServicio = new ServicioAT();
-        $newServicio->codalmacen = $this->user->codalmacen;
-        $newServicio->codcliente = $this->cliente->codcliente;
-        $newServicio->idempresa = $this->user->idempresa;
-        $newServicio->idmaquina = $idmaquina;
-        $newServicio->idproyecto = $this->request->get('idproyecto');
-        $newServicio->nick = $this->user->nick;
-        if ($newServicio->save()) {
-            $this->redirect($newServicio->url());
-            return;
+        $resultExtension = $this->pipe('saveNewService', $service);
+        if ($resultExtension instanceof ServicioAT) {
+            $service = $resultExtension;
         }
 
-        Tools::log()->warning('record-save-error');
-    }
-
-    protected function newServiceWithMachineAction()
-    {
-        $id = $this->request->get('idmaquina');
-        if (empty($id)) {
-            return;
+        if (false === $service->save()) {
+            Tools::log()->error('save-error');
+            return ['saveNewService' => false];
         }
 
-        $maquina = new MaquinaAT();
-        if (false === $maquina->loadFromCode($id)) {
-            return;
-        }
-
-        if (empty($maquina->codcliente) || false === $this->cliente->loadFromCode($maquina->codcliente)) {
-            return;
-        }
-
-        $newServicio = new ServicioAT();
-        $newServicio->codalmacen = $this->user->codalmacen;
-        $newServicio->codcliente = $this->cliente->codcliente;
-        $newServicio->idempresa = $this->user->idempresa;
-        $newServicio->idmaquina = $id;
-        $newServicio->idproyecto = $this->request->get('idproyecto');
-        $newServicio->nick = $this->user->nick;
-        if ($newServicio->save()) {
-            $this->redirect($newServicio->url());
-            return;
-        }
-
-        Tools::log()->warning('record-save-error');
-    }
-
-    protected function newServiceWithoutMachineAction()
-    {
-        $newServicio = new ServicioAT();
-        $newServicio->codalmacen = $this->user->codalmacen;
-        $newServicio->codcliente = $this->cliente->codcliente;
-        $newServicio->idempresa = $this->user->idempresa;
-        $newServicio->idproyecto = $this->request->get('idproyecto');
-        $newServicio->nick = $this->user->nick;
-        if ($newServicio->save()) {
-            $this->redirect($newServicio->url());
-            return;
-        }
-
-        Tools::log()->warning('record-save-error');
-    }
-
-    protected function newMachineAction(): void
-    {
-        $codfabricante = $this->request->request->get('codfabricante');
-
-        $newMachine = new MaquinaAT();
-        $newMachine->codcliente = $this->cliente->codcliente;
-        $newMachine->codfabricante = empty($codfabricante) ? null : $codfabricante;
-        $newMachine->descripcion = $this->request->request->get('descripcion');
-        $newMachine->nombre = $this->request->request->get('nombre');
-        $newMachine->numserie = $this->request->request->get('numserie');
-        $newMachine->referencia = $this->request->request->get('referencia');
-        if (false === $newMachine->save()) {
-            Tools::log()->warning('record-save-error');
-            return;
-        }
-
-        $newServicio = new ServicioAT();
-        $newServicio->codalmacen = $this->user->codalmacen;
-        $newServicio->codcliente = $this->cliente->codcliente;
-        $newServicio->idempresa = $this->user->idempresa;
-        $newServicio->idmaquina = $newMachine->idmaquina;
-        $newServicio->idproyecto = $this->request->get('idproyecto');
-        $newServicio->nick = $this->user->nick;
-        if ($newServicio->save()) {
-            $this->redirect($newServicio->url());
-            return;
-        }
-
-        Tools::log()->warning('record-save-error');
+        return [
+            'saveNewService' => true,
+            'url' => $service->url('edit'),
+        ];
     }
 }
