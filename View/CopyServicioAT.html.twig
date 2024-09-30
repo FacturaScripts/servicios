@@ -1,0 +1,100 @@
+{% extends 'Master/MenuBgTemplate.html.twig' %}
+
+{% block body %}
+    {% set works = fsc.model.getTrabajos() %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h1 class="h3">
+                    <i class="fas fa-cut"></i> {{ fsc.title }}
+                </h1>
+                <p>{{ trans('copy-p') }}</p>
+                <form method="post" onsubmit="animateSpinner('add')">
+                    {{ formToken() }}
+                    <input type="hidden" name="action" value="save"/>
+                    <input type="hidden" name="code" value="{{ fsc.modelCode }}"/>
+                    <input type="hidden" name="model" value="{{ fsc.modelClass }}"/>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-12 border-bottom pb-2 h4">
+                                    {{ trans('service') }}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{ trans('date') }}
+                                    <div class="form-group">
+                                        <input type="date" name="fecha" value="{{ "now" | date('Y-m-d') }}"
+                                               class="form-control" required/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    {{ trans('hour') }}
+                                    <div class="form-group">
+                                        <input type="time" name="hora" value="{{ "now" | date('H:i:s') }}"
+                                               class="form-control" required/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 d-flex align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="copy-attachments"
+                                               id="copyAttachments">
+                                        <label class="form-check-label" for="copyAttachments">
+                                            {{ trans('copy-attachments') }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    {{ trans('description') }}
+                                    <div class="form-group">
+                                        <textarea name="descripcion" class="form-control" rows="3"
+                                                  required>{{ fsc.model.descripcion }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if works is not empty %}
+                                <div class="form-row">
+                                    <div class="col-12 h4">
+                                        {{ trans('works') }}
+                                    </div>
+                                    {% for work in works %}
+                                        <div class="col-12">
+                                            <div class="form-row border-top pt-2">
+                                                <div class="col-sm-2">
+                                                    {{ trans('start-date') }}
+                                                    <div class="form-group">
+                                                        <input type="date" name="fechainicio[]" value="{{ "now" | date('Y-m-d') }}"
+                                                               class="form-control" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    {{ trans('start-hour') }}
+                                                    <div class="form-group">
+                                                        <input type="time" name="horainicio[]" value="{{ "now" | date('H:i:s') }}"
+                                                               class="form-control" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm">
+                                                    {{ trans('observations') }}
+                                                    <div class="form-group">
+                                                        {{ work.observaciones }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-spin-action btn-primary">
+                                    <i class="fas fa-save"></i> {{ trans('save') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

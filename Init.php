@@ -48,6 +48,7 @@ final class Init extends InitClass
     public function init(): void
     {
         // extensions
+        $this->loadExtension(new Extension\Controller\CopyModel());
         $this->loadExtension(new Extension\Controller\EditCliente());
 
         // tickets

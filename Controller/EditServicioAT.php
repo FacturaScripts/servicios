@@ -277,6 +277,13 @@ class EditServicioAT extends EditController
                     $this->setSettings('EditTrabajoAT', 'btnNew', false);
                     $this->setSettings('EditTrabajoAT', 'btnSave', false);
                 }
+
+                $this->addButton($viewName, [
+                    'action' => 'CopyModel?model=' . $this->getModelClassName() . '&code=' . $view->model->primaryColumnValue(),
+                    'icon' => 'fas fa-cut',
+                    'label' => 'copy',
+                    'type' => 'link'
+                ]);
                 break;
 
             case 'docfiles':
