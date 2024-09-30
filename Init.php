@@ -61,7 +61,11 @@ final class Init extends InitClass
         }
 
         // export manager
-        ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
+        if (Plugins::isEnabled('PlantillasPDF')) {
+            ExportManager::addOptionModel('PlantillasPDFserviciosExport', 'PDF', 'ServicioAT');
+        } else {
+            ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
+        }
 
         // mod para los documentos de venta
         SalesHeaderHTML::addMod(new Mod\SalesHeaderHTMLMod());
