@@ -28,6 +28,7 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
+use FacturaScripts\Dinamic\Model\Almacen;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
@@ -361,6 +362,14 @@ class ServicioAT extends ModelOnChangeClass
 
         // comprobamos que editable se corresponda con el estado
         $this->editable = $this->getStatus()->editable;
+
+        // si tenemos almacén, pero no empresa, obtenemos la empresa del almacén
+        if (false === empty($this->codalmacen) && empty($this->codempresa)) {
+            $warehouse = new Almacen();
+            if ($warehouse->loadFromCode($this->codalmacen)) {
+                $this->idempresa = $warehouse->idempresa;
+            }
+        }
 
         return parent::test();
     }

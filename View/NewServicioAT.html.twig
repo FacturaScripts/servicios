@@ -1,136 +1,414 @@
-{% extends "Master/MenuBghTemplate.html.twig" %}
-
-{% block bodyHeaderOptions %}
-    {{ parent() }}
-    <div class="container pt-4">
-        <div class="row">
-            <div class="col">
-                <h1 class="h3 mb-0">{{ trans('new-service') }}</h1>
-                <p>{{ trans('new-service-p') }}</p>
-                <ul class="nav nav-tabs">
-                    {% if fsc.cliente.exists() %}
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1"
-                               aria-disabled="true">{{ trans('customer') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">{{ trans('machine') }}</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">{{ trans('customer') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1"
-                               aria-disabled="true">{{ trans('machine') }}</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+{% extends "Master/MenuTemplate.html.twig" %}
 
 {% block body %}
     {{ parent() }}
-    <div class="container">
-        {% if fsc.cliente.exists() %}
-            <div class="row">
-                <div class="col-sm">
-                    {{ _self.machineList(fsc, i18n) }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm">
-                    <div class="card shadow mt-5 mb-5">
-                        <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="newm-tab" data-toggle="tab" href="#newm" role="tab"
-                                       aria-controls="newm" aria-selected="false">
-                                        {{ trans('new-machine') }}
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="findm-tab" data-toggle="tab" href="#findm" role="tab"
-                                       aria-controls="findm" aria-selected="true">
-                                        {{ trans('search') }}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content">
-                                <div class="tab-pane fade show active" id="newm" role="tabpanel"
-                                     aria-labelledby="newm-tab">
-                                    {{ _self.newMachineTab(fsc, i18n) }}
-                                </div>
-                                <div class="tab-pane fade" id="findm" role="tabpanel" aria-labelledby="findm-tab">
-                                    {{ _self.findMachineTab(fsc, i18n) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <form id="formSearchCustomer" method="post" onsubmit="animateSpinner('add')">
-                <input type="hidden" name="action" value="new-service-with-machine"/>
-                <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
-                <div class="row mt-4">
-                    <div class="col-sm">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                            </div>
-                            <input type="text" name="query" class="form-control" id="customerac"
-                                   placeholder="{{ trans('search') }}" autofocus=""/>
-                        </div>
-                    </div>
-                    <div class="col-sm">
-                        <button type="submit" class="btn btn-primary">
-                            {{ trans('continue-whit-machine') }}
-                        </button>
-                        <button type="button" class="btn btn-secondary" onclick="btnNewServiceWhitoutMachine()">
-                            {{ trans('continue-whitout-machine') }}
-                        </button>
-                        <a href="{{ fsc.getNewCustomerUrl() }}" class="btn btn-success">
-                            {{ trans('new-customer') }}
-                        </a>
-                    </div>
-                </div>
-            </form>
-        {% endif %}
+    <div class="text-center">
+        <button class="btn btn-success" onclick="initNewService()">
+            {{ trans('new-service') }}
+        </button>
     </div>
+
+    <!-- Modal warehouse -->
+    {% block modalWarehouse %}
+        <div class="modal fade" id="warehouseModal" tabindex="-1" aria-labelledby="warehouseModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="warehouseModalLabel">{{ trans('select-warehouse') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <select class="form-control" id="warehouseSelect">
+                                {% for company in fsc.getCompanies() %}
+                                    <optgroup label="{{ company.nombrecorto }}">
+                                        {% for warehouse in company.getWarehouses() %}
+                                            {% if warehouse.activo %}
+                                                <option value="{{ warehouse.codalmacen }}">{{ warehouse.nombre }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </optgroup>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-block btn-primary" onclick="saveWarehouse()">
+                            {{ trans('continue') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    <!-- Modal customer -->
+    {% block modalCustomer %}
+        <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="customerModalLabel">{{ trans('select-customer') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="input-group p-3">
+                            <input type="text" id="findCustomerInput" class="form-control ui-autocomplete-input"
+                                   placeholder="{{ trans('search') }}" autocomplete="off"/>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fa-solid fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <table class="table table-hover mb-0">
+                            {% for customer in fsc.getModalCustomers() %}
+                                {% set customerName = customer.nombre == customer.razonsocial ? customer.nombre : customer.nombre ~ ' <span>(' ~ customer.razonsocial ~ ')</span>' %}
+                                <tr class="clickableRow" data-codcliente="{{ customer.codcliente }}">
+                                    <td>
+                                        <i class="fas fa-user fa-fw"></i> {{ customerName | raw }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-block btn-success" onclick="showModalNewCustomer()">
+                            <i class="fa-solid fa-user-plus"></i> {{ trans('new-customer') | capitalize }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    <!-- Modal new customer -->
+    {% block modalNewCustomer %}
+        <div class="modal fade" id="newCustomerModal" tabindex="-1" aria-labelledby="newCustomerModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newCustomerModalLabel">{{ trans('new-customer') | capitalize }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{ trans('name') }}
+                            <input type="text" name="name" class="form-control" maxlength="100"/>
+                        </div>
+                        <div class="form-group">
+                            {{ trans('cifnif') }}
+                            <input type="text" name="cifnif" class="form-control" maxlength="30"/>
+                        </div>
+                        <div class="form-group">
+                            {{ trans('email') }}
+                            <input type="email" name="email" class="form-control" maxlength="100"/>
+                        </div>
+                        <div class="form-group">
+                            {{ trans('phone') }}
+                            <input type="text" name="phone1" class="form-control" maxlength="30"/>
+                        </div>
+                        <div class="form-group">
+                            {{ trans('phone2') }}
+                            <input type="text" name="phone2" class="form-control" maxlength="30"/>
+                        </div>
+                        {% for item in getIncludeViews('NewServicioAT', 'newCustomerModal') %}
+                            {% include item['path'] %}
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-block btn-success" onclick="saveNewCustomer()">
+                            {{ trans('save') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    <!-- Modal machines customer -->
+    {% block modalMachine %}
+        <div class="modal fade" id="machineModal" tabindex="-1" aria-labelledby="machineModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="machineModalLabel">{{ trans('customer-machines') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th>{{ trans('name') }}</th>
+                            <th>{{ trans('serial-number') }}</th>
+                            <th>{{ trans('description') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody id="customerMachines"></tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-block btn-success" onclick="showModalNewMachine()">
+                            <i class="fa-solid fa-laptop-medical"></i> {{ trans('new-machine') }}
+                        </button>
+                        <button type="button" class="btn btn-block btn-primary" onclick="saveMachine(null)">
+                            {{ trans('continue-without-machine') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    <!-- Modal new machine customer -->
+    {% block modalNewMachine %}
+        <div class="modal fade" id="newMachineModal" tabindex="-1" aria-labelledby="newMachineModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newMachineModalLabel">{{ trans('new-machine') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{ trans('name') }}
+                            <input type="text" name="name" class="form-control" maxlength="100" required/>
+                        </div>
+                        <div class="form-group">
+                            {{ trans('serial-number') }}
+                            <input type="text" name="serial_number" class="form-control" maxlength="100"/>
+                        </div>
+                        <div class="form-group">
+                            {{ trans('description') }}
+                            <textarea name="description" class="form-control" maxlength="100"></textarea>
+                        </div>
+                        {% for item in getIncludeViews('NewServicioAT', 'newMachineModal') %}
+                            {% include item['path'] %}
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-block btn-success" onclick="saveNewMachine()">
+                            {{ trans('save') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
 {% endblock %}
 
 {% block css %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.css') }}"/>
+    <link rel="stylesheet" href="/node_modules/jquery-ui-dist/jquery-ui.min.css"/>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript">
-        function btnNewServiceWhitoutMachine() {
-            document.forms['formSearchCustomer']['action'].value = 'new-service-without-machine';
-            document.forms['formSearchCustomer'].submit();
+    <script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script>
+        let codalmacen = null;
+        let codcliente = null;
+        let idmaquina = null;
+
+        function initNewService() {
+            // si hay más de un almacén, se muestra el modal para seleccionar el almacén
+            // si no se muestra el modal de clientes
+            if ($('#warehouseSelect option').length > 1) {
+                showModalWarehouse();
+            } else {
+                showModalCustomer();
+            }
+        }
+
+        function saveCustomer(code) {
+            codcliente = code;
+
+            let formData = new FormData();
+            formData.append('codcliente', codcliente);
+            sendFormService(formData, 'renderCustomerMachines');
+        }
+
+        function saveMachine(code) {
+            idmaquina = code;
+
+            let formData = new FormData();
+            formData.append('codcliente', codcliente);
+
+            if (codalmacen) {
+                formData.append('codalmacen', codalmacen);
+            }
+
+            if (idmaquina) {
+                formData.append('idmaquina', idmaquina);
+            }
+
+            sendFormService(formData, 'saveNewService');
+        }
+
+        function saveNewCustomer() {
+            let formData = new FormData();
+
+            $('#newCustomerModal input').each(function () {
+                formData.append($(this).attr('name'), $(this).val());
+            });
+
+            $('#newMachineModal textarea').each(function () {
+                formData.append($(this).attr('name'), $(this).val());
+            });
+
+            $('#newCustomerModal select').each(function () {
+                formData.append($(this).attr('name'), $(this).find('option:selected').val());
+            });
+
+            sendFormService(formData, 'saveNewCustomer');
+        }
+
+        function saveNewMachine() {
+            let formData = new FormData();
+            formData.append('codcliente', codcliente);
+
+            $('#newMachineModal input').each(function () {
+                formData.append($(this).attr('name'), $(this).val());
+            });
+
+            $('#newCustomerModal select').each(function () {
+                formData.append($(this).attr('name'), $(this).find('option:selected').val());
+            });
+
+            $('#newMachineModal textarea').each(function () {
+                formData.append($(this).attr('name'), $(this).val());
+            });
+
+            sendFormService(formData, 'saveNewMachine');
+        }
+
+        function saveWarehouse() {
+            codalmacen = $('#warehouseSelect').val();
+            showModalCustomer();
+        }
+
+        function sendFormService(formData, action) {
+            animateSpinner('add');
+            formData.append('action', action);
+            formData.append('ajax', true);
+
+            fetch('{{ fsc.url() }}', {
+                method: 'POST',
+                body: formData
+            }).then(function (response) {
+                if (response.ok) {
+                    animateSpinner('remove', true);
+                    return response.json();
+                }
+                animateSpinner('remove', false);
+                return Promise.reject(response);
+            }).then(function (data) {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
+
+                if (data.renderCustomerMachines) {
+                    $('#customerMachines').html(data.html);
+                    showModalMachine();
+                }
+
+                if (data.saveNewCustomer) {
+                    saveCustomer(data.codcliente);
+                }
+
+                if (data.saveNewMachine) {
+                    saveMachine(data.idmaquina);
+                }
+
+                if (data.saveNewService) {
+                    window.location.href = data.url;
+                    return;
+                }
+
+                // si hay mensajes de error
+                if (data.messages) {
+                    data.messages.forEach(function (msg) {
+                        if (msg.level === 'danger') {
+                            setToast(msg.message, msg.level, '', 0);
+                        } else {
+                            setToast(msg.message, msg.level);
+                        }
+                    });
+                }
+
+                animateSpinner('remove');
+            }).catch(function (error) {
+                alert('error sendFormService');
+                console.warn(error);
+                animateSpinner('remove', false);
+                return false;
+            });
+
+            return true;
+        }
+
+        function showModalCustomer() {
+            $('#warehouseModal').modal('hide');
+            $('#customerModal').modal('show').on('shown.bs.modal', function (event) {
+                $('#findCustomerInput').focus();
+            });
+        }
+
+        function showModalNewCustomer() {
+            $('#customerModal').modal('hide');
+            $('#newCustomerModal').modal('show').on('shown.bs.modal', function (event) {
+                $('#newCustomerModal input').first().focus();
+            });
+        }
+
+        function showModalNewMachine() {
+            $('#machineModal').modal('hide');
+            $('#newMachineModal').modal('show').on('shown.bs.modal', function (event) {
+                $('#newMachineModal input').first().focus();
+            });
+        }
+
+        function showModalWarehouse() {
+            $('#warehouseModal').modal('show').on('shown.bs.modal', function (event) {
+                $('#warehouseSelect').focus();
+            });
+        }
+
+        function showModalMachine() {
+            $('#customerModal').modal('hide');
+            $('#newCustomerModal').modal('hide');
+            $('#machineModal').modal('show');
         }
 
         $(document).ready(function () {
-            $("#customerac").autocomplete({
+            $("#findCustomerInput").autocomplete({
                 autoFocus: true,
                 source: function (request, response) {
                     $.ajax({
                         method: "POST",
                         url: '{{ fsc.url() }}',
-                        data: {action: 'autocomplete-customer', query: request.term},
+                        data: {
+                            action: 'findCustomer',
+                            term: request.term,
+                            ajax: true,
+                        },
                         dataType: "json",
                         success: function (results) {
-                            response(results);
+                            response(results.customers);
                         },
                         error: function (msg) {
                             alert(msg.status + " " + msg.responseText);
@@ -141,8 +419,7 @@
                     if (ui.item.key !== null) {
                         const value = ui.item.value.split(" | ");
                         if (value.length > 1) {
-                            document.forms['formSearchCustomer']['codcliente'].value = value[0];
-                            ui.item.value = value[1];
+                            saveCustomer(value[0]);
                         }
                     }
                 },
@@ -152,182 +429,15 @@
                 }
             });
 
-            $("#machineac").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        method: "POST",
-                        url: '{{ fsc.url() }}',
-                        data: {action: 'autocomplete-machine', query: request.term},
-                        dataType: "json",
-                        success: function (results) {
-                            response(results);
-                        },
-                        error: function (msg) {
-                            alert(msg.status + " " + msg.responseText);
-                        }
-                    });
-                },
-                select: function (event, ui) {
-                    if (ui.item.key !== null) {
-                        const value = ui.item.value.split(" | ");
-                        if (value.length > 1) {
-                            document.forms['formSearchMachine']['idmaquina'].value = value[0];
-                            ui.item.value = value[1];
-                        }
-                    }
-                },
-                open: function (event, ui) {
-                    $(this).autocomplete('widget').css('z-index', 1500);
-                    return false;
-                }
+            $('#customerModal .clickableRow').click(function () {
+                saveCustomer($(this).data('codcliente'));
             });
 
-            $("#nomachineBtn").click(function () {
-                $(this.form.action).val('new-service-without-machine');
-                $(this.form).submit();
+            $('#machineModal .clickableRow').click(function () {
+                saveMachine($(this).data('idmaquina'));
             });
+
+            initNewService();
         });
     </script>
 {% endblock %}
-
-{% macro findMachineTab(fsc, i18n) %}
-    <form id="formSearchMachine" method="post">
-        <input type="hidden" name="action" value="machine"/>
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
-        <input type="hidden" name="idmaquina" value=""/>
-        <div class="row">
-            <div class="col-sm">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fas fa-search"></i>
-                        </span>
-                    </div>
-                    <input type="text" name="query" class="form-control" id="machineac"
-                           placeholder="{{ trans('search') }}"/>
-                </div>
-            </div>
-            <div class="col-sm">
-                <button type="submit" class="btn btn-primary">
-                    {{ trans('continue') }}
-                </button>
-            </div>
-        </div>
-    </form>
-{% endmacro %}
-
-{% macro machineList(fsc, i18n) %}
-    <form method="post">
-        <input type="hidden" name="action" value="machine"/>
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>{{ trans('name') }}</th>
-                    <th>{{ trans('serial-number') }}</th>
-                    <th>{{ trans('reference') }}</th>
-                    <th>{{ trans('manufacturer') }}</th>
-                    <th class="text-right">{{ trans('date') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for machine in fsc.maquinas %}
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                {% if loop.index == 1 %}
-                                    <input class="form-check-input" type="radio" name="idmaquina"
-                                           value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}" checked=""/>
-                                {% else %}
-                                    <input class="form-check-input" type="radio" name="idmaquina"
-                                           value="{{ machine.idmaquina }}" id="maquina{{ loop.index }}"/>
-                                {% endif %}
-                                <label class="form-check-label" for="maquina{{ loop.index }}">
-                                    {{ machine.nombre }}
-                                </label>
-                            </div>
-                        </td>
-                        <td>{{ machine.numserie }}</td>
-                        <td>{{ machine.reference }}</td>
-                        <td>{{ machine.getFabricante().nombre }}</td>
-                        <td class="text-right">{{ machine.fecha }}</td>
-                    </tr>
-                {% else %}
-                    <tr class="table-warning">
-                        <td colspan="6">{{ trans('customer-has-no-machines') }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="row">
-            {% if fsc.maquinas %}
-                <div class="col-sm">
-                    <button type="submit" class="btn btn-primary">
-                        {{ trans('continue') }}
-                    </button>
-                </div>
-            {% endif %}
-            <div class="col-sm text-right">
-                <button type="button" class="btn btn-secondary" id="nomachineBtn">
-                    <i class="fas fa-times-circle"></i>&nbsp; {{ trans('no-machine') }}
-                </button>
-            </div>
-        </div>
-    </form>
-{% endmacro %}
-
-{% macro newMachineTab(fsc, i18n) %}
-    <form method="post">
-        <input type="hidden" name="action" value="new-machine"/>
-        <input type="hidden" name="codcliente" value="{{ fsc.cliente.codcliente }}"/>
-        <div class="form-row">
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ trans('name') }}
-                    <input type="text" name="nombre" class="form-control" maxlength="100" required/>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ trans('serial-number') }}
-                    <input type="text" name="numserie" class="form-control" maxlength="100"/>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ trans('reference') }}
-                    <input type="text" name="referencia" class="form-control" maxlength="30"/>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ trans('manufacturer') }}
-                    <select name="codfabricante" class="form-control">
-                        {% for item in fsc.codeModel.all('fabricantes','codfabricante','nombre') %}
-                            <option value="{{ item.code }}">
-                                {{ item.description | raw }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-sm">
-                <div class="form-group">
-                    {{ trans('observations') }}
-                    <textarea class="form-control" name="descripcion"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-sm text-right">
-                <button type="submit" class="btn btn-success">
-                    {{ trans('save') }}
-                </button>
-            </div>
-        </div>
-    </form>
-{% endmacro %}
