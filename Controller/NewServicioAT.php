@@ -175,7 +175,7 @@ class NewServicioAT extends Controller
         }
 
         if (empty($html)) {
-            $html = '<tr class="table-warning"><td colspan="3" class="text-center">'
+            $html = '<tr class="table-warning"><td colspan="3">'
                 . Tools::lang()->trans('no-data')
                 . '</td></tr>';
         }

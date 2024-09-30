@@ -1,12 +1,30 @@
-{% extends "Master/MenuTemplate.html.twig" %}
+{% extends "Master/MenuBghTemplate.html.twig" %}
+
+{% block bodyHeaderOptions %}
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+{% endblock %}
 
 {% block body %}
-    {{ parent() }}
-    <div class="text-center">
-        <button class="btn btn-success" onclick="initNewService()">
-            {{ trans('new-service') }}
-        </button>
+    <div class="container" style="margin-top: -42px">
+        <div class="row">
+            <div class="col">
+                <div class="card shadow mb-5">
+                    <div class="card-body"></div>
+                    <div class="card-footer p-2">
+                        <button class="btn btn-lg btn-block btn-success" onclick="initNewService()">
+                            {{ trans('new-service') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    {{ parent() }}
 
     <!-- Modal warehouse -->
     {% block modalWarehouse %}
@@ -15,27 +33,30 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="warehouseModalLabel">{{ trans('select-warehouse') }}</h5>
+                        <h5 class="modal-title" id="warehouseModalLabel">
+                            <i class="fa-solid fa-warehouse mr-1"></i> {{ trans('warehouse') }}
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <select class="form-control" id="warehouseSelect">
-                                {% for company in fsc.getCompanies() %}
-                                    <optgroup label="{{ company.nombrecorto }}">
-                                        {% for warehouse in company.getWarehouses() %}
-                                            {% if warehouse.activo %}
-                                                <option value="{{ warehouse.codalmacen }}">{{ warehouse.nombre }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </optgroup>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
+                        <select class="form-control mb-3" id="warehouseSelect">
+                            {% for company in fsc.getCompanies() %}
+                                <optgroup label="{{ company.nombrecorto }}">
+                                    {% for warehouse in company.getWarehouses() %}
+                                        {% if warehouse.activo == false %}
+                                        {% elseif warehouse.codalmacen == fsc.user.codalmacen %}
+                                            <option value="{{ warehouse.codalmacen }}" selected>
+                                                {{ warehouse.nombre }}
+                                            </option>
+                                        {% else %}
+                                            <option value="{{ warehouse.codalmacen }}">{{ warehouse.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
                         <button type="button" class="btn btn-block btn-primary" onclick="saveWarehouse()">
                             {{ trans('continue') }}
                         </button>
@@ -52,7 +73,9 @@
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="customerModalLabel">{{ trans('select-customer') }}</h5>
+                        <h5 class="modal-title" id="customerModalLabel">
+                            <i class="fa-solid fa-users mr-1"></i> {{ trans('customers') }}
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -95,7 +118,9 @@
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="newCustomerModalLabel">{{ trans('new-customer') | capitalize }}</h5>
+                        <h5 class="modal-title" id="newCustomerModalLabel">
+                            <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') }}
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -142,7 +167,9 @@
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="machineModalLabel">{{ trans('customer-machines') }}</h5>
+                        <h5 class="modal-title" id="machineModalLabel">
+                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('machines') }}
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -159,10 +186,10 @@
                     </table>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-block btn-success" onclick="showModalNewMachine()">
-                            <i class="fa-solid fa-laptop-medical"></i> {{ trans('new-machine') }}
+                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
                         </button>
                         <button type="button" class="btn btn-block btn-primary" onclick="saveMachine(null)">
-                            {{ trans('continue-without-machine') }}
+                            <i class="fa-solid fa-ban mr-1"></i> {{ trans('no-machine') }}
                         </button>
                     </div>
                 </div>
@@ -177,7 +204,9 @@
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="newMachineModalLabel">{{ trans('new-machine') }}</h5>
+                        <h5 class="modal-title" id="newMachineModalLabel">
+                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -212,12 +241,12 @@
 
 {% block css %}
     {{ parent() }}
-    <link rel="stylesheet" href="/node_modules/jquery-ui-dist/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
     <script>
         let codalmacen = null;
         let codcliente = null;
