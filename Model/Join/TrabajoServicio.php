@@ -25,7 +25,7 @@ use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>
  */
-class TrabajoAT extends JoinModel
+class TrabajoServicio extends JoinModel
 {
     public function __construct($data = [])
     {

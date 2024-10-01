@@ -154,7 +154,7 @@ class ListServicioAT extends ListController
         $customers = $this->codeModel->all('clientes', 'codcliente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
 
-        $this->addView($viewName, 'Join\TrabajoAT', 'work', 'fas fa-stethoscope')
+        $this->addView($viewName, 'Join\TrabajoServicio', 'work', 'fas fa-stethoscope')
             ->addOrderBy(['serviciosat_trabajos.fechainicio', 'serviciosat_trabajos.horainicio'], 'from-date')
             ->addOrderBy(['serviciosat_trabajos.fechafin', 'serviciosat_trabajos.horafin'], 'until-date', 2)
             ->addOrderBy(['serviciosat_trabajos.idservicio', 'serviciosat_trabajos.idtrabajo'], 'service')
