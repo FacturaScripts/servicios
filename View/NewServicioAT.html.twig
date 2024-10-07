@@ -103,7 +103,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-block btn-success" onclick="showModalNewCustomer()">
-                            <i class="fa-solid fa-user-plus"></i> {{ trans('new-customer') | capitalize }}
+                            <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
                         </button>
                     </div>
                 </div>
@@ -115,36 +115,100 @@
     {% block modalNewCustomer %}
         <div class="modal fade" id="newCustomerModal" tabindex="-1" aria-labelledby="newCustomerModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newCustomerModalLabel">
-                            <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') }}
+                            <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            {{ trans('name') }}
-                            <input type="text" name="name" class="form-control" maxlength="100"/>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('name') }}
+                                    <input type="text" name="name" class="form-control" maxlength="100"/>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('cifnif') }}
+                                    <input type="text" name="cifnif" class="form-control" maxlength="30"/>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            {{ trans('cifnif') }}
-                            <input type="text" name="cifnif" class="form-control" maxlength="30"/>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('phone') }}
+                                    <input type="text" name="phone1" class="form-control" maxlength="30"/>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('phone2') }}
+                                    <input type="text" name="phone2" class="form-control" maxlength="30"/>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             {{ trans('email') }}
                             <input type="email" name="email" class="form-control" maxlength="100"/>
                         </div>
                         <div class="form-group">
-                            {{ trans('phone') }}
-                            <input type="text" name="phone1" class="form-control" maxlength="30"/>
+                            {{ trans('address') }}
+                            <input type="text" name="address" class="form-control" maxlength="100"/>
                         </div>
-                        <div class="form-group">
-                            {{ trans('phone2') }}
-                            <input type="text" name="phone2" class="form-control" maxlength="30"/>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('zip-code') }}
+                                    <input type="text" name="zip" class="form-control" maxlength="10"/>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('city') }}
+                                    <input list="cities" name="city" class="form-control" maxlength="100"/>
+                                    <datalist id="cities">
+                                        {% for city in fsc.codeModel.all('ciudades','ciudad','ciudad',false) %}
+                                            <option value="{{ city.code }}">
+                                        {% endfor %}
+                                    </datalist>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('province') }}
+                                    <input list="provinces" name="province" class="form-control" maxlength="100"/>
+                                    <datalist id="provinces">
+                                        {% for province in fsc.codeModel.all('provincias','provincia','provincia',false) %}
+                                            <option value="{{ province.code }}">
+                                        {% endfor %}
+                                    </datalist>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    {{ trans('country') }}
+                                    <select name="country" class="form-control" required>
+                                        {% for country in fsc.codeModel.all('paises','codpais','nombre',false) %}
+                                            {% if country.code == settings('default','codpais') %}
+                                                <option value="{{ country.code }}" selected>
+                                                    {{ country.description }}
+                                                </option>
+                                            {% else %}
+                                                <option value="{{ country.code }}">{{ country.description }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         {% for item in getIncludeViews('NewServicioAT', 'newCustomerModal') %}
                             {% include item['path'] %}

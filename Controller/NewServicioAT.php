@@ -25,6 +25,7 @@ use FacturaScripts\Core\Cache;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\CodeModel;
 use FacturaScripts\Dinamic\Model\RoleAccess;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
@@ -32,17 +33,23 @@ use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 /**
  * Description of NewServicioAT
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Carlos Garcia Gomez      <carlos@facturascripts.com>
  * @author Daniel Fernández Giménez <hola@danielfg.es>
  */
 class NewServicioAT extends Controller
 {
+    /** @var CodeModel */
+    public $codeModel;
+
     /** @var array */
     private $logLevels = ['critical', 'error', 'info', 'notice', 'warning'];
 
     public function privateCore(&$response, $user, $permissions)
     {
         parent::privateCore($response, $user, $permissions);
+
+        $this->codeModel = new CodeModel();
+        CodeModel::setLimit(10000);
 
         $action = $this->request->get('action');
         if ($this->request->get('ajax', false)) {
@@ -193,6 +200,7 @@ class NewServicioAT extends Controller
             return ['saveNewCustomer' => false];
         }
 
+        // creamos el cliente
         $customer = new Cliente();
         $customer->nombre = $this->request->get('name');
         $customer->cifnif = $this->request->get('cifnif', '');
@@ -208,6 +216,17 @@ class NewServicioAT extends Controller
         if (false === $customer->save()) {
             Tools::log()->error('save-error');
             return ['saveNewCustomer' => false];
+        }
+
+        // modificamos la dirección
+        foreach ($customer->getAddresses() as $address) {
+            $address->direccion = $this->request->get('address');
+            $address->codpostal = $this->request->get('zip');
+            $address->ciudad = $this->request->get('city');
+            $address->provincia = $this->request->get('province');
+            $address->codpais = $this->request->get('country');
+            $address->save();
+            break;
         }
 
         return [

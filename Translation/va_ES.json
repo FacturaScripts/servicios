@@ -8,6 +8,7 @@
     "changed-user-to": "L'usuari %oldUser% ha canviat per l'usuari %newUser%",
     "continue-whit-machine": "Continuar amb màquina",
     "continue-whitout-machine": "Continuar sense màquina",
+    "copy-attachments": "Copiar fitxers adjunts",
     "customer-has-no-machines": "El client no té màquines",
     "deleted-service": "Servei eliminat",
     "disable-stock-management": "No controlar estoc (en treballs)",

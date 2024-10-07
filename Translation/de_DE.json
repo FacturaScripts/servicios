@@ -8,6 +8,7 @@
     "changed-user-to": "Benutzer wurde von %oldUser% zu %newUser% geändert",
     "continue-whit-machine": "Mit der Maschine fortfahren",
     "continue-whitout-machine": "Fortfahren ohne Maschine",
+    "copy-attachments": "Dateianhänge kopieren",
     "customer-has-no-machines": "der Kunde hat keine Maschinen",
     "deleted-service": "Dienst gelöscht",
     "disable-stock-management": "Keine Lagerverwaltung (bei Aufträgen)",

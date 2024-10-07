@@ -8,6 +8,7 @@
     "changed-user-to": "Se ha cambiado el usuario %oldUser% por el usuario %newUser%",
     "continue-whit-machine": "Pokračovat s strojem",
     "continue-whitout-machine": "Pokračovat bez stroje",
+    "copy-attachments": "Copiar archivos adjuntos",
     "customer-has-no-machines": "El cliente no tiene máquinas",
     "deleted-service": "Služba smazána",
     "disable-stock-management": "No controlar stock (en trabajos)",
