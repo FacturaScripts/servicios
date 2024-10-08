@@ -329,26 +329,18 @@
         function saveCustomer(code) {
             codcliente = code;
 
-            let formData = new FormData();
-            formData.append('codcliente', codcliente);
-            sendFormService(formData, 'renderCustomerMachines');
+            {% if settings('servicios', 'new_service_without_machine', false) %}
+                saveNewService();
+            {% else %}
+                let formData = new FormData();
+                formData.append('codcliente', codcliente);
+                sendFormService(formData, 'renderCustomerMachines');
+            {% endif %}
         }
 
         function saveMachine(code) {
             idmaquina = code;
-
-            let formData = new FormData();
-            formData.append('codcliente', codcliente);
-
-            if (codalmacen) {
-                formData.append('codalmacen', codalmacen);
-            }
-
-            if (idmaquina) {
-                formData.append('idmaquina', idmaquina);
-            }
-
-            sendFormService(formData, 'saveNewService');
+            saveNewService();
         }
 
         function saveNewCustomer() {
@@ -386,6 +378,21 @@
             });
 
             sendFormService(formData, 'saveNewMachine');
+        }
+
+        function saveNewService() {
+            let formData = new FormData();
+            formData.append('codcliente', codcliente);
+
+            if (codalmacen) {
+                formData.append('codalmacen', codalmacen);
+            }
+
+            if (idmaquina) {
+                formData.append('idmaquina', idmaquina);
+            }
+
+            sendFormService(formData, 'saveNewService');
         }
 
         function saveWarehouse() {

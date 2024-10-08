@@ -22,6 +22,9 @@
                     <values title="estimation">6</values>
                 </widget>
             </column>
+            <column name="new-service-without-machine" order="130">
+                <widget type="checkbox" fieldname="new_service_without_machine"/>
+            </column>
         </group>
         <group name="print-services" title="print-services" icon="fas fa-print" numcolumns="12" valign="bottom">
             <column name="footer-text" numcolumns="12" order="100">
