@@ -78,6 +78,10 @@ class NewServicioAT extends Controller
             }
 
             switch ($action) {
+                case 'checkDuplicateCustomer':
+                    $data = $this->checkDuplicateCustomerAction();
+                    break;
+
                 case 'findCustomer':
                     $data = $this->findCustomerAction();
                     break;
@@ -157,6 +161,34 @@ class NewServicioAT extends Controller
         $data['title'] = 'new-service';
         $data['showonmenu'] = false;
         return $data;
+    }
+
+    protected function checkDuplicateCustomerAction(): array
+    {
+        $wheres = [];
+        $name = $this->request->get('name', '');
+        $cifnif = $this->request->get('cifnif', '');
+
+        if (false === empty($name)) {
+            $wheres[] = 'LOWER(nombre) = ' . $this->dataBase->var2str(strtolower($name));
+            $wheres[] = 'LOWER(razonsocial) = ' . $this->dataBase->var2str(strtolower($name));
+        }
+
+        if (false === empty($cifnif)) {
+            $wheres[] = 'LOWER(cifnif) = ' . $this->dataBase->var2str(strtolower($cifnif));
+        }
+
+        if (empty($wheres)) {
+            return ['checkDuplicateCustomer' => false];
+        }
+
+        $sql = 'SELECT codcliente'
+            . ' FROM clientes'
+            . ' WHERE ' . implode(' OR ', $wheres);
+
+        return count($this->dataBase->select($sql)) > 0
+            ? ['checkDuplicateCustomer' => true]
+            : ['checkDuplicateCustomer' => false];
     }
 
     protected function checkMachine(): bool
