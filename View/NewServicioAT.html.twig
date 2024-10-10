@@ -46,7 +46,7 @@
                                 <optgroup label="{{ company.nombrecorto }}">
                                     {% for warehouse in company.getWarehouses() %}
                                         {% if warehouse.activo == false %}
-                                        {% elseif warehouse.codalmacen == fsc.user.codalmacen %}
+                                        {% elseif warehouse.codalmacen == fsc.codalmacen  %}
                                             <option value="{{ warehouse.codalmacen }}" selected>
                                                 {{ warehouse.nombre }}
                                             </option>
@@ -104,6 +104,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-block btn-success" onclick="showModalNewCustomer()">
                             <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
+                        </button>
+                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalWarehouse()">
+                            <i class="fa-solid fa-warehouse mr-1"></i> {{ trans('change-warehouse') }}
                         </button>
                     </div>
                 </div>
@@ -218,6 +221,9 @@
                         <button type="button" class="btn btn-block btn-success" onclick="saveNewCustomer()">
                             {{ trans('save') }}
                         </button>
+                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalCustomer()">
+                            <i class="fa-solid fa-users mr-1"></i> {{ trans('change-customer') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -238,22 +244,27 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <table class="table table-hover mb-0">
-                        <thead>
-                        <tr>
-                            <th>{{ trans('name') }}</th>
-                            <th>{{ trans('serial-number') }}</th>
-                            <th>{{ trans('description') }}</th>
-                        </tr>
-                        </thead>
-                        <tbody id="customerMachines"></tbody>
-                    </table>
+                    <div class="modal-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr>
+                                <th>{{ trans('name') }}</th>
+                                <th>{{ trans('serial-number') }}</th>
+                                <th>{{ trans('description') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody id="customerMachines"></tbody>
+                        </table>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-block btn-success" onclick="showModalNewMachine()">
                             <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
                         </button>
                         <button type="button" class="btn btn-block btn-primary" onclick="saveMachine(null)">
                             <i class="fa-solid fa-ban mr-1"></i> {{ trans('no-machine') }}
+                        </button>
+                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalCustomer()">
+                            <i class="fa-solid fa-users mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
                 </div>
@@ -296,6 +307,9 @@
                         <button type="button" class="btn btn-block btn-success" onclick="saveNewMachine()">
                             {{ trans('save') }}
                         </button>
+                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalMachine()">
+                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('change-machine') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -312,16 +326,29 @@
     {{ parent() }}
     <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
     <script>
-        let codalmacen = null;
-        let codcliente = null;
-        let idmaquina = null;
+        let codalmacen = '{{ fsc.codalmacen }}';
+        let codcliente = '{{ fsc.codcliente }}';
+        let idmaquina = {{ fsc.idmaquina ?? 0 }};
 
         function initNewService() {
+            // si solo tengo un almacén, y tengo un cliente y una máquina, se guarda el servicio
+            if ($('#warehouseSelect option').length === 1 && codcliente !== '' && idmaquina > 0) {
+                saveNewService();
+                return;
+            }
+
+            // si solo tengo un almacén, y tengo un cliente, pero no una máquina
+            // se muestra el modal de máquinas o no, según la configuración
+            if ($('#warehouseSelect option').length === 1 && codcliente !== '' && idmaquina <= 0) {
+                saveCustomer(codcliente);
+                return;
+            }
+
             // si hay más de un almacén, se muestra el modal para seleccionar el almacén
-            // si no se muestra el modal de clientes
             if ($('#warehouseSelect option').length > 1) {
                 showModalWarehouse();
             } else {
+                // si no se muestra el modal de clientes
                 showModalCustomer();
             }
         }
@@ -388,7 +415,7 @@
                 formData.append('codalmacen', codalmacen);
             }
 
-            if (idmaquina) {
+            if (idmaquina > 0) {
                 formData.append('idmaquina', idmaquina);
             }
 
@@ -397,7 +424,21 @@
 
         function saveWarehouse() {
             codalmacen = $('#warehouseSelect').val();
-            showModalCustomer();
+
+            // si tenemos idmaquina en la url, se guarda el servicio
+            {% if fsc.idmaquina > 0 %}
+                saveMachine('{{ fsc.idmaquina }}');
+            {% elseif fsc.codcliente != '' and settings('servicios', 'new_service_without_machine', false) %}
+                // si ya tenemos codcliente en la url,
+                // y la configuración permite guardar servicios sin máquina, se guarda el servicio
+                saveNewService();
+            {% elseif fsc.codcliente != '' %}
+                // si ya tenemos codcliente en la url, se guarda el cliente
+                saveCustomer('{{ fsc.codcliente }}');
+            {% else %}
+                // si no se muestra el modal de clientes
+                showModalCustomer();
+            {% endif %}
         }
 
         function sendFormService(formData, action) {
@@ -463,35 +504,56 @@
 
         function showModalCustomer() {
             $('#warehouseModal').modal('hide');
+            $('#newCustomerModal').modal('hide');
+            $('#machineModal').modal('hide');
+            $('#newMachineModal').modal('hide');
+
+            $('#findCustomerInput').val('');
             $('#customerModal').modal('show').on('shown.bs.modal', function (event) {
                 $('#findCustomerInput').focus();
             });
         }
 
-        function showModalNewCustomer() {
+        function showModalMachine() {
+            $('#warehouseModal').modal('hide');
             $('#customerModal').modal('hide');
+            $('#newCustomerModal').modal('hide');
+            $('#newMachineModal').modal('hide');
+
+            $('#machineModal').modal('show');
+        }
+
+        function showModalNewCustomer() {
+            $('#warehouseModal').modal('hide');
+            $('#customerModal').modal('hide');
+            $('#machineModal').modal('hide');
+            $('#newMachineModal').modal('hide');
+
             $('#newCustomerModal').modal('show').on('shown.bs.modal', function (event) {
                 $('#newCustomerModal input').first().focus();
             });
         }
 
         function showModalNewMachine() {
+            $('#warehouseModal').modal('hide');
+            $('#customerModal').modal('hide');
+            $('#newCustomerModal').modal('hide');
             $('#machineModal').modal('hide');
+
             $('#newMachineModal').modal('show').on('shown.bs.modal', function (event) {
                 $('#newMachineModal input').first().focus();
             });
         }
 
         function showModalWarehouse() {
+            $('#customerModal').modal('hide');
+            $('#newCustomerModal').modal('hide');
+            $('#machineModal').modal('hide');
+            $('#newMachineModal').modal('hide');
+
             $('#warehouseModal').modal('show').on('shown.bs.modal', function (event) {
                 $('#warehouseSelect').focus();
             });
-        }
-
-        function showModalMachine() {
-            $('#customerModal').modal('hide');
-            $('#newCustomerModal').modal('hide');
-            $('#machineModal').modal('show');
         }
 
         $(document).ready(function () {
@@ -529,11 +591,13 @@
                 }
             });
 
-            $('#customerModal .clickableRow').click(function () {
+            $(document).on('click', '#customerModal .clickableRow', function () {
                 saveCustomer($(this).data('codcliente'));
             });
 
-            $('#machineModal .clickableRow').click(function () {
+            $(document).on('click', '#machineModal .clickableRow', function () {
+                console.log($(this));
+                console.log($(this).data('idmaquina'));
                 saveMachine($(this).data('idmaquina'));
             });
 

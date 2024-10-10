@@ -38,8 +38,17 @@ use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
  */
 class NewServicioAT extends Controller
 {
+    /** @var string */
+    public $codalmacen;
+
+    /** @var string */
+    public $codcliente;
+
     /** @var CodeModel */
     public $codeModel;
+
+    /** @var int */
+    public $idmaquina;
 
     /** @var array */
     private $logLevels = ['critical', 'error', 'info', 'notice', 'warning'];
@@ -50,12 +59,18 @@ class NewServicioAT extends Controller
 
         $this->codeModel = new CodeModel();
         CodeModel::setLimit(10000);
+        $this->codalmacen = $this->request->get('codalmacen', $this->user->codalmacen);
+        $this->codcliente = $this->request->get('codcliente');
+        $this->idmaquina = $this->request->get('idmaquina');
 
         $action = $this->request->get('action');
-        if ($this->request->get('ajax', false)) {
+        $ajax = $this->request->get('ajax', false);
+
+        if ($ajax) {
             $this->setTemplate(false);
 
-            if (false === $this->user->can('NewServicioAT')) {
+            if (false === $this->user->can('NewServicioAT')
+                || false === $this->checkMachine()) {
                 $this->response->setContent(json_encode([
                     'redirect' => 'ListServicioAT'
                 ]));
@@ -92,7 +107,8 @@ class NewServicioAT extends Controller
             return;
         }
 
-        if (false === $this->user->can('NewServicioAT')) {
+        if (false === $this->user->can('NewServicioAT')
+            || false === $this->checkMachine()) {
             $this->redirect('ListServicioAT');
         }
     }
@@ -141,6 +157,30 @@ class NewServicioAT extends Controller
         $data['title'] = 'new-service';
         $data['showonmenu'] = false;
         return $data;
+    }
+
+    protected function checkMachine(): bool
+    {
+        if (empty($this->idmaquina)) {
+            return true;
+        }
+
+        $machine = new MaquinaAT();
+        if (false === $machine->loadFromCode($this->idmaquina)) {
+            return false;
+        }
+
+        // si no hay cliente, usamos el cliente de la máquina
+        if (empty($this->codcliente)) {
+            $this->codcliente = $machine->codcliente;
+        }
+
+        // si el cliente es distinto al cliente de la máquina, no permitimos continuar
+        if ($this->codcliente !== $machine->codcliente) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function findCustomerAction(): array
