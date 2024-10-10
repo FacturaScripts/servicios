@@ -1,5 +1,9 @@
 {
+    "allow-new-service-without-machine": "Permitir nuevo servicio sin máquina",
     "calculate-hours": "Orduak kalkulatu",
+    "change-customer": "Cambiar cliente",
+    "change-machine": "Cambiar máquina",
+    "change-warehouse": "Biltegian aldatu",
     "changed-agent-to": "%oldAgent% agentea %newAgent% agentera aldatu da",
     "changed-assigned-to": "Esleitutako %oldAssigned% erabiltzaile esleitutako %newAssigned% izatera aldatu da",
     "changed-customer-to": "%oldCustomer% bezeroa %newCustomer% bezero izatera aldatu da",

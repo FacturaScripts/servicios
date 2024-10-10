@@ -1,5 +1,9 @@
 {
+    "allow-new-service-without-machine": "Permitir nuevo servicio sin máquina",
     "calculate-hours": "Calcular hores",
+    "change-customer": "Cambiar cliente",
+    "change-machine": "Cambiar máquina",
+    "change-warehouse": "Cambiar almacén",
     "changed-agent-to": "L'agent %oldAgent% ha canviat per l'agent %newAgent%",
     "changed-assigned-to": "L'agent %oldAgent% ha canviat per l'agent %newAgent%",
     "changed-customer-to": "S'ha canviat el client %oldCustomer% pel client %newCustomer%",

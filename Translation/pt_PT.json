@@ -1,5 +1,9 @@
 {
+    "allow-new-service-without-machine": "Permitir nuevo servicio sin máquina",
     "calculate-hours": "Cálculo de horas",
+    "change-customer": "Mudar cliente",
+    "change-machine": "Cambiar máquina",
+    "change-warehouse": "Cambiar almacén",
     "changed-agent-to": "O agente %oldAgent% foi alterado para o agente %newAgent%",
     "changed-assigned-to": "O usuário atribuído %oldAssigned% foi alterado para o usuário atribuído %newAssigned%",
     "changed-customer-to": "O cliente %oldCustomer% foi alterado para o cliente %newCustomer%",
