@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model\Join;
 
 use FacturaScripts\Core\Model\Base\JoinModel;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>
@@ -31,6 +32,8 @@ class TrabajoServicio extends JoinModel
     {
         parent::__construct($data);
         $this->setMasterModel(new ServicioAT());
+
+        new TrabajoAT();
     }
 
     protected function getFields(): array
