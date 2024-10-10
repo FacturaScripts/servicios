@@ -63,7 +63,7 @@ class PrioridadAT extends Base\ModelClass
                 new DataBaseWhere('predeterminado', true),
                 new DataBaseWhere('id', $this->id, '!=')
             ];
-            foreach ($this->all($where) as $priority) {
+            foreach ($this->all($where, [], 0, 0) as $priority) {
                 $priority->predeterminado = false;
                 $priority->save();
             }
