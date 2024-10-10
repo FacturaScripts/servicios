@@ -21,6 +21,8 @@ namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
+use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
 /**
  * Description of EditCliente
@@ -40,29 +42,49 @@ class EditCliente
     protected function createViewsMachines(): Closure
     {
         return function ($viewName = 'ListMaquinaAT') {
-            $this->addListView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical');
-            $this->views[$viewName]->addOrderBy(['idmaquina'], 'code', 2);
-            $this->views[$viewName]->addOrderBy(['fecha'], 'date');
-            $this->views[$viewName]->addOrderBy(['nombre'], 'name');
-            $this->views[$viewName]->addOrderBy(['referencia'], 'reference');
-            $this->views[$viewName]->searchFields = ['idmaquina', 'nombre', 'numserie', 'referencia'];
+            $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
+            $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
 
-            /// disable customer column
-            $this->views[$viewName]->disableColumn('customer');
+            $this->addListView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical')
+                ->addOrderBy(['idmaquina'], 'code', 2)
+                ->addOrderBy(['fecha'], 'date')
+                ->addOrderBy(['nombre'], 'name')
+                ->addOrderBy(['referencia'], 'reference')
+                ->addSearchFields(['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia'])
+                ->addFilterPeriod('fecha', 'date', 'fecha')
+                ->addFilterSelect('codfabricante', 'manufacturer', 'codfabricante', $manufacturers)
+                ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
+                ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+                ->disableColumn('customer');
         };
     }
 
     protected function createViewsServices(): Closure
     {
         return function ($viewName = 'ListServicioAT') {
-            $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset');
-            $this->views[$viewName]->addOrderBy(['fecha', 'hora'], 'date', 2);
-            $this->views[$viewName]->addOrderBy(['prioridad'], 'priority');
-            $this->views[$viewName]->addOrderBy(['idservicio'], 'code');
-            $this->views[$viewName]->searchFields = ['codigo', 'descripcion', 'idservicio', 'observaciones'];
+            $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+            $users = $this->codeModel->all('users', 'nick', 'nick');
+            $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
+            $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
 
-            /// disable customer column
-            $this->views[$viewName]->disableColumn('customer');
+            $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
+                ->addOrderBy(['fecha', 'hora'], 'date', 2)
+                ->addOrderBy(['idprioridad'], 'priority')
+                ->addOrderBy(['idservicio'], 'code')
+                ->addOrderBy(['neto'], 'net')
+                ->addSearchFields(['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'])
+                ->addFilterPeriod('fecha', 'date', 'fecha')
+                ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
+                ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
+                ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $status)
+                ->addFilterSelect('nick', 'user', 'nick', $users)
+                ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
+                ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+                ->addFilterNumber('netogt', 'net', 'neto', '>=')
+                ->addFilterNumber('netolt', 'net', 'neto', '<=')
+                ->disableColumn('customer');
+
+            $this->setServicesColors($viewName);
         };
     }
 
@@ -76,6 +98,27 @@ class EditCliente
                     $where = [new DataBaseWhere('codcliente', $codcliente)];
                     $view->loadData('', $where);
                     break;
+            }
+        };
+    }
+
+    protected function setServicesColors(): Closure
+    {
+        return function (string $viewName) {
+            // asignamos colores
+            foreach (EstadoAT::all([], [], 0, 0) as $estado) {
+                if (empty($estado->color)) {
+                    continue;
+                }
+
+                $this->views[$viewName]->getRow('status')->options[] = [
+                    'tag' => 'option',
+                    'children' => [],
+                    'color' => $estado->color,
+                    'fieldname' => 'idestado',
+                    'text' => $estado->id,
+                    'title' => $estado->nombre
+                ];
             }
         };
     }
