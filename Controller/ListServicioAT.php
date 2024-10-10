@@ -23,6 +23,7 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
+use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
  * Description of ListServicioAT
@@ -151,17 +152,31 @@ class ListServicioAT extends ListController
     protected function createViewsWorks(string $viewName = 'ListTrabajoAT'): void
     {
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
-        $customers = $this->codeModel->all('clientes', 'codcliente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
+
+        $statuses = [];
+        foreach (TrabajoAT::getAvailableStatus() as $key => $value) {
+            $statuses[] = ['code' => $key, 'description' => $value];
+        }
 
         $this->addView($viewName, 'Join\TrabajoServicio', 'work', 'fas fa-stethoscope')
             ->addOrderBy(['serviciosat_trabajos.fechainicio', 'serviciosat_trabajos.horainicio'], 'from-date')
-            ->addOrderBy(['serviciosat_trabajos.fechafin', 'serviciosat_trabajos.horafin'], 'until-date', 2)
-            ->addOrderBy(['serviciosat_trabajos.idservicio', 'serviciosat_trabajos.idtrabajo'], 'service')
+            ->addOrderBy(['serviciosat_trabajos.fechafin', 'serviciosat_trabajos.horafin'], 'until-date')
+            ->addOrderBy(['serviciosat_trabajos.idservicio', 'serviciosat_trabajos.idtrabajo'], 'service', 2)
+            ->addOrderBy(['serviciosat_trabajos.cantidad'], 'quantity')
+            ->addOrderBy(['serviciosat_trabajos.precio'], 'price')
             ->addSearchFields(['serviciosat.codigo', 'serviciosat_trabajos.descripcion', 'serviciosat_trabajos.observaciones', 'serviciosat_trabajos.referencia'])
+            ->addFilterDatePicker('fechainicio', 'from-date', 'serviciosat_trabajos.fechainicio', '>=')
+            ->addFilterDatePicker('fechafin', 'until-date', 'serviciosat_trabajos.fechafin', '<=')
             ->addFilterSelect('nick', 'user', 'serviciosat_trabajos.nick', $users)
             ->addFilterSelect('codagente', 'agent', 'serviciosat_trabajos.codagente', $agents)
-            ->addFilterSelect('codcliente', 'customer', 'serviciosat.codcliente', $customers)
+            ->addFilterAutocomplete('codcliente', 'customer', 'serviciosat.codcliente', 'clientes', 'codcliente', 'nombre')
+            ->addFilterAutocomplete('referencia', 'reference', 'serviciosat_trabajos.referencia', 'variantes', 'referencia', 'referencia')
+            ->addFilterNumber('quantity-gt', 'quantity', 'serviciosat_trabajos.cantidad', '>=')
+            ->addFilterNumber('quantity-lt', 'quantity', 'serviciosat_trabajos.cantidad', '<=')
+            ->addFilterNumber('price-gt', 'price', 'serviciosat_trabajos.precio', '>=')
+            ->addFilterNumber('price-lt', 'price', 'serviciosat_trabajos.precio', '<=')
+            ->addFilterSelect('status', 'action', 'serviciosat_trabajos.estado', $statuses)
             ->setSettings('btnDelete', false)
             ->setSettings('btnNew', false)
             ->setSettings('checkBoxes', false);

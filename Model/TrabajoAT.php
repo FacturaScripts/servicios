@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -104,6 +104,19 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $servicio = new DinServicioAT();
         $servicio->loadFromCode($this->idservicio);
         return $servicio;
+    }
+
+    public static function getAvailableStatus(): array
+    {
+        return [
+            self::STATUS_NONE => Tools::lang()->trans('do-nothing'),
+            self::STATUS_MAKE_INVOICE => Tools::lang()->trans('make-invoice'),
+            self::STATUS_INVOICED => Tools::lang()->trans('invoiced'),
+            self::STATUS_MAKE_DELIVERY_NOTE => Tools::lang()->trans('make-delivery-note'),
+            self::STATUS_DELIVERY_NOTE => Tools::lang()->trans('delivery-note'),
+            self::STATUS_MAKE_ESTIMATION => Tools::lang()->trans('make-estimation'),
+            self::STATUS_ESTIMATION => Tools::lang()->trans('estimation'),
+        ];
     }
 
     public function getVariante(): Variante
