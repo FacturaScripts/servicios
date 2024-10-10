@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -32,7 +32,6 @@ use FacturaScripts\Dinamic\Model\Almacen;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
-use FacturaScripts\Plugins\Servicios\Lib\ServiceTool;
 
 /**
  * Description of ServicioAT
@@ -560,7 +559,7 @@ class ServicioAT extends ModelOnChangeClass
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
-            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
         ]);
     }
 
@@ -577,7 +576,7 @@ class ServicioAT extends ModelOnChangeClass
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
-            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
         ]);
     }
 
@@ -594,7 +593,7 @@ class ServicioAT extends ModelOnChangeClass
             'customer' => $customer->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
-            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
         ]);
     }
 
@@ -611,7 +610,7 @@ class ServicioAT extends ModelOnChangeClass
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
-            'url' => ServiceTool::getSiteUrl() . '/EditServicioAT?code=' . $this->idservicio
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
         ]);
     }
 
