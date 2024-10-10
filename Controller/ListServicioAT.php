@@ -151,17 +151,20 @@ class ListServicioAT extends ListController
     protected function createViewsWorks(string $viewName = 'ListTrabajoAT'): void
     {
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
+        $customers = $this->codeModel->all('clientes', 'codcliente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
 
-        $this->addView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope')
-            ->addOrderBy(['fechainicio', 'horainicio'], 'from-date')
-            ->addOrderBy(['fechafin', 'horafin'], 'until-date', 2)
-            ->addOrderBy(['idservicio', 'idtrabajo'], 'service')
-            ->addSearchFields(['descripcion', 'observaciones', 'referencia'])
-            ->addFilterSelect('nick', 'user', 'nick', $users)
-            ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
+        $this->addView($viewName, 'Join\TrabajoServicio', 'work', 'fas fa-stethoscope')
+            ->addOrderBy(['serviciosat_trabajos.fechainicio', 'serviciosat_trabajos.horainicio'], 'from-date')
+            ->addOrderBy(['serviciosat_trabajos.fechafin', 'serviciosat_trabajos.horafin'], 'until-date', 2)
+            ->addOrderBy(['serviciosat_trabajos.idservicio', 'serviciosat_trabajos.idtrabajo'], 'service')
+            ->addSearchFields(['serviciosat.codigo', 'serviciosat_trabajos.descripcion', 'serviciosat_trabajos.observaciones', 'serviciosat_trabajos.referencia'])
+            ->addFilterSelect('nick', 'user', 'serviciosat_trabajos.nick', $users)
+            ->addFilterSelect('codagente', 'agent', 'serviciosat_trabajos.codagente', $agents)
+            ->addFilterSelect('codcliente', 'customer', 'serviciosat.codcliente', $customers)
             ->setSettings('btnDelete', false)
-            ->setSettings('btnNew', false);
+            ->setSettings('btnNew', false)
+            ->setSettings('checkBoxes', false);
     }
 
     protected function getServiceStatus(): array
