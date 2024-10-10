@@ -300,6 +300,7 @@ class EditServicioAT extends EditController
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
                 $orderBy = ['fechainicio' => 'DESC', 'horainicio' => 'DESC', 'idtrabajo' => 'DESC'];
                 $view->loadData('', $where, $orderBy);
+                $this->loadStatusWorkValues($viewName, $view);
                 if ($view->count > 0) {
                     $this->addButton('EditTrabajoAT', [
                         'action' => 'auto-quantity',
@@ -318,6 +319,19 @@ class EditServicioAT extends EditController
                 $where = [new DataBaseWhere('idservicio', $idservicio)];
                 $view->loadData('', $where);
                 break;
+        }
+    }
+
+    protected function loadStatusWorkValues(string $viewName, BaseView $view): void
+    {
+        $column = $this->views[$viewName]->columnForName('action');
+        if ($column && $column->widget->getType() === 'select') {
+            $statuses = [];
+            foreach ($view->model->getAvailableStatus() as $key => $value) {
+                $statuses[] = ['value' => $key, 'title' => $value];
+            }
+
+            $column->widget->setValuesFromArray($statuses);
         }
     }
 
