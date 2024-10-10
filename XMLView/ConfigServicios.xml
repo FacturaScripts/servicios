@@ -22,7 +22,7 @@
                     <values title="estimation">6</values>
                 </widget>
             </column>
-            <column name="new-service-without-machine" order="130">
+            <column name="allow-new-service-without-machine" order="130">
                 <widget type="checkbox" fieldname="new_service_without_machine"/>
             </column>
         </group>
