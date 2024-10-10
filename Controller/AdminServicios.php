@@ -41,7 +41,7 @@ class AdminServicios extends PanelController
         $data = parent::getPageData();
         $data['menu'] = 'admin';
         $data['title'] = 'services';
-        $data['icon'] = 'fas fa-headset';
+        $data['icon'] = 'fa-solid fa-headset';
         return $data;
     }
 
@@ -66,19 +66,19 @@ class AdminServicios extends PanelController
 
     private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES)
     {
-        $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fas fa-list-ol')
+        $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fa-solid fa-list-ol')
             ->setInLine(true);
     }
     
     private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES)
     {
-        $this->addEditListView($viewName, 'TipoAT', 'type', 'fas fa-list-ol');
+        $this->addEditListView($viewName, 'TipoAT', 'type', 'fa-solid fa-list-ol');
         $this->views[$viewName]->setInLine(true);
     }
 
     private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS)
     {
-        $this->addEditListView($viewName, 'EstadoAT', 'states', 'fas fa-tags')
+        $this->addEditListView($viewName, 'EstadoAT', 'states', 'fa-solid fa-tags')
             ->setInLine(true);
     }
 

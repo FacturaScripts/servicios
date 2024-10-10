@@ -47,7 +47,7 @@ class EditServicioAT extends EditController
         $data = parent::getPageData();
         $data['menu'] = 'sales';
         $data['title'] = 'service';
-        $data['icon'] = 'fas fa-headset';
+        $data['icon'] = 'fa-solid fa-headset';
         $data['showonmenu'] = false;
         return $data;
     }
@@ -99,7 +99,7 @@ class EditServicioAT extends EditController
 
     protected function createViewsDeliveryNotes(string $viewName = 'ListAlbaranCliente'): void
     {
-        $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fas fa-dolly-flatbed')
+        $this->addListView($viewName, 'AlbaranCliente', 'delivery-notes', 'fa-solid fa-dolly-flatbed')
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones'])
             ->setSettings('btnDelete', false)
@@ -110,14 +110,14 @@ class EditServicioAT extends EditController
             'action' => 'make-delivery-note',
             'color' => 'warning',
             'confirm' => true,
-            'icon' => 'fas fa-magic',
+            'icon' => 'fa-solid fa-magic',
             'label' => 'make-delivery-note'
         ]);
     }
 
     protected function createViewsEstimations(string $viewName = 'ListPresupuestoCliente'): void
     {
-        $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'far fa-file-powerpoint')
+        $this->addListView($viewName, 'PresupuestoCliente', 'estimations', 'fa-regular fa-file-powerpoint')
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones'])
             ->setSettings('btnDelete', false)
@@ -128,14 +128,14 @@ class EditServicioAT extends EditController
             'action' => 'make-estimation',
             'color' => 'warning',
             'confirm' => true,
-            'icon' => 'fas fa-magic',
+            'icon' => 'fa-solid fa-magic',
             'label' => 'make-estimation'
         ]);
     }
 
     protected function createViewsInvoices(string $viewName = 'ListFacturaCliente'): void
     {
-        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fas fa-file-invoice-dollar')
+        $this->addListView($viewName, 'FacturaCliente', 'invoices', 'fa-solid fa-file-invoice-dollar')
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addSearchFields(['codigo', 'numero', 'numero2', 'observaciones'])
             ->setSettings('btnDelete', false)
@@ -146,14 +146,14 @@ class EditServicioAT extends EditController
             'action' => 'make-invoice',
             'color' => 'warning',
             'confirm' => true,
-            'icon' => 'fas fa-magic',
+            'icon' => 'fa-solid fa-magic',
             'label' => 'make-invoice'
         ]);
     }
 
     public function createViewLogs(string $viewName = 'ListServicioATLog'): void
     {
-        $this->addListView($viewName, 'ServicioATLog', 'history', 'fas fa-history')
+        $this->addListView($viewName, 'ServicioATLog', 'history', 'fa-solid fa-history')
             ->addOrderBy(['creationdate'], 'date', 2)
             ->addSearchFields(['context', 'message'])
             ->setSettings('btnDelete', false)
@@ -163,7 +163,7 @@ class EditServicioAT extends EditController
 
     protected function createViewsWorks(string $viewName = 'EditTrabajoAT'): void
     {
-        $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fas fa-stethoscope')
+        $this->addEditListView($viewName, 'TrabajoAT', 'work', 'fa-solid fa-stethoscope')
             ->disableColumn('service');
     }
 
@@ -280,7 +280,7 @@ class EditServicioAT extends EditController
 
                 $this->addButton($viewName, [
                     'action' => 'CopyModel?model=' . $this->getModelClassName() . '&code=' . $view->model->primaryColumnValue(),
-                    'icon' => 'fas fa-cut',
+                    'icon' => 'fa-solid fa-cut',
                     'label' => 'copy',
                     'type' => 'link'
                 ]);
@@ -304,7 +304,7 @@ class EditServicioAT extends EditController
                 if ($view->count > 0) {
                     $this->addButton('EditTrabajoAT', [
                         'action' => 'auto-quantity',
-                        'icon' => 'fas fa-calculator',
+                        'icon' => 'fa-solid fa-calculator',
                         'label' => 'calculate-hours'
                     ]);
                 } elseif (false === $view->model->exists()) {

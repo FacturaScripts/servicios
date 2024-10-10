@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,7 +21,6 @@ namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
 /**
@@ -45,7 +44,7 @@ class EditCliente
             $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
             $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
 
-            $this->addListView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical')
+            $this->addListView($viewName, 'MaquinaAT', 'machines', 'fa-solid fa-laptop-medical')
                 ->addOrderBy(['idmaquina'], 'code', 2)
                 ->addOrderBy(['fecha'], 'date')
                 ->addOrderBy(['nombre'], 'name')
@@ -67,7 +66,7 @@ class EditCliente
             $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
             $status = $this->codeModel->all('serviciosat_estados', 'id', 'nombre');
 
-            $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
+            $this->addListView($viewName, 'ServicioAT', 'services', 'fa-solid fa-headset')
                 ->addOrderBy(['fecha', 'hora'], 'date', 2)
                 ->addOrderBy(['idprioridad'], 'priority')
                 ->addOrderBy(['idservicio'], 'code')

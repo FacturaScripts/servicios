@@ -31,7 +31,7 @@
                 <widget type="text" fieldname="numserie" />
             </column>
             <column name="reference" order="130">
-                <widget type="text" fieldname="referencia" maxlength="30" icon="fas fa-hashtag" />
+                <widget type="text" fieldname="referencia" maxlength="30" icon="fa-solid fa-hashtag" />
             </column>
             <column name="manufacturer" titleurl="ListFabricante" order="140">
                 <widget type="select" fieldname="codfabricante" onclick="EditFabricante">

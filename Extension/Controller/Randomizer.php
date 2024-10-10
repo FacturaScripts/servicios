@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Proyectos plugin for FacturaScripts
- * Copyright (C) 2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -32,7 +32,7 @@ class Randomizer
     protected function loadButtons(): Closure
     {
         return function () {
-            $this->addButton('plugins', 'servicios', 'generated-services', 'services', 'fas fa-headset', 'Random\\Servicios', 'ServicioAT');
+            $this->addButton('plugins', 'servicios', 'generated-services', 'services', 'fa-solid fa-headset', 'Random\\Servicios', 'ServicioAT');
         };
     }
 }

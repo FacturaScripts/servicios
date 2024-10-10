@@ -41,7 +41,7 @@ class EditMaquinaAT extends EditController
         $data = parent::getPageData();
         $data['menu'] = 'sales';
         $data['title'] = 'machine';
-        $data['icon'] = 'fas fa-laptop-medical';
+        $data['icon'] = 'fa-solid fa-laptop-medical';
         $data['showonmenu'] = false;
 
         return $data;
@@ -57,7 +57,7 @@ class EditMaquinaAT extends EditController
 
     protected function createViewsServices(string $viewName = 'ListServicioAT')
     {
-        $this->addListView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
+        $this->addListView($viewName, 'ServicioAT', 'services', 'fa-solid fa-headset')
             ->addSearchFields(['descripcion', 'idservicio', 'observaciones'])
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addOrderBy(['prioridad'], 'priority')

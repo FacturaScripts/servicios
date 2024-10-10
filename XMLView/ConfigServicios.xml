@@ -26,7 +26,7 @@
                 <widget type="checkbox" fieldname="new_service_without_machine"/>
             </column>
         </group>
-        <group name="print-services" title="print-services" icon="fas fa-print" numcolumns="12" valign="bottom">
+        <group name="print-services" title="print-services" icon="fa-solid fa-print" numcolumns="12" valign="bottom">
             <column name="footer-text" numcolumns="12" order="100">
                 <widget type="textarea" fieldname="footertext" rows="4"/>
             </column>
@@ -46,7 +46,7 @@
                 <widget type="checkbox" fieldname="disablestockmanagement"/>
             </column>
         </group>
-        <group name="print-works" title="print-works" icon="fas fa-print" numcolumns="12" valign="bottom">
+        <group name="print-works" title="print-works" icon="fa-solid fa-print" numcolumns="12" valign="bottom">
             <column name="print-works" order="100">
                 <widget type="checkbox" fieldname="printworks"/>
             </column>

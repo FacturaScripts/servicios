@@ -95,7 +95,7 @@
                                 {% set customerName = customer.nombre == customer.razonsocial ? customer.nombre : customer.nombre ~ ' <span>(' ~ customer.razonsocial ~ ')</span>' %}
                                 <tr class="clickableRow" data-codcliente="{{ customer.codcliente }}">
                                     <td>
-                                        <i class="fas fa-user fa-fw"></i> {{ customerName | raw }}
+                                        <i class="fa-solid fa-user fa-fw"></i> {{ customerName | raw }}
                                     </td>
                                 </tr>
                             {% endfor %}

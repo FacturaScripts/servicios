@@ -40,7 +40,7 @@ class ListServicioAT extends ListController
         $data = parent::getPageData();
         $data['menu'] = 'sales';
         $data['title'] = 'services';
-        $data['icon'] = 'fas fa-headset';
+        $data['icon'] = 'fa-solid fa-headset';
         return $data;
     }
 
@@ -57,7 +57,7 @@ class ListServicioAT extends ListController
         $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
 
-        $this->addView($viewName, 'MaquinaAT', 'machines', 'fas fa-laptop-medical')
+        $this->addView($viewName, 'MaquinaAT', 'machines', 'fa-solid fa-laptop-medical')
             ->addOrderBy(['idmaquina'], 'code', 2)
             ->addOrderBy(['fecha'], 'date')
             ->addOrderBy(['nombre'], 'name')
@@ -90,7 +90,7 @@ class ListServicioAT extends ListController
             }
         }
 
-        $this->addView($viewName, 'ServicioAT', 'services', 'fas fa-headset')
+        $this->addView($viewName, 'ServicioAT', 'services', 'fa-solid fa-headset')
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addOrderBy(['idprioridad'], 'priority')
             ->addOrderBy(['idservicio'], 'code')
@@ -130,7 +130,7 @@ class ListServicioAT extends ListController
             }
         }
 
-        $this->addView($viewName, 'ServicioAT', 'closed', 'fas fa-lock')
+        $this->addView($viewName, 'ServicioAT', 'closed', 'fa-solid fa-lock')
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addOrderBy(['idprioridad'], 'priority')
             ->addOrderBy(['idservicio'], 'code')
@@ -159,7 +159,7 @@ class ListServicioAT extends ListController
             $statuses[] = ['code' => $key, 'description' => $value];
         }
 
-        $this->addView($viewName, 'Join\TrabajoServicio', 'work', 'fas fa-stethoscope')
+        $this->addView($viewName, 'Join\TrabajoServicio', 'work', 'fa-solid fa-stethoscope')
             ->addOrderBy(['serviciosat_trabajos.fechainicio', 'serviciosat_trabajos.horainicio'], 'from-date')
             ->addOrderBy(['serviciosat_trabajos.fechafin', 'serviciosat_trabajos.horafin'], 'until-date')
             ->addOrderBy(['serviciosat_trabajos.idservicio', 'serviciosat_trabajos.idtrabajo'], 'service', 2)
