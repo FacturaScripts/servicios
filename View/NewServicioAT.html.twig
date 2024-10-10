@@ -133,14 +133,17 @@
                             <div class="col">
                                 <div class="form-group">
                                     {{ trans('name') }}
-                                    <input type="text" name="name" class="form-control" maxlength="100"/>
+                                    <input type="text" name="name" class="form-control" maxlength="100" onkeyup="return checkCustomer(this)"/>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     {{ trans('cifnif') }}
-                                    <input type="text" name="cifnif" class="form-control" maxlength="30"/>
+                                    <input type="text" name="cifnif" class="form-control" maxlength="30" onkeyup="return checkCustomer(this)"/>
                                 </div>
+                            </div>
+                            <div id="checkDuplicateCustomerMsg" class="col-12 form-group alert alert-danger text-center d-none">
+                                {{ trans('duplicate-customer-name-or-cif') }}
                             </div>
                         </div>
                         <div class="form-row">
@@ -326,9 +329,25 @@
     {{ parent() }}
     <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
     <script>
+        let waitCounterNewCustomer = 0;
         let codalmacen = '{{ fsc.codalmacen }}';
         let codcliente = '{{ fsc.codcliente }}';
         let idmaquina = {{ fsc.idmaquina ?? 0 }};
+
+        async function checkCustomer(event) {
+            // usamos un contador y un temporizador para solamente procesar la última llamada
+            waitCounterNewCustomer++;
+            let waitNum = waitCounterNewCustomer;
+            await new Promise(r => setTimeout(r, 300));
+            if (waitNum < waitCounterNewCustomer) {
+                return false;
+            }
+
+            let formData = new FormData();
+            formData.append('name', $('#newCustomerModal input[name="name"]').val());
+            formData.append('cifnif', $('#newCustomerModal input[name="cifnif"]').val());
+            return sendFormService(formData, 'checkDuplicateCustomer');
+        }
 
         function initNewService() {
             // si solo tengo un almacén, y tengo un cliente y una máquina, se guarda el servicio
@@ -460,6 +479,12 @@
                 if (data.redirect) {
                     window.location.href = data.redirect;
                     return;
+                }
+
+                if (data.checkDuplicateCustomer) {
+                    $('#checkDuplicateCustomerMsg').removeClass('d-none');
+                } else {
+                    $('#checkDuplicateCustomerMsg').addClass('d-none');
                 }
 
                 if (data.renderCustomerMachines) {
