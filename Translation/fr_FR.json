@@ -1,7 +1,7 @@
 {
-    "allow-new-service-without-machine": "Permitir nuevo servicio sin máquina",
+    "allow-new-service-without-machine": "Autoriser un nouveau service sans machine",
     "calculate-hours": "Calculer les heures",
-    "change-customer": "Cambiar cliente",
+    "change-customer": "Changer de client",
     "change-machine": "Changer de machine",
     "change-warehouse": "Changer d'entrepôt",
     "changed-agent-to": "L'agent a été changé de %oldAgent% à %newAgent%",
@@ -16,6 +16,7 @@
     "customer-has-no-machines": "Le client n'a pas de machines",
     "deleted-service": "Service supprimé",
     "disable-stock-management": "Ne pas gérer le stock (dans les travaux)",
+    "duplicate-customer-name-or-cif": "Il existe un client avec le même nom ou CIF\/NIF",
     "from-hour": "À partir de l'heure",
     "generated-services": "%quantity% services generated.",
     "make-delivery-note": "Faire un bon de livraison",

@@ -101,12 +101,12 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer p-2">
                         <button type="button" class="btn btn-block btn-success" onclick="showModalNewCustomer()">
                             <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
                         </button>
-                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalWarehouse()">
-                            <i class="fa-solid fa-warehouse mr-1"></i> {{ trans('change-warehouse') }}
+                        <button type="button" class="btn btn-block btn-outline-secondary" onclick="showModalWarehouse()">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-warehouse') }}
                         </button>
                     </div>
                 </div>
@@ -220,12 +220,12 @@
                             {% include item['path'] %}
                         {% endfor %}
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-block btn-success" onclick="saveNewCustomer()">
-                            {{ trans('save') }}
+                    <div class="modal-footer p-2">
+                        <button type="button" class="btn btn-lg btn-block btn-success" onclick="saveNewCustomer()">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalCustomer()">
-                            <i class="fa-solid fa-users mr-1"></i> {{ trans('change-customer') }}
+                        <button type="button" class="btn btn-block btn-outline-secondary" onclick="showModalCustomer()">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
                 </div>
@@ -259,15 +259,15 @@
                             <tbody id="customerMachines"></tbody>
                         </table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-block btn-success" onclick="showModalNewMachine()">
-                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
-                        </button>
+                    <div class="modal-footer p-2">
                         <button type="button" class="btn btn-block btn-primary" onclick="saveMachine(null)">
                             <i class="fa-solid fa-ban mr-1"></i> {{ trans('no-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalCustomer()">
-                            <i class="fa-solid fa-users mr-1"></i> {{ trans('change-customer') }}
+                        <button type="button" class="btn btn-block btn-success" onclick="showModalNewMachine()">
+                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
+                        </button>
+                        <button type="button" class="btn btn-block btn-outline-secondary mt-4" onclick="showModalCustomer()">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
                 </div>
@@ -306,12 +306,12 @@
                             {% include item['path'] %}
                         {% endfor %}
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-block btn-success" onclick="saveNewMachine()">
-                            {{ trans('save') }}
+                    <div class="modal-footer p-2">
+                        <button type="button" class="btn btn-lg btn-block btn-success" onclick="saveNewMachine()">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-secondary" onclick="showModalMachine()">
-                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('change-machine') }}
+                        <button type="button" class="btn btn-block btn-outline-secondary" onclick="showModalMachine()">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-machine') }}
                         </button>
                     </div>
                 </div>

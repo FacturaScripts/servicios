@@ -1,5 +1,9 @@
 {
+    "allow-new-service-without-machine": "Zezwól na nową usługę bez maszyny",
     "calculate-hours": "Oblicz godziny",
+    "change-customer": "Zmień klienta",
+    "change-machine": "Cambiar máquina",
+    "change-warehouse": "Zmień magazyn",
     "changed-agent-to": "Zmieniono agenta %oldAgent% na agenta %newAgent%",
     "changed-assigned-to": "Zmieniono przypisanego użytkownika %oldAssigned% na nowego przypisanego użytkownika %newAssigned%.",
     "changed-customer-to": "Zmieniono klienta %oldCustomer% na klienta %newCustomer%",
@@ -12,6 +16,7 @@
     "customer-has-no-machines": "Klient nie ma maszyn",
     "deleted-service": "Usługa usunięta",
     "disable-stock-management": "Nie kontrolować zapasów (w pracy)",
+    "duplicate-customer-name-or-cif": "Istnieje klient o tej samej nazwie lub CIF\/NIF",
     "from-hour": "Godzina rozpoczęcia",
     "generated-services": "%quantity% servicios generados.",
     "make-delivery-note": "Zrób notę dostawy",

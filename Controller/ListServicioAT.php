@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\DataSrc\Almacenes;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
@@ -75,6 +76,7 @@ class ListServicioAT extends ListController
         $users = $this->codeModel->all('users', 'nick', 'nick');
         $types = $this->codeModel->all('serviciosat_tipos', 'id', 'name');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
+        $warehouses = Almacenes::codeModel();
 
         // obtenemos los estados editables
         $valuesWhere = [
@@ -97,15 +99,16 @@ class ListServicioAT extends ListController
             ->addOrderBy(['neto'], 'net')
             ->addSearchFields(['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'])
             ->addFilterPeriod('fecha', 'date', 'fecha')
-            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
-            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
+            ->addFilterSelect('codalmacen', 'warehouse', 'codalmacen', $warehouses)
+            ->addFilterSelect('idtipo', 'type', 'idtipo', $types)
             ->addFilterSelectWhere('status', $valuesWhere)
+            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
-            ->addFilterSelect('idtipo', 'type', 'idtipo', $types)
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
             ->addFilterNumber('netogt', 'net', 'neto', '>=')
-            ->addFilterNumber('netolt', 'net', 'neto', '<=');
+            ->addFilterNumber('netolt', 'net', 'neto', '<=')
+            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority);
 
         $this->setServicesColors($viewName);
     }
@@ -115,6 +118,8 @@ class ListServicioAT extends ListController
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
         $users = $this->codeModel->all('users', 'nick', 'nick');
         $priority = $this->codeModel->all('serviciosat_prioridades', 'id', 'nombre');
+        $types = $this->codeModel->all('serviciosat_tipos', 'id', 'name');
+        $warehouses = Almacenes::codeModel();
 
         // obtenemos los estados no editables
         $valuesWhere = [
@@ -137,14 +142,16 @@ class ListServicioAT extends ListController
             ->addOrderBy(['neto'], 'net')
             ->addSearchFields(['codigo', 'descripcion', 'idservicio', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'])
             ->addFilterPeriod('fecha', 'date', 'fecha')
-            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
-            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
+            ->addFilterSelect('codalmacen', 'warehouse', 'codalmacen', $warehouses)
+            ->addFilterSelect('idtipo', 'type', 'idtipo', $types)
             ->addFilterSelectWhere('status', $valuesWhere)
+            ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('nick', 'user', 'nick', $users)
             ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents)
             ->addFilterNumber('netogt', 'net', 'neto', '>=')
-            ->addFilterNumber('netolt', 'net', 'neto', '<=');
+            ->addFilterNumber('netolt', 'net', 'neto', '<=')
+            ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority);
 
         $this->setServicesColors($viewName);
     }
