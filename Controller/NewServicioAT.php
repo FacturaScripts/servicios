@@ -317,7 +317,7 @@ class NewServicioAT extends Controller
         $machine = new MaquinaAT();
         $machine->codcliente = $this->request->get('codcliente');
         $machine->nombre = $this->request->get('name');
-        $machine->numserie = $this->request->get('numserie');
+        $machine->numserie = $this->request->get('serial_number');
         $machine->descripcion = $this->request->get('description');
 
         $resultExtension = $this->pipe('saveNewMachine', $machine);
