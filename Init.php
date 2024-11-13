@@ -50,6 +50,7 @@ final class Init extends InitClass
         // extensions
         $this->loadExtension(new Extension\Controller\CopyModel());
         $this->loadExtension(new Extension\Controller\EditCliente());
+        $this->loadExtension(new Extension\Controller\EditProducto());
 
         // tickets
         if (Plugins::isEnabled('Tickets')) {
