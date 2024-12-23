@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Lib;
 
 use FacturaScripts\Core\Base\Calculator;
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Base\ExtensionsTrait;
 use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
@@ -31,18 +32,13 @@ use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
- * Description of ServiceToInvoice
- *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 class ServiceToInvoice
 {
-    /**
-     * @param ServicioAT $service
-     *
-     * @return bool
-     */
-    public static function deliveryNote(&$service): bool
+    use ExtensionsTrait;
+
+    public static function deliveryNote(ServicioAT &$service): bool
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
@@ -67,7 +63,18 @@ class ServiceToInvoice
             $newAlbaran->idproyecto = $service->idproyecto;
         }
 
+        $pipe = new self();
+        $pipeAlbaran = $pipe->pipe('deliveryNote', $service, $newAlbaran);
+        if ($pipeAlbaran) {
+            $newAlbaran = $pipeAlbaran;
+        }
+
         if (false === $newAlbaran->save()) {
+            $database->rollback();
+            return false;
+        }
+
+        if (false === static::addLineService($newAlbaran, $service)) {
             $database->rollback();
             return false;
         }
@@ -79,7 +86,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            if (false === static::addLine($newAlbaran, $work, TrabajoAT::STATUS_DELIVERY_NOTE)) {
+            if (false === static::addLineWork($newAlbaran, $work, TrabajoAT::STATUS_DELIVERY_NOTE)) {
                 $database->rollback();
                 return false;
             }
@@ -94,12 +101,7 @@ class ServiceToInvoice
         return static::recalculate($newAlbaran, $database);
     }
 
-    /**
-     * @param ServicioAT $service
-     *
-     * @return bool
-     */
-    public static function estimation(&$service): bool
+    public static function estimation(ServicioAT &$service): bool
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
@@ -124,7 +126,18 @@ class ServiceToInvoice
             $newEstimation->idproyecto = $service->idproyecto;
         }
 
+        $pipe = new self();
+        $pipeEstimation = $pipe->pipe('estimation', $service, $newEstimation);
+        if ($pipeEstimation) {
+            $newEstimation = $pipeEstimation;
+        }
+
         if (false === $newEstimation->save()) {
+            $database->rollback();
+            return false;
+        }
+
+        if (false === static::addLineService($newEstimation, $service)) {
             $database->rollback();
             return false;
         }
@@ -136,7 +149,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            if (false === static::addLine($newEstimation, $work, TrabajoAT::STATUS_ESTIMATION)) {
+            if (false === static::addLineWork($newEstimation, $work, TrabajoAT::STATUS_ESTIMATION)) {
                 $database->rollback();
                 return false;
             }
@@ -151,12 +164,7 @@ class ServiceToInvoice
         return static::recalculate($newEstimation, $database);
     }
 
-    /**
-     * @param ServicioAT $service
-     *
-     * @return bool
-     */
-    public static function invoice(&$service): bool
+    public static function invoice(ServicioAT &$service): bool
     {
         $customer = new Cliente();
         if (false === $customer->loadFromCode($service->codcliente)) {
@@ -181,7 +189,18 @@ class ServiceToInvoice
             $newInvoice->idproyecto = $service->idproyecto;
         }
 
+        $pipe = new self();
+        $pipeInvoice = $pipe->pipe('invoice', $service, $newInvoice);
+        if ($pipeInvoice) {
+            $newInvoice = $pipeInvoice;
+        }
+
         if (false === $newInvoice->save()) {
+            $database->rollback();
+            return false;
+        }
+
+        if (false === static::addLineService($newInvoice, $service)) {
             $database->rollback();
             return false;
         }
@@ -193,7 +212,7 @@ class ServiceToInvoice
             }
 
             $found = true;
-            if (false === static::addLine($newInvoice, $work, TrabajoAT::STATUS_INVOICED)) {
+            if (false === static::addLineWork($newInvoice, $work, TrabajoAT::STATUS_INVOICED)) {
                 $database->rollback();
                 return false;
             }
@@ -208,7 +227,102 @@ class ServiceToInvoice
         return static::recalculate($newInvoice, $database);
     }
 
-    protected static function addLine(SalesDocument &$doc, TrabajoAT &$work, int $estado): bool
+    protected static function addLineService(SalesDocument &$doc, ServicioAT $service): bool
+    {
+        $saveLine = false;
+
+        $newLine = $doc->getNewLine();
+        $newLine->cantidad = 0;
+        $newLine->descripcion = Tools::lang()->trans('service') . ': ' . $service->codigo;
+        $newLine->codimpuesto = null;
+        $newLine->iva = 0;
+
+        if (Tools::settings('servicios', 'document_machine')) {
+            foreach ($service->getMachines() as $machine) {
+                $newLine->descripcion .= "\n"
+                    . Tools::lang()->trans('machine') . ': ' . $machine->nombre;
+
+                if ($machine->numserie) {
+                    $newLine->descripcion .= ' (' . $machine->numserie . ')';
+                }
+
+                $saveLine = true;
+            }
+        }
+
+        if (Tools::settings('servicios', 'document_start_date')) {
+            $startDate = $service->fecha;
+            foreach ($service->getTrabajos() as $work) {
+                if (strtotime($work->fechainicio) < strtotime($startDate)) {
+                    $startDate = $work->fechainicio;
+                }
+            }
+
+            $newLine->descripcion .= "\n"
+                . Tools::lang()->trans('start-date') . ': ' . $startDate;
+
+            $saveLine = true;
+        }
+
+        if (Tools::settings('servicios', 'document_end_date')) {
+            $endDate = $service->fecha;
+            foreach ($service->getTrabajos() as $work) {
+                if (strtotime($work->fechafin) > strtotime($endDate)) {
+                    $endDate = $work->fechafin;
+                }
+            }
+
+            $newLine->descripcion .= "\n"
+                . Tools::lang()->trans('end-date') . ': ' . $endDate;
+
+            $saveLine = true;
+        }
+
+        if (Tools::settings('servicios', 'document_description') && $service->descripcion) {
+            $newLine->descripcion .= "\n\n"
+                . Tools::lang()->trans('description') . "\n" . $service->descripcion;
+
+            $saveLine = true;
+        }
+
+        if (Tools::settings('servicios', 'document_material') && $service->material) {
+            $newLine->descripcion .= "\n\n"
+                . Tools::lang()->trans('material')
+                . "\n" . $service->material;
+
+            $saveLine = true;
+        }
+
+        if (Tools::settings('servicios', 'document_solution') && $service->solucion) {
+            $newLine->descripcion .= "\n\n"
+                . Tools::lang()->trans('solution')
+                . "\n" . $service->solucion;
+
+            $saveLine = true;
+        }
+
+        if (Tools::settings('servicios', 'document_observations') && $service->observaciones) {
+            $newLine->descripcion .= "\n\n"
+                . Tools::lang()->trans('observations')
+                . "\n" . $service->observaciones;
+
+            $saveLine = true;
+        }
+
+        $pipe = new self();
+        $pipeLine = $pipe->pipe('lineService', $service, $newLine);
+        if ($pipeLine) {
+            $newLine = $pipeLine;
+        }
+
+        if ($saveLine && false === $newLine->save()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected static function addLineWork(SalesDocument &$doc, TrabajoAT &$work, int $estado): bool
     {
         $newLine = empty($work->referencia) ? $doc->getNewLine() : $doc->getNewProductLine($work->referencia);
         $newLine->cantidad = $work->cantidad;
@@ -221,6 +335,13 @@ class ServiceToInvoice
         }
 
         $work->estado = $estado;
+
+        $pipe = new self();
+        $pipeLine = $pipe->pipe('lineWork', $doc, $work, $newLine);
+        if ($pipeLine) {
+            $newLine = $pipeLine;
+        }
+
         if (false === $work->save() || false === $newLine->save()) {
             return false;
         }
@@ -228,13 +349,7 @@ class ServiceToInvoice
         return true;
     }
 
-    /**
-     * @param SalesDocument $newDoc
-     * @param DataBase $database
-     *
-     * @return bool
-     */
-    protected static function recalculate(&$newDoc, &$database): bool
+    protected static function recalculate(SalesDocument &$newDoc, DataBase &$database): bool
     {
         $lines = $newDoc->getLines();
         Calculator::calculate($newDoc, $lines, true);
