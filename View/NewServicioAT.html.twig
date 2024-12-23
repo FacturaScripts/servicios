@@ -46,7 +46,7 @@
                                 <optgroup label="{{ company.nombrecorto }}">
                                     {% for warehouse in company.getWarehouses() %}
                                         {% if warehouse.activo == false %}
-                                        {% elseif warehouse.codalmacen == fsc.codalmacen  %}
+                                        {% elseif warehouse.codalmacen == fsc.codalmacen %}
                                             <option value="{{ warehouse.codalmacen }}" selected>
                                                 {{ warehouse.nombre }}
                                             </option>
@@ -57,7 +57,8 @@
                                 </optgroup>
                             {% endfor %}
                         </select>
-                        <button type="button" class="btn btn-block btn-primary btn-spin-action" onclick="saveWarehouse()">
+                        <button type="button" class="btn btn-block btn-primary btn-spin-action"
+                                onclick="saveWarehouse()">
                             {{ trans('continue') }}
                         </button>
                     </div>
@@ -102,10 +103,12 @@
                         </table>
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-block btn-success btn-spin-action" onclick="showModalNewCustomer()">
+                        <button type="button" class="btn btn-block btn-success btn-spin-action"
+                                onclick="showModalNewCustomer()">
                             <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action" onclick="showModalWarehouse()">
+                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action"
+                                onclick="showModalWarehouse()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-warehouse') }}
                         </button>
                     </div>
@@ -133,16 +136,19 @@
                             <div class="col">
                                 <div class="form-group">
                                     {{ trans('name') }}
-                                    <input type="text" name="name" class="form-control" maxlength="100" onkeyup="return checkCustomer(this)"/>
+                                    <input type="text" name="name" class="form-control" maxlength="100"
+                                           onkeyup="return checkCustomer(this)"/>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     {{ trans('cifnif') }}
-                                    <input type="text" name="cifnif" class="form-control" maxlength="30" onkeyup="return checkCustomer(this)"/>
+                                    <input type="text" name="cifnif" class="form-control" maxlength="30"
+                                           onkeyup="return checkCustomer(this)"/>
                                 </div>
                             </div>
-                            <div id="checkDuplicateCustomerMsg" class="col-12 form-group alert alert-danger text-center d-none">
+                            <div id="checkDuplicateCustomerMsg"
+                                 class="col-12 form-group alert alert-danger text-center d-none">
                                 {{ trans('duplicate-customer-name-or-cif') }}
                             </div>
                         </div>
@@ -181,8 +187,8 @@
                                     <input list="cities" name="city" class="form-control" maxlength="100"/>
                                     <datalist id="cities">
                                         {% for city in fsc.codeModel.all('ciudades','ciudad','ciudad',false) %}
-                                            <option value="{{ city.code }}">
-                                        {% endfor %}
+                                        <option value="{{ city.code }}">
+                                            {% endfor %}
                                     </datalist>
                                 </div>
                             </div>
@@ -194,8 +200,8 @@
                                     <input list="provinces" name="province" class="form-control" maxlength="100"/>
                                     <datalist id="provinces">
                                         {% for province in fsc.codeModel.all('provincias','provincia','provincia',false) %}
-                                            <option value="{{ province.code }}">
-                                        {% endfor %}
+                                        <option value="{{ province.code }}">
+                                            {% endfor %}
                                     </datalist>
                                 </div>
                             </div>
@@ -221,10 +227,12 @@
                         {% endfor %}
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action" onclick="saveNewCustomer()">
+                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action"
+                                onclick="saveNewCustomer()">
                             <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action" onclick="showModalCustomer()">
+                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action"
+                                onclick="showModalCustomer()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
@@ -260,13 +268,16 @@
                         </table>
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-block btn-primary btn-spin-action" onclick="saveMachine(null)">
+                        <button type="button" class="btn btn-block btn-primary btn-spin-action"
+                                onclick="saveMachine(null)">
                             <i class="fa-solid fa-ban mr-1"></i> {{ trans('no-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-success btn-spin-action" onclick="showModalNewMachine()">
+                        <button type="button" class="btn btn-block btn-success btn-spin-action"
+                                onclick="showModalNewMachine()">
                             <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary mt-4 btn-spin-action" onclick="showModalCustomer()">
+                        <button type="button" class="btn btn-block btn-outline-secondary mt-4 btn-spin-action"
+                                onclick="showModalCustomer()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
@@ -299,6 +310,14 @@
                             <input type="text" name="serial_number" class="form-control" maxlength="100"/>
                         </div>
                         <div class="form-group">
+                            {{ trans('manufacturer') }}
+                            <select name="manufacturer" class="form-control" required>
+                                {% for manufacture in fsc.codeModel.all('fabricantes','codfabricante','nombre') %}
+                                    <option value="{{ manufacture.code }}">{{ manufacture.description }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
                             {{ trans('description') }}
                             <textarea name="description" class="form-control" maxlength="100"></textarea>
                         </div>
@@ -307,10 +326,12 @@
                         {% endfor %}
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action" onclick="saveNewMachine()">
+                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action"
+                                onclick="saveNewMachine()">
                             <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action" onclick="showModalMachine()">
+                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action"
+                                onclick="showModalMachine()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-machine') }}
                         </button>
                     </div>
@@ -376,11 +397,11 @@
             codcliente = code;
 
             {% if settings('servicios', 'new_service_without_machine', false) %}
-                saveNewService();
+            saveNewService();
             {% else %}
-                let formData = new FormData();
-                formData.append('codcliente', codcliente);
-                sendFormService(formData, 'renderCustomerMachines');
+            let formData = new FormData();
+            formData.append('codcliente', codcliente);
+            sendFormService(formData, 'renderCustomerMachines');
             {% endif %}
         }
 
@@ -415,6 +436,10 @@
                 formData.append($(this).attr('name'), $(this).val());
             });
 
+            $('#newMachineModal select').each(function () {
+                formData.append($(this).attr('name'), $(this).find('option:selected').val());
+            });
+
             $('#newCustomerModal select').each(function () {
                 formData.append($(this).attr('name'), $(this).find('option:selected').val());
             });
@@ -446,17 +471,17 @@
 
             // si tenemos idmaquina en la url, se guarda el servicio
             {% if fsc.idmaquina > 0 %}
-                saveMachine('{{ fsc.idmaquina }}');
+            saveMachine('{{ fsc.idmaquina }}');
             {% elseif fsc.codcliente != '' and settings('servicios', 'new_service_without_machine', false) %}
-                // si ya tenemos codcliente en la url,
-                // y la configuración permite guardar servicios sin máquina, se guarda el servicio
-                saveNewService();
+            // si ya tenemos codcliente en la url,
+            // y la configuración permite guardar servicios sin máquina, se guarda el servicio
+            saveNewService();
             {% elseif fsc.codcliente != '' %}
-                // si ya tenemos codcliente en la url, se guarda el cliente
-                saveCustomer('{{ fsc.codcliente }}');
+            // si ya tenemos codcliente en la url, se guarda el cliente
+            saveCustomer('{{ fsc.codcliente }}');
             {% else %}
-                // si no se muestra el modal de clientes
-                showModalCustomer();
+            // si no se muestra el modal de clientes
+            showModalCustomer();
             {% endif %}
         }
 
