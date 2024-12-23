@@ -27,6 +27,7 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
+use FacturaScripts\Plugins\Servicios\Model\TipoAT;
 
 /**
  * Description of EditServicioAT
@@ -276,6 +277,12 @@ class EditServicioAT extends EditController
                     $this->setSettings('EditTrabajoAT', 'btnDelete', false);
                     $this->setSettings('EditTrabajoAT', 'btnNew', false);
                     $this->setSettings('EditTrabajoAT', 'btnSave', false);
+                }
+
+                // si no hay tipo, ocultamos el campo
+                $type = new TipoAT();
+                if ($type->count() === 0) {
+                    $view->disableColumn('type');
                 }
 
                 $this->addButton($viewName, [

@@ -63,7 +63,7 @@
                 <widget type="checkbox" fieldname="print_work_price"/>
             </column>
         </group>
-        <group name="generate-document" title="generate-document" description="generate-document-desc" icon="fa-solid fa-list" numcolumns="12" valign="bottom">
+        <group name="generate-document" title="generate-document" description="generate-document-desc" icon="fa-solid fa-file-invoice-dollar" numcolumns="12" valign="bottom">
             <column name="add-description" order="100">
                 <widget type="checkbox" fieldname="document_description"/>
             </column>
