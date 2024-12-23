@@ -15,7 +15,7 @@
                 <div class="card shadow mb-5">
                     <div class="card-body"></div>
                     <div class="card-footer p-2">
-                        <button class="btn btn-lg btn-block btn-success" onclick="initNewService()">
+                        <button class="btn btn-lg btn-block btn-success btn-spin-action" onclick="initNewService()">
                             {{ trans('new-service') }}
                         </button>
                     </div>
@@ -57,7 +57,7 @@
                                 </optgroup>
                             {% endfor %}
                         </select>
-                        <button type="button" class="btn btn-block btn-primary" onclick="saveWarehouse()">
+                        <button type="button" class="btn btn-block btn-primary btn-spin-action" onclick="saveWarehouse()">
                             {{ trans('continue') }}
                         </button>
                     </div>
@@ -102,10 +102,10 @@
                         </table>
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-block btn-success" onclick="showModalNewCustomer()">
+                        <button type="button" class="btn btn-block btn-success btn-spin-action" onclick="showModalNewCustomer()">
                             <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary" onclick="showModalWarehouse()">
+                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action" onclick="showModalWarehouse()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-warehouse') }}
                         </button>
                     </div>
@@ -221,10 +221,10 @@
                         {% endfor %}
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-lg btn-block btn-success" onclick="saveNewCustomer()">
+                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action" onclick="saveNewCustomer()">
                             <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary" onclick="showModalCustomer()">
+                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action" onclick="showModalCustomer()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
@@ -260,13 +260,13 @@
                         </table>
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-block btn-primary" onclick="saveMachine(null)">
+                        <button type="button" class="btn btn-block btn-primary btn-spin-action" onclick="saveMachine(null)">
                             <i class="fa-solid fa-ban mr-1"></i> {{ trans('no-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-success" onclick="showModalNewMachine()">
+                        <button type="button" class="btn btn-block btn-success btn-spin-action" onclick="showModalNewMachine()">
                             <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary mt-4" onclick="showModalCustomer()">
+                        <button type="button" class="btn btn-block btn-outline-secondary mt-4 btn-spin-action" onclick="showModalCustomer()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
@@ -307,10 +307,10 @@
                         {% endfor %}
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-lg btn-block btn-success" onclick="saveNewMachine()">
+                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action" onclick="saveNewMachine()">
                             <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary" onclick="showModalMachine()">
+                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action" onclick="showModalMachine()">
                             <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-machine') }}
                         </button>
                     </div>
