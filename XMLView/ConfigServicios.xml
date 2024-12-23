@@ -63,5 +63,28 @@
                 <widget type="checkbox" fieldname="print_work_price"/>
             </column>
         </group>
+        <group name="generate-document" title="generate-document" description="generate-document-desc" icon="fa-solid fa-list" numcolumns="12" valign="bottom">
+            <column name="add-description" order="100">
+                <widget type="checkbox" fieldname="document_description"/>
+            </column>
+            <column name="add-material" order="100">
+                <widget type="checkbox" fieldname="document_material"/>
+            </column>
+            <column name="add-solution" order="100">
+                <widget type="checkbox" fieldname="document_solution"/>
+            </column>
+            <column name="add-observations" order="100">
+                <widget type="checkbox" fieldname="document_observations"/>
+            </column>
+            <column name="add-start-date" order="100">
+                <widget type="checkbox" fieldname="document_start_date"/>
+            </column>
+            <column name="add-end-date" order="100">
+                <widget type="checkbox" fieldname="document_end_date"/>
+            </column>
+            <column name="add-machine" order="100">
+                <widget type="checkbox" fieldname="document_machine"/>
+            </column>
+        </group>
     </columns>
 </view>
