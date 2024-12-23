@@ -40,7 +40,12 @@
                 <values source="fabricantes" fieldcode="codfabricante" fieldtitle="nombre" />
             </widget>
         </column>
-        <column name="date" display="right" order="160">
+        <column name="customer" order="160">
+            <widget type="select" fieldname="codcliente">
+                <values source="clientes" fieldcode="codcliente" fieldtitle="nombre" />
+            </widget>
+        </column>
+        <column name="date" display="right" order="170">
             <widget type="date" fieldname="fecha" />
         </column>
     </columns>

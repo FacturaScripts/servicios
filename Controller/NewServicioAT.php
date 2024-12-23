@@ -207,8 +207,8 @@ class NewServicioAT extends Controller
             $this->codcliente = $machine->codcliente;
         }
 
-        // si el cliente es distinto al cliente de la máquina, no permitimos continuar
-        if ($this->codcliente !== $machine->codcliente) {
+        // si la máquina tiene cliente y no es igual al cliente seleccionado, no permitimos continuar
+        if (!empty($machine->codcliente) && $this->codcliente !== $machine->codcliente) {
             return false;
         }
 
@@ -244,8 +244,43 @@ class NewServicioAT extends Controller
     {
         $html = '';
         $orderBy = ['nombre' => 'ASC'];
-        $where = [new DataBaseWhere('codcliente', $this->request->get('codcliente'))];
-        foreach (MaquinaAT::all($where, $orderBy, 0, 0) as $machine) {
+
+        $customer = new Cliente();
+        if (false === $customer->loadFromCode($this->request->get('codcliente'))) {
+            Tools::log()->error('customer-not-found');
+            return [
+                'renderCustomerMachines' => false,
+                'html' => ''
+            ];
+        }
+
+        $whereCustomer = [new DataBaseWhere('codcliente', $customer->codcliente)];
+        $customerMachines = MaquinaAT::all($whereCustomer, $orderBy, 0, 0);
+        if (false === empty($customerMachines)) {
+            $html .= '<tr class="table-info"><td colspan="3">'
+                . Tools::lang()->trans('customer-machines') . ': ' . $customer->nombre
+                . '</td></tr>';
+        }
+
+        foreach ($customerMachines as $machine) {
+            $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
+                . '<td>' . $machine->nombre . '</td>'
+                . '<td>' . $machine->numserie . '</td>'
+                . '<td>' . $machine->descripcion . '</td>'
+                . '</tr>';
+        }
+
+        $whereAnonymous = [new DataBaseWhere('codcliente', null)];
+        $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy, 0, 0);
+
+        if (false === empty($anonymousMachines)) {
+            $html .= '<tr class="table-info"><td colspan="3">'
+                . Tools::lang()->trans('anonymous-machines')
+                . '</td></tr>';
+        }
+
+        $whereAnonymous = [new DataBaseWhere('codcliente', null)];
+        foreach (MaquinaAT::all($whereAnonymous, $orderBy, 0, 0) as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
                 . '<td>' . $machine->nombre . '</td>'
                 . '<td>' . $machine->numserie . '</td>'
