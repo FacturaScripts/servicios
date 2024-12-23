@@ -30,7 +30,6 @@ use FacturaScripts\Dinamic\Lib\ExtendedController\PanelController;
  */
 class AdminServicios extends PanelController
 {
-
     private const VIEW_CONFIG = 'ConfigServicios';
     private const VIEW_LIST_PRIORITIES = 'EditPrioridadAT';
     private const VIEW_LIST_TYPES = 'EditTipoAT';
@@ -57,26 +56,26 @@ class AdminServicios extends PanelController
         $this->createViewTypes();
     }
 
-    private function createViewEditConfig(string $viewName = self::VIEW_CONFIG)
+    private function createViewEditConfig(string $viewName = self::VIEW_CONFIG): void
     {
         $this->addEditView($viewName, 'Settings', 'general')
             ->setSettings('btnDelete', false)
             ->setSettings('btnNew', false);
     }
 
-    private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES)
+    private function createViewPriorities(string $viewName = self::VIEW_LIST_PRIORITIES): void
     {
         $this->addEditListView($viewName, 'PrioridadAT', 'priority', 'fa-solid fa-list-ol')
             ->setInLine(true);
     }
-    
-    private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES)
+
+    private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES): void
     {
         $this->addEditListView($viewName, 'TipoAT', 'type', 'fa-solid fa-list-ol');
         $this->views[$viewName]->setInLine(true);
     }
 
-    private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS)
+    private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS): void
     {
         $this->addEditListView($viewName, 'EstadoAT', 'states', 'fa-solid fa-tags')
             ->setInLine(true);

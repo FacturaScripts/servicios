@@ -61,14 +61,14 @@
             <column name="hour" order="180">
                 <widget type="time" fieldname="hora" required="true"/>
             </column>
-            <column name="status" numcolumns="2" order="190">
-                <widget type="select" fieldname="idestado" required="true">
-                    <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
+            <column name="type" numcolumns="2" order="190">
+                <widget type="select" fieldname="idtipo">
+                    <values source="serviciosat_tipos" fieldcode="id" fieldtitle="name"/>
                 </widget>
             </column>
-            <column name="type" numcolumns="2" order="200">
-                <widget type="select" fieldname="idtipo">
-                    <values source="serviciosat_tipos" fieldcode="id" fieldtitle="name" />
+            <column name="status" numcolumns="2" order="200">
+                <widget type="select" fieldname="idestado" required="true">
+                    <values source="serviciosat_estados" fieldcode="id" fieldtitle="nombre"/>
                 </widget>
             </column>
         </group>

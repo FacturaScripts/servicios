@@ -69,8 +69,7 @@ class NewServicioAT extends Controller
         if ($ajax) {
             $this->setTemplate(false);
 
-            if (false === $this->user->can('NewServicioAT')
-                || false === $this->checkMachine()) {
+            if (false === $this->user->can('NewServicioAT') || false === $this->checkMachine()) {
                 $this->response->setContent(json_encode([
                     'redirect' => 'ListServicioAT'
                 ]));
@@ -256,12 +255,6 @@ class NewServicioAT extends Controller
 
         $whereCustomer = [new DataBaseWhere('codcliente', $customer->codcliente)];
         $customerMachines = MaquinaAT::all($whereCustomer, $orderBy, 0, 0);
-        if (false === empty($customerMachines)) {
-            $html .= '<tr class="table-info"><td colspan="3">'
-                . Tools::lang()->trans('customer-machines') . ': ' . $customer->nombre
-                . '</td></tr>';
-        }
-
         foreach ($customerMachines as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
                 . '<td>' . $machine->nombre . '</td>'
@@ -272,9 +265,8 @@ class NewServicioAT extends Controller
 
         $whereAnonymous = [new DataBaseWhere('codcliente', null)];
         $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy, 0, 0);
-
         if (false === empty($anonymousMachines)) {
-            $html .= '<tr class="table-info"><td colspan="3">'
+            $html .= '<tr class="table-info"><td class="text-center" colspan="3">'
                 . Tools::lang()->trans('anonymous-machines')
                 . '</td></tr>';
         }
@@ -354,7 +346,11 @@ class NewServicioAT extends Controller
         $machine->nombre = $this->request->get('name');
         $machine->numserie = $this->request->get('serial_number');
         $machine->descripcion = $this->request->get('description');
+
         $machine->codfabricante = $this->request->get('manufacturer');
+        if (empty($machine->codfabricante)) {
+            $machine->codfabricante = null;
+        }
 
         $resultExtension = $this->pipe('saveNewMachine', $machine);
         if ($resultExtension instanceof MaquinaAT) {

@@ -30,7 +30,6 @@ use FacturaScripts\Core\Lib\ExtendedController\EditController;
  */
 class EditMaquinaAT extends EditController
 {
-
     public function getModelClassName(): string
     {
         return 'MaquinaAT';
@@ -55,7 +54,7 @@ class EditMaquinaAT extends EditController
         $this->createViewsServices();
     }
 
-    protected function createViewsServices(string $viewName = 'ListServicioAT')
+    protected function createViewsServices(string $viewName = 'ListServicioAT'): void
     {
         $this->addListView($viewName, 'ServicioAT', 'services', 'fa-solid fa-headset')
             ->addSearchFields(['descripcion', 'idservicio', 'observaciones'])
