@@ -71,8 +71,8 @@ class AdminServicios extends PanelController
 
     private function createViewTypes(string $viewName = self::VIEW_LIST_TYPES): void
     {
-        $this->addEditListView($viewName, 'TipoAT', 'type', 'fa-solid fa-list-ol');
-        $this->views[$viewName]->setInLine(true);
+        $this->addEditListView($viewName, 'TipoAT', 'type', 'fa-solid fa-shapes')
+            ->setInLine(true);
     }
 
     private function createViewStatus(string $viewName = self::VIEW_LIST_STATUS): void
