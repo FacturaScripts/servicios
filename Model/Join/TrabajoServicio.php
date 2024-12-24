@@ -20,8 +20,8 @@
 namespace FacturaScripts\Plugins\Servicios\Model\Join;
 
 use FacturaScripts\Core\Model\Base\JoinModel;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
-use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\TrabajoAT;
 
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>

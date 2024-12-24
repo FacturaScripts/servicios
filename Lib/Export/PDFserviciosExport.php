@@ -21,8 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Lib\Export;
 
 use FacturaScripts\Core\Lib\Export\PDFExport;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Dinamic\Model\Cliente;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\ServicioAT;
 
 /**
  * Description of PDFserviciosExport

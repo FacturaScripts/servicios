@@ -20,8 +20,8 @@
 namespace FacturaScripts\Plugins\Servicios\Lib\Export;
 
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Plugins\PlantillasPDF\Lib\Export\PDFExport;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>

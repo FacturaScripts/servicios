@@ -23,8 +23,8 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Almacenes;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
-use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Model\EstadoAT;
+use FacturaScripts\Dinamic\Model\TrabajoAT;
 
 /**
  * Description of ListServicioAT
