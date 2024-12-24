@@ -26,8 +26,8 @@ use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
-use FacturaScripts\Plugins\Servicios\Model\TipoAT;
 
 /**
  * Description of EditServicioAT

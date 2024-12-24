@@ -26,9 +26,9 @@ use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\CodeModel;
+use FacturaScripts\Dinamic\Model\MaquinaAT;
 use FacturaScripts\Dinamic\Model\RoleAccess;
-use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\ServicioAT;
 
 /**
  * Description of NewServicioAT

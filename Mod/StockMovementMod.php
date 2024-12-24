@@ -21,9 +21,9 @@ namespace FacturaScripts\Plugins\Servicios\Mod;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Model\MovimientoStock;
 use FacturaScripts\Plugins\StockAvanzado\Contract\StockMovementModInterface;
-use FacturaScripts\Plugins\StockAvanzado\Model\MovimientoStock;
 
 class StockMovementMod implements StockMovementModInterface
 {
