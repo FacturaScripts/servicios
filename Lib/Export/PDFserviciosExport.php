@@ -49,7 +49,7 @@ class PDFserviciosExport extends PDFExport
         $this->pdf->ezText('');
 
         $machinesData = $this->machinesData($model);
-        if ($machinesData && Tools::settings('servicios', 'printmachineinfo', false)) {
+        if ($machinesData && Tools::settings('servicios', 'print_pdf_machine_info', false)) {
             $this->printTableSection('machines', $machinesData);
         }
 
@@ -57,16 +57,16 @@ class PDFserviciosExport extends PDFExport
         $this->printTextSection('material', $model->material);
         $this->printTextSection('solution', $model->solucion);
 
-        if (Tools::settings('servicios', 'printobservations', false)) {
+        if (Tools::settings('servicios', 'print_pdf_observations', false)) {
             $this->printTextSection('observations', $model->observaciones);
         }
 
         $worksData = $this->worksData($model);
-        if ($worksData && Tools::settings('servicios', 'printworks', false)) {
+        if ($worksData && Tools::settings('servicios', 'print_pdf_works', false)) {
             $this->printTableSection('work', $worksData);
         }
 
-        $footer = Tools::settings('servicios', 'footertext', '');
+        $footer = Tools::settings('servicios', 'print_pdf_footer_text', '');
         $this->printTextSection("", $footer, false);
 
         return false;
@@ -145,15 +145,16 @@ class PDFserviciosExport extends PDFExport
             ['key' => $this->i18n->trans('customer'), 'value' => Tools::fixHtml($subject->nombre)],
             ['key' => $tipoidfiscal, 'value' => $subject->cifnif],
             ['key' => $this->i18n->trans('address'), 'value' => $subject->getDefaultAddress()->direccion],
-            ['key' => $this->i18n->trans('phone'), 'value' => $subject->telefono1]
+            ['key' => $this->i18n->trans('phone'), 'value' => ($model->telefono1 ?? $subject->telefono1)],
+            ['key' => $this->i18n->trans('phone2'), 'value' => ($model->telefono2 ?? $subject->telefono2)],
         ];
 
-        if (Tools::settings('servicios', 'print_agent', false)) {
+        if (Tools::settings('servicios', 'print_pdf_agent', false)) {
             $agent = $model->getAgent();
             $data[] = ['key' => $this->i18n->trans('agent'), 'value' => $agent->nombre];
         }
 
-        if (Tools::settings('servicios', 'print_assigned', false)) {
+        if (Tools::settings('servicios', 'print_pdf_assigned', false)) {
             $data[] = ['key' => $this->i18n->trans('assigned'), 'value' => $model->asignado];
         }
 
@@ -177,20 +178,20 @@ class PDFserviciosExport extends PDFExport
                 $this->i18n->trans('observations') => $work->observaciones
             ];
 
-            if (Tools::settings('servicios', 'print_work_reference', false)) {
+            if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
                 $data[$this->i18n->trans('reference') ] = $work->referencia;
             }
 
-            if (Tools::settings('servicios', 'print_work_description', false)) {
+            if (Tools::settings('servicios', 'print_pdf_work_description', false)) {
                 $data[$this->i18n->trans('description')] = $work->descripcion;
             }
 
-            if (Tools::settings('servicios', 'print_work_quantity', false)) {
+            if (Tools::settings('servicios', 'print_pdf_work_quantity', false)) {
                 $data[$this->i18n->trans('quantity')] = $work->cantidad;
             }
 
-            if (Tools::settings('servicios', 'print_work_price', false)) {
-                $data[$this->i18n->trans('price')] = $work->precio;
+            if (Tools::settings('servicios', 'print_pdf_work_price', false)) {
+                $data[$this->i18n->trans('price')] = Tools::money($work->precio);
             }
 
             $result[] = $data;

@@ -25,42 +25,72 @@
             <column name="allow-new-service-without-machine" order="130">
                 <widget type="checkbox" fieldname="new_service_without_machine"/>
             </column>
-        </group>
-        <group name="print-services" title="print-services" icon="fa-solid fa-print" numcolumns="12" valign="bottom">
-            <column name="footer-text" numcolumns="12" order="100">
-                <widget type="textarea" fieldname="footertext" rows="4"/>
-            </column>
-            <column name="print-machine-info" order="110">
-                <widget type="checkbox" fieldname="printmachineinfo"/>
-            </column>
-            <column name="print-observations" order="120">
-                <widget type="checkbox" fieldname="printobservations"/>
-            </column>
-            <column name="print-agent" order="130">
-                <widget type="checkbox" fieldname="print_agent"/>
-            </column>
-            <column name="print-assigned" order="140">
-                <widget type="checkbox" fieldname="print_assigned"/>
-            </column>
-            <column name="disable-stock-management" order="150">
+            <column name="disable-stock-management" order="140">
                 <widget type="checkbox" fieldname="disablestockmanagement"/>
             </column>
         </group>
-        <group name="print-works" title="print-works" icon="fa-solid fa-print" numcolumns="12" valign="bottom">
-            <column name="print-works" order="100">
-                <widget type="checkbox" fieldname="printworks"/>
+        <group name="print-pdf" title="print-pdf" description="print-pdf-desc" icon="fa-solid fa-file-pdf" numcolumns="12" valign="bottom">
+            <column name="pdf-footer-text" title="footer-text" numcolumns="12" order="100">
+                <widget type="textarea" fieldname="print_pdf_footer_text" rows="4"/>
             </column>
-            <column name="print-reference" order="110">
-                <widget type="checkbox" fieldname="print_work_reference"/>
+            <column name="print-machine-info" order="110">
+                <widget type="checkbox" fieldname="print_pdf_machine_info"/>
             </column>
-            <column name="print-description" order="120">
-                <widget type="checkbox" fieldname="print_work_description"/>
+            <column name="print-observations" order="120">
+                <widget type="checkbox" fieldname="print_pdf_observations"/>
             </column>
-            <column name="print-quantity" order="130">
-                <widget type="checkbox" fieldname="print_work_quantity"/>
+            <column name="print-agent" order="130">
+                <widget type="checkbox" fieldname="print_pdf_agent"/>
             </column>
-            <column name="print-price" order="140">
-                <widget type="checkbox" fieldname="print_work_price"/>
+            <column name="print-assigned" order="140">
+                <widget type="checkbox" fieldname="print_pdf_assigned"/>
+            </column>
+            <column name="print-works" order="150">
+                <widget type="checkbox" fieldname="print_pdf_works"/>
+            </column>
+            <column name="print-works-reference" order="160">
+                <widget type="checkbox" fieldname="print_pdf_work_reference"/>
+            </column>
+            <column name="print-works-description" order="170">
+                <widget type="checkbox" fieldname="print_pdf_work_description"/>
+            </column>
+            <column name="print-works-quantity" order="180">
+                <widget type="checkbox" fieldname="print_pdf_work_quantity"/>
+            </column>
+            <column name="print-works-price" order="190">
+                <widget type="checkbox" fieldname="print_pdf_work_price"/>
+            </column>
+        </group>
+        <group name="print-ticket" title="print-ticket" description="print-ticket-desc" icon="fa-solid fa-receipt" numcolumns="12" valign="bottom">
+            <column name="ticket-footer-text" title="ticket-footer-text" numcolumns="12" order="100">
+                <widget type="textarea" fieldname="print_ticket_footer_text" rows="4"/>
+            </column>
+            <column name="print-machine-info" order="110">
+                <widget type="checkbox" fieldname="print_ticket_machine_info"/>
+            </column>
+            <column name="print-observations" order="120">
+                <widget type="checkbox" fieldname="print_ticket_observations"/>
+            </column>
+            <column name="print-agent" order="130">
+                <widget type="checkbox" fieldname="print_ticket_agent"/>
+            </column>
+            <column name="print-assigned" order="140">
+                <widget type="checkbox" fieldname="print_ticket_assigned"/>
+            </column>
+            <column name="print-works" order="150">
+                <widget type="checkbox" fieldname="print_ticket_works"/>
+            </column>
+            <column name="print-works-reference" order="160">
+                <widget type="checkbox" fieldname="print_ticket_work_reference"/>
+            </column>
+            <column name="print-works-description" order="170">
+                <widget type="checkbox" fieldname="print_ticket_work_description"/>
+            </column>
+            <column name="print-works-quantity" order="180">
+                <widget type="checkbox" fieldname="print_ticket_work_quantity"/>
+            </column>
+            <column name="print-works-price" order="190">
+                <widget type="checkbox" fieldname="print_ticket_work_price"/>
             </column>
         </group>
         <group name="generate-document" title="generate-document" description="generate-document-desc" icon="fa-solid fa-file-invoice-dollar" numcolumns="12" valign="bottom">

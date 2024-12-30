@@ -26,8 +26,9 @@ class Service extends BaseTicket
         $ticket = new Ticket();
         $ticket->idprinter = $printer->id;
         $ticket->nick = $user->nick;
-        $ticket->title = static::$i18n->trans('service') . ' Service.php' . $model->primaryColumnValue();
+        $ticket->title = Tools::lang()->trans('service') . ': ' . ($model->codigo ?? $model->primaryColumnValue());
 
+        static::setOpenDrawer(false);
         static::setHeader($model, $printer, $ticket->title);
         static::setBody($model, $printer);
         static::setFooter($model, $printer);
@@ -46,21 +47,59 @@ class Service extends BaseTicket
     {
         static::$escpos->setTextSize($printer->font_size, $printer->font_size);
 
-        static::$escpos->text(static::sanitize(static::$i18n->trans('date') . ': ' . $model->fecha . ' ' . $model->hora) . "\n");
+        static::$escpos->text(static::sanitize(Tools::lang()->trans('date') . ': ' . $model->fecha . ' ' . $model->hora) . "\n");
+
+        if (Tools::settings('servicios', 'print_ticket_agent', false)) {
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('agent') . ': ' . $model->getAgent()->nombre) . "\n");
+        }
+
+        if (Tools::settings('servicios', 'print_ticket_assigned', false)) {
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('assigned') . ': ' . $model->getAsignado()->nick) . "\n");
+        }
 
         $customer = $model->getCustomer();
-        static::$escpos->text(static::sanitize(static::$i18n->trans('customer') . ': ' . $customer->razonsocial) . "\n");
-        if ($customer->telefono1) {
-            static::$escpos->text(static::sanitize(static::$i18n->trans('phone') . ': ' . $customer->telefono1) . "\n\n");
+        static::$escpos->text(static::sanitize(Tools::lang()->trans('customer') . ': ' . $customer->razonsocial) . "\n");
+        if ($model->telefono1 || $customer->telefono1) {
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('phone') . ': ' . ($model->telefono1 ?? $customer->telefono1)) . "\n");
         }
-        if ($customer->telefono2) {
-            static::$escpos->text(static::sanitize(static::$i18n->trans('phone') . ': ' . $customer->telefono2) . "\n\n");
+        if ($model->telefono2 || $customer->telefono2) {
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('phone2') . ': ' . ($model->telefono2 ?? $customer->telefono2)));
         }
 
-        static::$escpos->text(static::sanitize(static::$i18n->trans('description') . ': ' . $model->descripcion) . "\n");
+        if ($model->descripcion) {
+            static::$escpos->text("\n\n" . static::sanitize(Tools::lang()->trans('description')));
+            static::$escpos->text("\n" . static::sanitize($model->descripcion));
+        }
 
         if ($model->material) {
-            static::$escpos->text(static::sanitize(static::$i18n->trans('material') . ': ' . $model->material) . "\n");
+            static::$escpos->text("\n\n" . static::sanitize(Tools::lang()->trans('material')));
+            static::$escpos->text("\n" . static::sanitize($model->material));
+        }
+
+        if ($model->solucion) {
+            static::$escpos->text("\n\n" . static::sanitize(Tools::lang()->trans('solution')));
+            static::$escpos->text("\n" . static::sanitize($model->solucion));
+        }
+
+        if ($model->observaciones && Tools::settings('servicios', 'print_ticket_observations', false)) {
+            static::$escpos->text("\n\n" . static::sanitize(Tools::lang()->trans('observations')));
+            static::$escpos->text("\n" . static::sanitize($model->observaciones));
+        }
+
+        static::setMachines($model, $printer);
+        static::setWorks($model, $printer);
+    }
+
+    protected static function setMachines(ModelClass $model, TicketPrinter $printer): void
+    {
+        $machines = $model->getMachines();
+        if (empty($machines) || false === Tools::settings('servicios', 'print_ticket_machine_info', false)) {
+            return;
+        }
+
+        static::$escpos->text("\n\n" . static::sanitize(Tools::lang()->trans('machines')) . "\n");
+        foreach ($machines as $machine) {
+            static::$escpos->text(static::sanitize($machine->nombre . ' - ' . $machine->numserie) . "\n");
         }
     }
 
@@ -69,8 +108,44 @@ class Service extends BaseTicket
         parent::setFooter($model, $printer);
 
         // si hay un texto personalizado de pie de ticket, lo añadimos
-        if (false === empty(Tools::settings('servicios', 'footertext'))) {
-            static::$escpos->text("\n" . static::sanitize(Tools::settings('servicios', 'footertext')) . "\n");
+        if (false === empty(Tools::settings('servicios', 'print_ticket_footer_text'))) {
+            static::$escpos->text("\n" . static::sanitize(Tools::settings('servicios', 'print_ticket_footer_text')) . "\n");
+        }
+    }
+
+    protected static function setWorks(ModelClass $model, TicketPrinter $printer): void
+    {
+        $works = $model->getTrabajos();
+        if (empty($works) || false === Tools::settings('servicios', 'print_ticket_works', false)) {
+            return;
+        }
+
+        static::$escpos->text("\n\n" . static::sanitize(Tools::lang()->trans('works')));
+        foreach ($works as $work) {
+            static::$escpos->text("\n");
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('from-date') . ': ' . $work->fechainicio) . "\n");
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('from-hour') . ': ' . $work->horainicio) . "\n");
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('until-date') . ': ' . $work->fechafin) . "\n");
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('until-hour') . ': ' . $work->horafin) . "\n");
+            static::$escpos->text(static::sanitize(Tools::lang()->trans('observations') . ': ' . $work->observaciones) . "\n");
+
+            if (Tools::settings('servicios', 'print_ticket_work_reference', false)) {
+                static::$escpos->text(static::sanitize(Tools::lang()->trans('reference') . ': '. $work->referencia) . "\n");
+            }
+
+            if (Tools::settings('servicios', 'print_ticket_work_description', false)) {
+                static::$escpos->text(static::sanitize(Tools::lang()->trans('description') . ': ' . $work->descripcion) . "\n");
+            }
+
+            if (Tools::settings('servicios', 'print_ticket_work_quantity', false)) {
+                static::$escpos->text(static::sanitize(Tools::lang()->trans('quantity') . ': ' . $work->cantidad) . "\n");
+            }
+
+            if (Tools::settings('servicios', 'print_ticket_work_price', false)) {
+                static::$escpos->text(static::sanitize(Tools::lang()->trans('price') . ': ' . Tools::money($work->precio)) . "\n");
+            }
+
+            static::$escpos->text("\n");
         }
     }
 }

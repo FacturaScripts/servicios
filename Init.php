@@ -177,7 +177,8 @@ final class Init extends InitClass
     private function setupSettings(): void
     {
         $defaults = [
-            'footertext' => '',
+            'print_ticket_footer_text' => '',
+            'print_pdf_footer_text' => '',
             'longnumero' => 6,
             'patron' => 'SER{ANYO}-{NUM}',
             'workstatus' => 1
