@@ -70,12 +70,12 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function footerData(ServicioAT $model): void
     {
-        $this->template->writeHTML(Tools::settings('servicios', 'footertext', ''));
+        $this->template->writeHTML(Tools::settings('servicios', 'print_pdf_footer_text', ''));
     }
 
     protected function machineData(ServicioAT $model): void
     {
-        if (false === Tools::settings('servicios', 'printmachineinfo', false)) {
+        if (false === Tools::settings('servicios', 'print_pdf_machine_info', false)) {
             return;
         }
 
@@ -111,7 +111,7 @@ class PlantillasPDFserviciosExport extends PDFExport
     protected function observationData(ServicioAT $model): void
     {
         if (empty($model->observaciones)
-            || false === Tools::settings('servicios', 'printobservations', false)) {
+            || false === Tools::settings('servicios', 'print_pdf_observations', false)) {
             return;
         }
 
@@ -124,15 +124,11 @@ class PlantillasPDFserviciosExport extends PDFExport
     {
         $excludeFields = ['idmaquina', 'idtipo', 'neto', 'codalmacen', 'idprioridad', 'material', 'descripcion', 'solucion'];
 
-        if (false === Tools::settings('servicios', 'print_agent', false)) {
+        if (false === Tools::settings('servicios', 'print_pdf_agent', false)) {
             $excludeFields[] = 'codagente';
         }
 
-        if (false === Tools::settings('servicios', 'print_agent', false)) {
-            $excludeFields[] = 'asignado';
-        }
-
-        if (false === Tools::settings('servicios', 'print_assigned', false)) {
+        if (false === Tools::settings('servicios', 'print_pdf_assigned', false)) {
             $excludeFields[] = 'asignado';
         }
 
@@ -171,7 +167,7 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function workData(ServicioAT $model): void
     {
-        if (false === Tools::settings('servicios', 'printworks', false)) {
+        if (false === Tools::settings('servicios', 'print_pdf_works', false)) {
             return;
         }
 
@@ -183,19 +179,19 @@ class PlantillasPDFserviciosExport extends PDFExport
             Tools::lang()->trans('observations'),
         ];
 
-        if (Tools::settings('servicios', 'print_work_reference', false)) {
+        if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
             $headers[] = Tools::lang()->trans('reference');
         }
 
-        if (Tools::settings('servicios', 'print_work_description', false)) {
+        if (Tools::settings('servicios', 'print_pdf_work_description', false)) {
             $headers[] = Tools::lang()->trans('description');
         }
 
-        if (Tools::settings('servicios', 'print_work_quantity', false)) {
+        if (Tools::settings('servicios', 'print_pdf_work_quantity', false)) {
             $headers[] = Tools::lang()->trans('quantity');
         }
 
-        if (Tools::settings('servicios', 'print_work_price', false)) {
+        if (Tools::settings('servicios', 'print_pdf_work_price', false)) {
             $headers[] = Tools::lang()->trans('price');
         }
 
@@ -209,20 +205,20 @@ class PlantillasPDFserviciosExport extends PDFExport
                 $work->observaciones
             ];
 
-            if (Tools::settings('servicios', 'print_work_reference', false)) {
+            if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
                 $dataWork[] = $work->referencia;
             }
 
-            if (Tools::settings('servicios', 'print_work_description', false)) {
+            if (Tools::settings('servicios', 'print_pdf_work_description', false)) {
                 $dataWork[] = $work->descripcion;
             }
 
-            if (Tools::settings('servicios', 'print_work_quantity', false)) {
+            if (Tools::settings('servicios', 'print_pdf_work_quantity', false)) {
                 $dataWork[] = $work->cantidad;
             }
 
-            if (Tools::settings('servicios', 'print_work_price', false)) {
-                $dataWork[] = $work->precio;
+            if (Tools::settings('servicios', 'print_pdf_work_price', false)) {
+                $dataWork[] = Tools::money($work->precio);
             }
 
             $rows[] = $dataWork;
