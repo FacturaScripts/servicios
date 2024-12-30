@@ -27,7 +27,7 @@ use FacturaScripts\Plugins\StockAvanzado\Contract\StockMovementModInterface;
 
 class StockMovementMod implements StockMovementModInterface
 {
-    public function run(): void
+    public function run(?int $idproduct = null): void
     {
         // generamos un movimiento para cada trabajo con referencia
         $model = new TrabajoAT();
