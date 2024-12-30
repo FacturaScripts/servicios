@@ -24,6 +24,7 @@ use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
 use FacturaScripts\Core\Model\Base\ModelOnChangeClass;
 use FacturaScripts\Core\Model\Base\ModelTrait;
+use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
@@ -131,6 +132,7 @@ class ServicioAT extends ModelOnChangeClass
         $this->fecha = Tools::date();
         $this->hora = Tools::hour();
         $this->neto = 0.0;
+        $this->nick = Session::user()->nick;
 
         // set default status
         foreach ($this->getAvailableStatus() as $status) {
