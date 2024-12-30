@@ -411,6 +411,8 @@
         }
 
         function saveNewCustomer() {
+            animateSpinner('add');
+
             let formData = new FormData();
 
             $('#newCustomerModal input').each(function () {
@@ -429,6 +431,8 @@
         }
 
         function saveNewMachine() {
+            animateSpinner('add');
+
             let formData = new FormData();
             formData.append('codcliente', codcliente);
 
@@ -440,10 +444,6 @@
                 formData.append($(this).attr('name'), $(this).find('option:selected').val());
             });
 
-            $('#newCustomerModal select').each(function () {
-                formData.append($(this).attr('name'), $(this).find('option:selected').val());
-            });
-
             $('#newMachineModal textarea').each(function () {
                 formData.append($(this).attr('name'), $(this).val());
             });
@@ -452,6 +452,8 @@
         }
 
         function saveNewService() {
+            animateSpinner('add');
+
             let formData = new FormData();
             formData.append('codcliente', codcliente);
 
@@ -486,7 +488,6 @@
         }
 
         function sendFormService(formData, action) {
-            animateSpinner('add');
             formData.append('action', action);
             formData.append('ajax', true);
 
