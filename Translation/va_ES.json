@@ -1,6 +1,6 @@
 {
     "add-description": "Afegir descripció",
-    "add-end-date": "Afegir data de fi",
+    "add-end-date": "Afegir data de finalització",
     "add-machine": "Afegir màquina",
     "add-material": "Afegir material",
     "add-observations": "Afegir observacions",
@@ -68,7 +68,7 @@
     "print-pdf-desc": "Aquesta configuració només s'aplicarà als PDF de servei. Podeu utilitzar el PDF del core o el plugin PlantillesPDF.",
     "print-reference": "Imprimir referència",
     "print-services": "Imprimir serveis",
-    "print-ticket-desc": "Aquesta configuració només s'aplicarà als tiquets de servei. És necessari tenir el plugin Tiquets instal·lat.",
+    "print-ticket-desc": "Aquesta configuració només s'aplicarà als tiquets de servei. Ès necessari tenir el plugin Tiquets instal·lat.",
     "print-works": "print-works",
     "print-works-description": "Imprimir descripció de treballs",
     "print-works-price": "Imprimir preu de treballs",
@@ -76,7 +76,7 @@
     "print-works-reference": "Imprimir referència de treballs",
     "solution": "Solució",
     "subtract-stock": "Restar estoc",
-    "ticket-footer-text": "Text del peu del ticket",
+    "ticket-footer-text": "Text del peu del tiquet",
     "until-hour": "Hora fi",
     "work": "Treball"
 }

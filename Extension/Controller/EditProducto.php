@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -79,7 +79,7 @@ class EditProducto
                 $statuses[] = ['code' => $key, 'description' => $value];
             }
 
-            $this->addListView($viewName, 'Join\TrabajoServicio', 'works', 'fa-solid fa-stethoscope')
+            $this->addListView($viewName, 'Join\TrabajoServicio', 'services', 'fa-solid fa-stethoscope')
                 ->addOrderBy(['serviciosat_trabajos.fechainicio', 'serviciosat_trabajos.horainicio'], 'from-date')
                 ->addOrderBy(['serviciosat_trabajos.fechafin', 'serviciosat_trabajos.horafin'], 'until-date')
                 ->addOrderBy(['serviciosat_trabajos.idservicio', 'serviciosat_trabajos.idtrabajo'], 'service', 2)
