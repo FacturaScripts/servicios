@@ -378,6 +378,7 @@ class NewServicioAT extends Controller
         $service = new ServicioAT();
         $service->codalmacen = $this->request->get('codalmacen');
         $service->codcliente = $this->request->get('codcliente');
+        $service->idproyecto = $this->request->get('idproyecto');
 
         if ($this->request->get('idmaquina')) {
             $service->idmaquina = $this->request->get('idmaquina');
