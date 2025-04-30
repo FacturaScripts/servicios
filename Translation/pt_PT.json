@@ -68,7 +68,7 @@
     "print-pdf-desc": "Esta configuração só se aplicará aos PDFs de serviço. Pode usar o PDF do core ou o plugin PlantilhasPDF.",
     "print-reference": "Imprimir referência",
     "print-services": "Imprimir serviços",
-    "print-ticket-desc": "Esta configuração só se aplicará aos bilhetes de serviço. Necessário ter o plugin Tickets instalado.",
+    "print-ticket-desc": "Esta configuração só se aplicará aos bilhetes de serviço. É necessário ter o plugin Tickets instalado.",
     "print-works": "Imprimir Trabalhos",
     "print-works-description": "Imprimir descrição dos trabalhos",
     "print-works-price": "Imprimir preço dos trabalhos",
