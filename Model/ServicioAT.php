@@ -84,7 +84,7 @@ class ServicioAT extends ModelOnChangeClass
     public $idmaquina3;
 
     /** @var int */
-    public $idmaquina4; 
+    public $idmaquina4;
 
     /** @var int */
     public $idtipo;
@@ -115,9 +115,6 @@ class ServicioAT extends ModelOnChangeClass
 
     /** @var string */
     public $telefono2;
-
-    /** @var int */
-    public $idproyecto;
 
     public function calculatePriceNet(): void
     {
@@ -153,7 +150,7 @@ class ServicioAT extends ModelOnChangeClass
                 break;
             }
         }
-        
+
         // set default type
         foreach ($this->getAvailableTypes() as $type) {
             if ($type->default) {

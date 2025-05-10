@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -52,6 +52,52 @@ class NewServicioAT extends Controller
 
     /** @var array */
     private $logLevels = ['critical', 'error', 'info', 'notice', 'warning'];
+
+    public function getCompanies(): array
+    {
+        return Empresas::all();
+    }
+
+    public function getModalCustomers(): array
+    {
+        // buscamos en caché
+        $cacheKey = 'model-Cliente-sales-modal-' . $this->user->nick;
+        $clientes = Cache::get($cacheKey);
+        if (is_array($clientes)) {
+            return $clientes;
+        }
+
+        // ¿El usuario tiene permiso para ver todos los clientes?
+        $showAll = false;
+        foreach (RoleAccess::allFromUser($this->user->nick, 'EditCliente') as $access) {
+            if (false === $access->onlyownerdata) {
+                $showAll = true;
+            }
+        }
+
+        // consultamos la base de datos
+        $cliente = new Cliente();
+        $where = [new DataBaseWhere('fechabaja', null, 'IS')];
+        if ($this->permissions->onlyOwnerData && !$showAll) {
+            $where[] = new DataBaseWhere('codagente', $this->user->codagente);
+            $where[] = new DataBaseWhere('codagente', null, 'IS NOT');
+        }
+        $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC']);
+
+        // guardamos en caché
+        Cache::set($cacheKey, $clientes);
+
+        return $clientes;
+    }
+
+    public function getPageData(): array
+    {
+        $data = parent::getPageData();
+        $data['menu'] = 'sales';
+        $data['title'] = 'new-service';
+        $data['showonmenu'] = false;
+        return $data;
+    }
 
     public function privateCore(&$response, $user, $permissions)
     {
@@ -110,56 +156,12 @@ class NewServicioAT extends Controller
             return;
         }
 
+        $this->load();
+
         if (false === $this->user->can('NewServicioAT')
             || false === $this->checkMachine()) {
             $this->redirect('ListServicioAT');
         }
-    }
-
-    public function getCompanies(): array
-    {
-        return Empresas::all();
-    }
-
-    public function getModalCustomers(): array
-    {
-        // buscamos en caché
-        $cacheKey = 'model-Cliente-sales-modal-' . $this->user->nick;
-        $clientes = Cache::get($cacheKey);
-        if (is_array($clientes)) {
-            return $clientes;
-        }
-
-        // ¿El usuario tiene permiso para ver todos los clientes?
-        $showAll = false;
-        foreach (RoleAccess::allFromUser($this->user->nick, 'EditCliente') as $access) {
-            if (false === $access->onlyownerdata) {
-                $showAll = true;
-            }
-        }
-
-        // consultamos la base de datos
-        $cliente = new Cliente();
-        $where = [new DataBaseWhere('fechabaja', null, 'IS')];
-        if ($this->permissions->onlyOwnerData && !$showAll) {
-            $where[] = new DataBaseWhere('codagente', $this->user->codagente);
-            $where[] = new DataBaseWhere('codagente', null, 'IS NOT');
-        }
-        $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC']);
-
-        // guardamos en caché
-        Cache::set($cacheKey, $clientes);
-
-        return $clientes;
-    }
-
-    public function getPageData(): array
-    {
-        $data = parent::getPageData();
-        $data['menu'] = 'sales';
-        $data['title'] = 'new-service';
-        $data['showonmenu'] = false;
-        return $data;
     }
 
     protected function checkDuplicateCustomerAction(): array
@@ -237,6 +239,11 @@ class NewServicioAT extends Controller
         }
 
         return ['customers' => $list];
+    }
+
+    protected function load(): void
+    {
+        $this->pipeFalse('load');
     }
 
     protected function renderCustomerMachinesAction(): array
@@ -378,7 +385,6 @@ class NewServicioAT extends Controller
         $service = new ServicioAT();
         $service->codalmacen = $this->request->get('codalmacen');
         $service->codcliente = $this->request->get('codcliente');
-        $service->idproyecto = $this->request->get('idproyecto');
 
         if ($this->request->get('idmaquina')) {
             $service->idmaquina = $this->request->get('idmaquina');
