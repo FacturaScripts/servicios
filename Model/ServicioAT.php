@@ -116,6 +116,9 @@ class ServicioAT extends ModelOnChangeClass
     /** @var string */
     public $telefono2;
 
+    /** @var int */
+    public $idproyecto;
+
     public function calculatePriceNet(): void
     {
         $this->neto = 0.0;

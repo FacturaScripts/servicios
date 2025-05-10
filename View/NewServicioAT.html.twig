@@ -491,7 +491,7 @@
             formData.append('action', action);
             formData.append('ajax', true);
 
-            fetch('{{ fsc.url() }}', {
+            fetch('{{ fsc.url() }}' + window.location.search, {
                 method: 'POST',
                 body: formData
             }).then(function (response) {
