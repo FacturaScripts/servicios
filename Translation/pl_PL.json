@@ -25,7 +25,7 @@
     "customer-machines": "Maszyny klienta",
     "deleted-service": "Usługa usunięta",
     "disable-stock-management": "Nie kontrolować zapasów (w pracy)",
-    "duplicate-customer-name-or-cif": "Istnieje klient o tej samej nazwie lub CIF\/NIF",
+    "duplicate-customer-name-or-cif": "Istnieje klient o tej samej nazwie lub CIF\\\/NIF",
     "from-hour": "Godzina rozpoczęcia",
     "generate-document": "Generuj dokument",
     "generate-document-desc": "Dodaj linię na początku dokumentu z wybraną informacją",
