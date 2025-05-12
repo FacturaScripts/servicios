@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\TipoAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
@@ -38,10 +39,27 @@ final class TipoAtTest extends TestCase
         $this->assertTrue($type->save(), 'Error creating TipoAT');
 
         // eliminamos
-        $this->assertTrue($type->delete(), 'Error deleting TipoAT');
+        $this->assertTrue($type->delete());
     }
 
-    public function testDefaultStatus()
+    public function testEscapeHtml(): void
+    {
+        $html = '<br/>';
+        $escaped = Tools::noHtml($html);
+
+        // creamos un tipo
+        $type = new TipoAT();
+        $type->name = $html;
+        $this->assertTrue($type->save(), 'Error creating TipoAT');
+
+        // comprobamos que el nombre se ha escapado
+        $this->assertEquals($escaped, $type->name, 'Error checking escaped name');
+
+        // eliminamos
+        $this->assertTrue($type->delete());
+    }
+
+    public function testDefaultStatus(): void
     {
         // creamos el tipo 1
         $type1 = new TipoAT();
@@ -66,8 +84,8 @@ final class TipoAtTest extends TestCase
         $this->assertFalse($type1->default, 'Error checking default TipoAT 1');
 
         // eliminamos
-        $this->assertTrue($type1->delete(), 'Error deleting TipoAT 1');
-        $this->assertTrue($type2->delete(), 'Error deleting TipoAT 2');
+        $this->assertTrue($type1->delete());
+        $this->assertTrue($type2->delete());
     }
 
     protected function tearDown(): void

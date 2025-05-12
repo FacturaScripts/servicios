@@ -80,6 +80,7 @@ class TipoAT extends Base\ModelClass
     public function test(): bool
     {
         $this->name = Tools::noHtml($this->name);
+
         return parent::test();
     }
 
