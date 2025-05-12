@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -71,6 +71,25 @@ class EstadoAT extends Base\ModelClass
         $this->notificarcliente = false;
         $this->notificarusuario = false;
         $this->predeterminado = false;
+    }
+
+    public function delete(): bool
+    {
+        if (false === parent::delete()) {
+            return false;
+        }
+
+        if ($this->predeterminado) {
+            // ponemos otro estado como predeterminado
+            foreach ($this->all() as $item) {
+                $item->predeterminado = true;
+                if ($item->save()) {
+                    break;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static function primaryColumn(): string

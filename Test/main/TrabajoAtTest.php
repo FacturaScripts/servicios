@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -39,7 +39,7 @@ final class TrabajoAtTest extends TestCase
     {
         // creamos un cliente
         $customer = $this->getRandomCustomer();
-        $this->assertTrue($customer->save(), 'Error creating Cliente');
+        $this->assertTrue($customer->save());
 
         // creamos un estado
         $status = new EstadoAT();
@@ -69,12 +69,18 @@ final class TrabajoAtTest extends TestCase
         $work->cantidad = 1;
         $this->assertTrue($work->save(), 'Error creating TrabajoAT');
 
+        // eliminamos el servicio
+        $this->assertTrue($service->delete());
+
+        // comprobamos que el trabajo se ha eliminado
+        $this->assertFalse($work->exists());
+
         // eliminamos
-        $this->assertTrue($work->delete(), 'Error deleting TrabajoAT');
-        $this->assertTrue($service->delete(), 'Error deleting ServicioAT');
-        $this->assertTrue($customer->delete(), 'Error deleting Cliente');
-        $this->assertTrue($product->delete(), 'Error deleting Producto');
-        $this->assertTrue($status->delete(), 'Error deleting EstadoAT');
+        $this->assertTrue($work->delete());
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+        $this->assertTrue($product->delete());
+        $this->assertTrue($status->delete());
     }
 
     protected function tearDown(): void

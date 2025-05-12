@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,6 +19,8 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
@@ -30,18 +32,47 @@ final class EstadoAtTest extends TestCase
 {
     use LogErrorsTrait;
 
+    public function testInstall(): void
+    {
+        // comprobamos que ya hay estados creados
+        $status = EstadoAT::all();
+        $this->assertNotEmpty($status, 'Error: No hay estados creados');
+
+        // comprobamos que hay al menos uno predeterminado
+        $default = array_filter($status, function ($s) {
+            return $s->predeterminado;
+        });
+        $this->assertNotEmpty($default, 'Error: No hay estados predeterminados');
+    }
+
     public function testCreate(): void
     {
         // creamos un estado
         $status = new EstadoAT();
         $status->nombre = 'Test state';
-        $this->assertTrue($status->save(), 'Error creating EstadoAT');
+        $this->assertTrue($status->save());
 
         // eliminamos
-        $this->assertTrue($status->delete(), 'Error deleting EstadoAT');
+        $this->assertTrue($status->delete());
     }
 
-    public function testDefaultStatus()
+    public function testScapeHtml(): void
+    {
+        // creamos un estado
+        $status = new EstadoAT();
+        $status->nombre = '<br/>';
+        $status->color = '<br';
+        $this->assertTrue($status->save());
+
+        // comprobamos que se escapan los caracteres html
+        $this->assertEquals(Tools::noHtml('<br/>'), $status->nombre);
+        $this->assertEquals(Tools::noHtml('<br'), $status->color);
+
+        // eliminamos
+        $this->assertTrue($status->delete());
+    }
+
+    public function testDefaultStatus(): void
     {
         // creamos el estado 1
         $status1 = new EstadoAT();
@@ -66,8 +97,13 @@ final class EstadoAtTest extends TestCase
         $this->assertFalse($status1->predeterminado, 'Error checking predeterminado EstadoAT 1');
 
         // eliminamos
-        $this->assertTrue($status1->delete(), 'Error deleting EstadoAT 1');
-        $this->assertTrue($status2->delete(), 'Error deleting EstadoAT 2');
+        $this->assertTrue($status1->delete());
+        $this->assertTrue($status2->delete());
+
+        // comprobamos que queda alguno predeterminado
+        $whereDefault = [new DataBaseWhere('predeterminado', true)];
+        $default = EstadoAT::all($whereDefault);
+        $this->assertNotEmpty($default, 'Error: No hay estados predeterminados');
     }
 
     protected function tearDown(): void
