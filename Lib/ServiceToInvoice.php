@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -28,8 +28,8 @@ use FacturaScripts\Dinamic\Model\AlbaranCliente;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
-use FacturaScripts\Dinamic\Model\ServicioAT;
-use FacturaScripts\Dinamic\Model\TrabajoAT;
+use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
@@ -37,6 +37,13 @@ use FacturaScripts\Dinamic\Model\TrabajoAT;
 class ServiceToInvoice
 {
     use ExtensionsTrait;
+
+    protected static $generated = [];
+
+    public static function clear(): void
+    {
+        self::$generated = [];
+    }
 
     public static function deliveryNote(ServicioAT &$service): bool
     {
@@ -46,8 +53,8 @@ class ServiceToInvoice
         }
 
         // start transaction
-        $database = new DataBase();
-        $database->beginTransaction();
+        $db = new DataBase();
+        $db->beginTransaction();
 
         $newAlbaran = new AlbaranCliente();
         $newAlbaran->setSubject($customer);
@@ -70,12 +77,12 @@ class ServiceToInvoice
         }
 
         if (false === $newAlbaran->save()) {
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
         if (false === static::addLineService($newAlbaran, $service)) {
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
@@ -87,18 +94,18 @@ class ServiceToInvoice
 
             $found = true;
             if (false === static::addLineWork($newAlbaran, $work, TrabajoAT::STATUS_DELIVERY_NOTE)) {
-                $database->rollback();
+                $db->rollback();
                 return false;
             }
         }
 
         if (false === $found) {
             Tools::log()->warning('no-works-to-delivery-note');
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
-        return static::recalculate($newAlbaran, $database);
+        return static::recalculate($newAlbaran, $db);
     }
 
     public static function estimation(ServicioAT &$service): bool
@@ -109,8 +116,8 @@ class ServiceToInvoice
         }
 
         // start transaction
-        $database = new DataBase();
-        $database->beginTransaction();
+        $db = new DataBase();
+        $db->beginTransaction();
 
         $newEstimation = new PresupuestoCliente();
         $newEstimation->setSubject($customer);
@@ -133,12 +140,12 @@ class ServiceToInvoice
         }
 
         if (false === $newEstimation->save()) {
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
         if (false === static::addLineService($newEstimation, $service)) {
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
@@ -150,18 +157,23 @@ class ServiceToInvoice
 
             $found = true;
             if (false === static::addLineWork($newEstimation, $work, TrabajoAT::STATUS_ESTIMATION)) {
-                $database->rollback();
+                $db->rollback();
                 return false;
             }
         }
 
         if (false === $found) {
             Tools::log()->warning('no-works-to-estimation');
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
-        return static::recalculate($newEstimation, $database);
+        return static::recalculate($newEstimation, $db);
+    }
+
+    public static function generated(): array
+    {
+        return self::$generated;
     }
 
     public static function invoice(ServicioAT &$service): bool
@@ -172,8 +184,8 @@ class ServiceToInvoice
         }
 
         // start transaction
-        $database = new DataBase();
-        $database->beginTransaction();
+        $db = new DataBase();
+        $db->beginTransaction();
 
         $newInvoice = new FacturaCliente();
         $newInvoice->setSubject($customer);
@@ -196,12 +208,12 @@ class ServiceToInvoice
         }
 
         if (false === $newInvoice->save()) {
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
         if (false === static::addLineService($newInvoice, $service)) {
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
@@ -213,18 +225,18 @@ class ServiceToInvoice
 
             $found = true;
             if (false === static::addLineWork($newInvoice, $work, TrabajoAT::STATUS_INVOICED)) {
-                $database->rollback();
+                $db->rollback();
                 return false;
             }
         }
 
         if (false === $found) {
             Tools::log()->warning('no-works-to-invoice');
-            $database->rollback();
+            $db->rollback();
             return false;
         }
 
-        return static::recalculate($newInvoice, $database);
+        return static::recalculate($newInvoice, $db);
     }
 
     protected static function addLineService(SalesDocument &$doc, ServicioAT $service): bool
@@ -349,16 +361,18 @@ class ServiceToInvoice
         return true;
     }
 
-    protected static function recalculate(SalesDocument &$newDoc, DataBase &$database): bool
+    protected static function recalculate(SalesDocument &$newDoc, DataBase &$db): bool
     {
         $lines = $newDoc->getLines();
         Calculator::calculate($newDoc, $lines, true);
         if (Calculator::calculate($newDoc, $lines, true)) {
-            $database->commit();
+            $db->commit();
+
+            self::$generated[] = $newDoc;
             return true;
         }
 
-        $database->rollback();
+        $db->rollback();
         return false;
     }
 }
