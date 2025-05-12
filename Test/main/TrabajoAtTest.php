@@ -20,6 +20,7 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Plugins\Servicios\Lib\ServiceToInvoice;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
@@ -114,6 +115,130 @@ final class TrabajoAtTest extends TestCase
         // eliminamos
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
+    }
+
+    public function testDefaultStatus(): void
+    {
+        // establecemos el estado por defecto para los trabajos
+        Tools::settingsSet('servicios', 'workstatus', TrabajoAT::STATUS_MAKE_ESTIMATION);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un trabajo
+        $work1 = new TrabajoAT();
+        $work1->idservicio = $service->idservicio;
+        $work1->descripcion = 'Test work';
+        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with default status');
+
+        // comprobamos que se ha asignado el estado por defecto
+        $this->assertEquals(TrabajoAT::STATUS_MAKE_ESTIMATION, $work1->estado);
+
+        // cambiamos el estado predefinido
+        Tools::settingsSet('servicios', 'workstatus', TrabajoAT::STATUS_NONE);
+
+        // creamos otro trabajo
+        $work2 = new TrabajoAT();
+        $work2->idservicio = $service->idservicio;
+        $work2->descripcion = 'Test work 2';
+        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with default status');
+
+        // comprobamos que se ha asignado el nuevo estado por defecto
+        $this->assertEquals(TrabajoAT::STATUS_NONE, $work2->estado);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testUpdateStock(): void
+    {
+        // desactivamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un producto
+        $product = $this->getRandomProduct();
+        $product->precio = 17;
+        $product->nostock = false;
+        $product->ventasinstock = false;
+        $this->assertTrue($product->save(), 'Error creating Producto');
+
+        // añadimos stock
+        $stock = new Stock();
+        $stock->referencia = $product->referencia;
+        $stock->codalmacen = Tools::settings('default', 'codalmacen');
+        $stock->cantidad = 10;
+        $this->assertTrue($stock->save(), 'Error creating Stock');
+
+        // creamos un trabajo
+        $work1 = new TrabajoAT();
+        $work1->idservicio = $service->idservicio;
+        $work1->referencia = $product->referencia;
+        $work1->cantidad = 2;
+        $work1->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que no se ha restado el stock
+        $stock->loadFromCode($stock->primaryColumnValue());
+        $this->assertEquals(10, $stock->cantidad);
+
+        // activamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+
+        // creamos otro trabajo
+        $work2 = new TrabajoAT();
+        $work2->idservicio = $service->idservicio;
+        $work2->referencia = $product->referencia;
+        $work2->cantidad = 3;
+        $work2->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que se ha restado el stock
+        $stock->loadFromCode($stock->primaryColumnValue());
+        $this->assertEquals(7, $stock->cantidad);
+
+        // eliminamos el trabajo 2
+        $this->assertTrue($work2->delete(), 'Error deleting TrabajoAT with stock');
+
+        // comprobamos que se ha sumado el stock
+        $stock->loadFromCode($stock->primaryColumnValue());
+        $this->assertEquals(10, $stock->cantidad);
+
+        // desactivamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+
+        //eliminamos el trabajo 1
+        $this->assertTrue($work1->delete(), 'Error deleting TrabajoAT with stock');
+
+        // comprobamos que no se ha restado el stock
+        $stock->loadFromCode($stock->primaryColumnValue());
+        $this->assertEquals(10, $stock->cantidad);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+        $this->assertTrue($product->delete());
     }
 
     public function testCreateEstimation(): void
@@ -244,6 +369,15 @@ final class TrabajoAtTest extends TestCase
         $work1->precio = 6;
         $work1->estado = TrabajoAT::STATUS_MAKE_INVOICE;
         $this->assertTrue($work1->save(), 'Error creating TrabajoAT with invoice');
+
+        // creamos un trabajo con estado no hacer nada
+        $work2 = new TrabajoAT();
+        $work2->idservicio = $service->idservicio;
+        $work2->descripcion = 'Test work 2';
+        $work2->cantidad = 2;
+        $work2->precio = 10;
+        $work2->estado = TrabajoAT::STATUS_NONE;
+        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with invoice');
 
         // generamos la factura
         ServiceToInvoice::clear();
