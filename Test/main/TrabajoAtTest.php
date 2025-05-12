@@ -20,7 +20,6 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
@@ -41,18 +40,12 @@ final class TrabajoAtTest extends TestCase
         $customer = $this->getRandomCustomer();
         $this->assertTrue($customer->save());
 
-        // creamos un estado
-        $status = new EstadoAT();
-        $status->nombre = 'Test state';
-        $this->assertTrue($status->save(), 'Error creating EstadoAT');
-
         // creamos un servicio
         $service = new ServicioAT();
         $service->codalmacen = Tools::settings('default', 'codalmacen');
         $service->codcliente = $customer->codcliente;
         $service->descripcion = 'Test service';
         $service->idempresa = Tools::settings('default', 'idempresa');
-        $service->idestado = $status->id;
         $this->assertTrue($service->save(), 'Error creating ServicioAT');
 
         // creamos un producto
@@ -76,11 +69,41 @@ final class TrabajoAtTest extends TestCase
         $this->assertFalse($work->exists());
 
         // eliminamos
-        $this->assertTrue($work->delete());
-        $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
         $this->assertTrue($product->delete());
-        $this->assertTrue($status->delete());
+    }
+
+    public function testEscapeHtml(): void
+    {
+        $html = '<br/>';
+        $escaped = Tools::noHtml($html);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un trabajo
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->descripcion = $html;
+        $work->observaciones = $html;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with HTML');
+
+        // comprobamos que se ha escapado
+        $this->assertEquals($escaped, $work->descripcion);
+        $this->assertEquals($escaped, $work->observaciones);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
     }
 
     protected function tearDown(): void
