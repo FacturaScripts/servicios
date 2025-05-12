@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -36,7 +37,7 @@ final class MaquinaAtTest extends TestCase
     {
         // creamos un cliente
         $customer = $this->getRandomCustomer();
-        $this->assertTrue($customer->save(), 'Error creating Cliente');
+        $this->assertTrue($customer->save());
 
         // creamos la maquina
         $machine = new MaquinaAT();
@@ -45,8 +46,31 @@ final class MaquinaAtTest extends TestCase
         $this->assertTrue($machine->save(), 'Error creating MaquinaAT');
 
         // eliminamos
-        $this->assertTrue($machine->delete(), 'Error deleting MaquinaAT');
-        $this->assertTrue($customer->delete(), 'Error deleting Cliente');
+        $this->assertTrue($machine->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testEscapeHtml(): void
+    {
+        $html = '<br/>';
+        $escaped = Tools::noHtml($html);
+
+        // creamos una máquina
+        $machine = new MaquinaAT();
+        $machine->descripcion = $html;
+        $machine->nombre = $html;
+        $machine->numserie = $html;
+        $machine->referencia = $html;
+        $this->assertTrue($machine->save(), 'Error creating MaquinaAT with HTML');
+
+        // comprobamos que se ha escapado
+        $this->assertEquals($escaped, $machine->descripcion);
+        $this->assertEquals($escaped, $machine->nombre);
+        $this->assertEquals($escaped, $machine->numserie);
+        $this->assertEquals($escaped, $machine->referencia);
+
+        // eliminamos
+        $this->assertTrue($machine->delete());
     }
 
     protected function tearDown(): void

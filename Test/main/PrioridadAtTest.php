@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
@@ -38,10 +39,27 @@ final class PrioridadAtTest extends TestCase
         $this->assertTrue($priority->save(), 'Error creating PrioridadAT');
 
         // eliminamos
-        $this->assertTrue($priority->delete(), 'Error deleting PrioridadAT');
+        $this->assertTrue($priority->delete());
     }
 
-    public function testDefaultStatus()
+    public function testEscapeHtml(): void
+    {
+        $html = '<br/>';
+        $escaped = Tools::noHtml($html);
+
+        // creamos una prioridad
+        $priority = new PrioridadAT();
+        $priority->nombre = $html;
+        $this->assertTrue($priority->save(), 'Error creating PrioridadAT');
+
+        // comprobamos que el nombre es el esperado
+        $this->assertEquals($escaped, $priority->nombre, 'Error checking escape html PrioridadAT');
+
+        // eliminamos
+        $this->assertTrue($priority->delete());
+    }
+
+    public function testDefaultStatus(): void
     {
         // creamos la prioridad 1
         $priority1 = new PrioridadAT();
@@ -66,8 +84,8 @@ final class PrioridadAtTest extends TestCase
         $this->assertFalse($priority1->predeterminado, 'Error checking predeterminado PrioridadAT 1');
 
         // eliminamos
-        $this->assertTrue($priority1->delete(), 'Error deleting PrioridadAT 1');
-        $this->assertTrue($priority2->delete(), 'Error deleting PrioridadAT 2');
+        $this->assertTrue($priority1->delete());
+        $this->assertTrue($priority2->delete());
     }
 
     protected function tearDown(): void
