@@ -21,7 +21,9 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
+use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Plugins\Servicios\Model\TipoAT;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -95,6 +97,36 @@ final class ServicioAtTest extends TestCase
 
         // eliminamos
         $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testDefaultStatus(): void
+    {
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un estado por defecto
+        $status = new EstadoAT();
+        $status->nombre = 'Test state';
+        $status->editable = true;
+        $status->predeterminado = true;
+        $this->assertTrue($status->save(), 'Error creating EstadoAT');
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error saving ServicioAT');
+
+        // comprobamos que tiene el estado por defecto
+        $this->assertEquals($status->id, $service->idestado, 'Error checking default status ServicioAT');
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($status->delete());
         $this->assertTrue($customer->delete());
     }
 
@@ -191,6 +223,64 @@ final class ServicioAtTest extends TestCase
         $this->assertTrue($status->delete());
         $this->assertTrue($customer->delete());
         $this->assertTrue($user->delete());
+    }
+
+    public function testDefaultPriority(): void
+    {
+        // creamos una prioridad por defecto
+        $priority = new PrioridadAT();
+        $priority->nombre = 'Test priority';
+        $priority->predeterminado = true;
+        $this->assertTrue($priority->save());
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // comprobamos que tiene la prioridad por defecto
+        $this->assertEquals($priority->id, $service->idprioridad, 'Error checking default priority ServicioAT');
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($priority->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testDefaultType(): void
+    {
+        // creamos un tipo por defecto
+        $type = new TipoAT();
+        $type->name = 'Test type';
+        $type->default = true;
+        $this->assertTrue($type->save());
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // comprobamos que tiene el tipo por defecto
+        $this->assertEquals($type->id, $service->idtipo, 'Error checking default type ServicioAT');
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($type->delete());
+        $this->assertTrue($customer->delete());
     }
 
     protected function tearDown(): void
