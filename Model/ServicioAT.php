@@ -364,12 +364,13 @@ class ServicioAT extends ModelOnChangeClass
             $this->{$key} = Tools::noHtml($this->{$key});
         }
 
-        // comprobamos que editable se corresponda con el estado
-        $this->editable = $this->getStatus()->editable;
-
-        // comprobamos que asignado se corresponda con el estado
-        if (empty($this->asignado)) {
-            $this->asignado = $this->getStatus()->asignado;
+        // comprobamos que editable y asignado se corresponda con el estado
+        $status = $this->getStatus();
+        if ($this->editable != $status->editable) {
+            $this->editable = $status->editable;
+        }
+        if (!empty($status->asignado) && $this->asignado != $status->asignado) {
+            $this->asignado = $status->asignado;
         }
 
         // si tenemos almacén, pero no empresa, obtenemos la empresa del almacén
