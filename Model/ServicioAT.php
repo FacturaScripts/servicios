@@ -139,6 +139,9 @@ class ServicioAT extends ModelOnChangeClass
             if ($status->predeterminado) {
                 $this->idestado = $status->id;
                 $this->editable = $status->editable;
+                if ($status->asignado) {
+                    $this->asignado = $status->asignado;
+                }
                 break;
             }
         }
@@ -363,6 +366,11 @@ class ServicioAT extends ModelOnChangeClass
 
         // comprobamos que editable se corresponda con el estado
         $this->editable = $this->getStatus()->editable;
+
+        // comprobamos que asignado se corresponda con el estado
+        if (empty($this->asignado)) {
+            $this->asignado = $this->getStatus()->asignado;
+        }
 
         // si tenemos almacén, pero no empresa, obtenemos la empresa del almacén
         if (false === empty($this->codalmacen) && empty($this->codempresa)) {

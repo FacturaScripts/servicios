@@ -127,6 +127,47 @@ final class ServicioAtTest extends TestCase
         $this->assertTrue($customer->delete());
     }
 
+    public function testStatusAssigned(): void
+    {
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un usuario
+        $user = $this->getRandomUser();
+        $user->password = Tools::randomString(8) . rand(1111, 9999);
+        $this->assertTrue($user->save());
+
+        // creamos un estado con usuario asignado
+        $status = new EstadoAT();
+        $status->nombre = 'Test state';
+        $status->asignado = $user->nick;
+        $this->assertTrue($status->save(), 'Error creating EstadoAT');
+
+        // creamos un servicio con estado asignado
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $service->idestado = $status->id;
+
+        // comprobamos que no tiene asignado (antes de guardar)
+        $this->assertNull($service->asignado, 'Error checking asignado ServicioAT');
+
+        // guardamos el servicio
+        $this->assertTrue($service->save(), 'Error saving ServicioAT');
+
+        // comprobamos que tiene asignado (después de guardar)
+        $this->assertEquals($user->nick, $service->asignado, 'Error checking asignado ServicioAT');
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($status->delete());
+        $this->assertTrue($customer->delete());
+        $this->assertTrue($user->delete());
+    }
+
     protected function tearDown(): void
     {
         $this->logErrors();
