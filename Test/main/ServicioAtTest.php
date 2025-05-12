@@ -64,6 +64,41 @@ final class ServicioAtTest extends TestCase
         $this->assertTrue($customer->delete());
     }
 
+    public function testEscapeHtml(): void
+    {
+        $html = '<br/>';
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = $html;
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $service->material = $html;
+        $service->observaciones = $html;
+        $service->solucion = $html;
+        $service->telefono1 = $html;
+        $service->telefono2 = $html;
+        $this->assertTrue($service->save());
+
+        // comprobamos que se ha escapado el html
+        $escaped = Tools::noHtml($html);
+        $this->assertEquals($escaped, $service->descripcion);
+        $this->assertEquals($escaped, $service->material);
+        $this->assertEquals($escaped, $service->observaciones);
+        $this->assertEquals($escaped, $service->solucion);
+        $this->assertEquals($escaped, $service->telefono1);
+        $this->assertEquals($escaped, $service->telefono2);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
     public function testChangeStatus(): void
     {
         // creamos un cliente

@@ -56,7 +56,7 @@ final class EstadoAtTest extends TestCase
         $this->assertTrue($status->delete());
     }
 
-    public function testScapeHtml(): void
+    public function testEscapeHtml(): void
     {
         // creamos un estado
         $status = new EstadoAT();

@@ -81,7 +81,8 @@ class EstadoAT extends Base\ModelClass
 
         if ($this->predeterminado) {
             // ponemos otro estado como predeterminado
-            foreach ($this->all() as $item) {
+            $where = [new DataBaseWhere('editable', true)];
+            foreach ($this->all($where) as $item) {
                 $item->predeterminado = true;
                 if ($item->save()) {
                     break;
