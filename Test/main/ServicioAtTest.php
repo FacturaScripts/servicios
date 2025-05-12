@@ -19,7 +19,6 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
@@ -107,12 +106,13 @@ final class ServicioAtTest extends TestCase
 
         // creamos un estado
         $status1 = new EstadoAT();
-        $status1->nombre = 'Test state 1';
+        $status1->nombre = 'Test state 3';
+        $status1->editable = true;
         $this->assertTrue($status1->save(), 'Error creating EstadoAT');
 
         // creamos un estado no editable
         $status2 = new EstadoAT();
-        $status2->nombre = 'Test state 2';
+        $status2->nombre = 'Test state 4';
         $status2->editable = false;
         $this->assertTrue($status2->save(), 'Error creating EstadoAT');
 
@@ -125,13 +125,8 @@ final class ServicioAtTest extends TestCase
         $service->idestado = $status1->id;
         $this->assertTrue($service->save());
 
-        // buscamos un estado no editable
-        $status = new EstadoAT();
-        $where = [new DataBaseWhere('editable', false)];
-        $this->assertTrue($status->loadFromCode('', $where), 'Error loading EstadoAT');
-
         // asignamos el estado no editable
-        $service->idestado = $status->id;
+        $service->idestado = $status2->id;
         $this->assertTrue($service->save(), 'Error saving ServicioAT');
 
         // recargamos el servicio
@@ -140,13 +135,8 @@ final class ServicioAtTest extends TestCase
         // comprobamos que el servicio ya no es editable
         $this->assertFalse($service->editable, 'Error checking editable ServicioAT');
 
-        // buscamos un estado editable
-        $status2 = new EstadoAT();
-        $where = [new DataBaseWhere('editable', true)];
-        $this->assertTrue($status2->loadFromCode('', $where), 'Error loading EstadoAT');
-
         // asignamos el estado editable
-        $service->idestado = $status2->id;
+        $service->idestado = $status1->id;
         $this->assertTrue($service->save(), 'Error saving ServicioAT');
 
         // recargamos el servicio
