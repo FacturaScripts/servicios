@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
@@ -86,6 +87,11 @@ final class PrioridadAtTest extends TestCase
         // eliminamos
         $this->assertTrue($priority1->delete());
         $this->assertTrue($priority2->delete());
+
+        // comprobamos que queda alguna prioridad predeterminada
+        $whereDefault = [new DataBaseWhere('predeterminado', true)];
+        $priorities = PrioridadAT::all($whereDefault);
+        $this->assertNotEmpty($priorities, 'Error checking predeterminado PrioridadAT');
     }
 
     protected function tearDown(): void

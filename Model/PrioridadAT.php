@@ -44,7 +44,26 @@ class PrioridadAT extends Base\ModelClass
     public function clear()
     {
         parent::clear();
-        $this->predeterminado = true;
+        $this->predeterminado = false;
+    }
+
+    public function delete(): bool
+    {
+        if (false === parent::delete()) {
+            return false;
+        }
+
+        if ($this->predeterminado) {
+            // ponemos alguna prioridad como predeterminada
+            foreach ($this->all() as $item) {
+                $item->predeterminado = true;
+                if ($item->save()) {
+                    break;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static function primaryColumn(): string
