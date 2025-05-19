@@ -91,8 +91,9 @@ final class Init extends InitClass
         new Model\MaquinaAT();
         new Model\PrioridadAT();
         new Model\TipoAT();
-        new Model\CategoriaAT();
+        new Model\CheckAT();
         new Model\ServicioAT();
+        new Model\ServicioCheckAT();
         new PresupuestoCliente();
         new AlbaranCliente();
         new FacturaCliente();
