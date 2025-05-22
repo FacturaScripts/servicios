@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -122,7 +122,7 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function serviceData(ServicioAT $model, array $columns): void
     {
-        $excludeFields = ['idmaquina', 'idtipo', 'neto', 'codalmacen', 'idprioridad', 'material', 'descripcion', 'solucion'];
+        $excludeFields = ['idmaquina', 'idtipo', 'neto', 'codalmacen', 'idprioridad', 'material', 'descripcion', 'solucion', 'observaciones'];
 
         if (false === Tools::settings('servicios', 'print_pdf_agent', false)) {
             $excludeFields[] = 'codagente';
