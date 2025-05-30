@@ -21,41 +21,19 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Dinamic\Model\User;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
-use FacturaScripts\Test\Traits\DefaultSettingsTrait;
-use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
-use FacturaScripts\Dinamic\Model\Cliente;
-use FacturaScripts\Dinamic\Model\Empresa;
-use FacturaScripts\Dinamic\Model\Agente;
-use FacturaScripts\Dinamic\Model\Almacen;
-use FacturaScripts\Dinamic\Model\MaquinaAT;
-use FacturaScripts\Dinamic\Model\TipoAT;
-use FacturaScripts\Dinamic\Model\PrioridadAT;
 
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>
  */
 final class EstadoAtTest extends TestCase
 {
-    use LogErrorsTrait;
-    use DefaultSettingsTrait;
+    use MacroThreat;
 
     public static function setUpBeforeClass(): void
     {
-        self::setDefaultSettings();
-        self::installAccountingPlan();
-        self::removeTaxRegularization();
-        new User();
-        new Cliente();
-        new Empresa();
-        new Agente();
-        new Almacen();
-        new MaquinaAT();
-        new TipoAT();
-        new PrioridadAT();
-        new EstadoAT();
+        self::installDependencies();
     }
 
     public function testInstall(): void
