@@ -33,11 +33,13 @@ final class ServicioAtTest extends TestCase
 {
     use DefaultSettingsTrait;
     use LogErrorsTrait;
-    use RandomDataTrait;
 
     public static function setUpBeforeClass(): void
     {
         self::setDefaultSettings();
+        self::installAccountingPlan();
+        self::removeTaxRegularization();
+        
     }
 
     public function testCreate(): void

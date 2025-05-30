@@ -24,6 +24,7 @@ use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Plugins\Servicios\Lib\ServiceToInvoice;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
@@ -33,8 +34,17 @@ use PHPUnit\Framework\TestCase;
  */
 final class TrabajoAtTest extends TestCase
 {
+    use DefaultSettingsTrait;
     use LogErrorsTrait;
     use RandomDataTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::installAccountingPlan();
+        self::removeTaxRegularization();
+        
+    }
 
     public function testCreate(): void
     {

@@ -21,6 +21,7 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
@@ -32,6 +33,15 @@ final class MaquinaAtTest extends TestCase
 {
     use LogErrorsTrait;
     use RandomDataTrait;
+    use DefaultSettingsTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::installAccountingPlan();
+        self::removeTaxRegularization();
+        
+    }
 
     public function testCreate(): void
     {

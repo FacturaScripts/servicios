@@ -21,6 +21,7 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\TipoAT;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +30,16 @@ use PHPUnit\Framework\TestCase;
  */
 final class TipoAtTest extends TestCase
 {
+    use DefaultSettingsTrait;
     use LogErrorsTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::installAccountingPlan();
+        self::removeTaxRegularization();
+        
+    }
 
     public function testCreate(): void
     {

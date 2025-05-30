@@ -2,9 +2,9 @@ name: Tests del Plugin FacturaScripts
 
 on:
   push:
-    branches: [ master, main, testGithubActions ]
+    branches: [ master, main, fixTests ]
   pull_request:
-    branches: [ master, main, testGithubActions ]
+    branches: [ master, main, fixTests ]
 
 jobs:
   tests:

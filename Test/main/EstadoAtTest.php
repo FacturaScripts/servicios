@@ -22,6 +22,7 @@ namespace FacturaScripts\Test\Plugins;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -31,6 +32,15 @@ use PHPUnit\Framework\TestCase;
 final class EstadoAtTest extends TestCase
 {
     use LogErrorsTrait;
+    use DefaultSettingsTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::installAccountingPlan();
+        self::removeTaxRegularization();
+        
+    }
 
     public function testInstall(): void
     {
