@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace FacturaScripts\Test\Plugins;
+namespace FacturaScripts\Plugins\Servicios\Lib\Trait;
 
 use FacturaScripts\Dinamic\Model\AgenciaTransporte;
 use FacturaScripts\Dinamic\Model\Agente;
@@ -40,11 +40,12 @@ use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 
-trait MacroThreat
-{
+trait MacroTrait {
+    
     use LogErrorsTrait;
     use RandomDataTrait;
     use DefaultSettingsTrait;
+
     protected static function installDependencies()
     {
         self::setDefaultSettings();

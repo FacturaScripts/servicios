@@ -21,6 +21,7 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +30,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class EstadoAtTest extends TestCase
 {
-    use MacroThreat;
+    use MacroTrait;
 
     public static function setUpBeforeClass(): void
     {

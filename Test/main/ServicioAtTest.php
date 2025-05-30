@@ -21,6 +21,7 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use PHPUnit\Framework\TestCase;
 use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Dinamic\Model\PrioridadAT;
@@ -28,7 +29,7 @@ use FacturaScripts\Dinamic\Model\EstadoAT;
 
 final class ServicioAtTest extends TestCase
 {
-    use MacroThreat;
+    use MacroTrait;
 
     public static function setUpBeforeClass(): void
     {

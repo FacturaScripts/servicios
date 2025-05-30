@@ -20,6 +20,7 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +29,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class MaquinaAtTest extends TestCase
 {
-    use MacroThreat;
+    use MacroTrait;
 
     public static function setUpBeforeClass(): void
     {

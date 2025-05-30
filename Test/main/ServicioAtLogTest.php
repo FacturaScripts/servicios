@@ -20,6 +20,7 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioATLog;
@@ -30,7 +31,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ServicioAtLogTest extends TestCase
 {
-    use MacroThreat;
+    use MacroTrait;
 
     public static function setUpBeforeClass(): void
     {

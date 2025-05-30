@@ -22,6 +22,7 @@ namespace FacturaScripts\Test\Plugins;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Plugins\Servicios\Lib\ServiceToInvoice;
+use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class TrabajoAtTest extends TestCase
 {
-    use MacroThreat;
+    use MacroTrait;
 
     public static function setUpBeforeClass(): void
     {
