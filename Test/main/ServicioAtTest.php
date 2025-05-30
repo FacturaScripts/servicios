@@ -19,11 +19,17 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\DataSrc\Agentes;
+use FacturaScripts\Core\DataSrc\Almacenes;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
-use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
-use FacturaScripts\Plugins\Servicios\Model\TipoAT;
+use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\Empresa;
+use FacturaScripts\Dinamic\Model\MaquinaAT;
+use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Dinamic\Model\EstadoAT;
+use FacturaScripts\Dinamic\Model\PrioridadAT;
+use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -40,7 +46,15 @@ final class ServicioAtTest extends TestCase
         self::setDefaultSettings();
         self::installAccountingPlan();
         self::removeTaxRegularization();
-        
+        new Agentes();
+        new Almacenes();
+        new Cliente();
+        new MaquinaAT();
+        new Empresa();
+        new EstadoAT();
+        new User();
+        new PrioridadAT();
+        new TipoAT();
     }
 
     public function testCreate(): void
