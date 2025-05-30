@@ -28,6 +28,15 @@ use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
+use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\Empresa;
+use FacturaScripts\Dinamic\Model\Agente;
+use FacturaScripts\Dinamic\Model\Almacen;
+use FacturaScripts\Dinamic\Model\MaquinaAT;
+use FacturaScripts\Dinamic\Model\TipoAT;
+use FacturaScripts\Dinamic\Model\PrioridadAT;
+use FacturaScripts\Dinamic\Model\EstadoAT;
 
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>
@@ -43,7 +52,15 @@ final class TrabajoAtTest extends TestCase
         self::setDefaultSettings();
         self::installAccountingPlan();
         self::removeTaxRegularization();
-        
+        new User();
+        new Cliente();
+        new Empresa();
+        new Agente();
+        new Almacen();
+        new MaquinaAT();
+        new TipoAT();
+        new PrioridadAT();
+        new EstadoAT();
     }
 
     public function testCreate(): void

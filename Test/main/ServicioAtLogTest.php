@@ -19,7 +19,15 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\DataSrc\Almacenes;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\Agente;
+use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\Empresa;
+use FacturaScripts\Dinamic\Model\MaquinaAT;
+use FacturaScripts\Dinamic\Model\PrioridadAT;
+use FacturaScripts\Dinamic\Model\TipoAT;
+use FacturaScripts\Dinamic\Model\User;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioATLog;
@@ -42,7 +50,15 @@ final class ServicioAtLogTest extends TestCase
         self::setDefaultSettings();
         self::installAccountingPlan();
         self::removeTaxRegularization();
-        
+        new User();
+        new Cliente();
+        new Empresa();
+        new Agente();
+        new Almacenes();
+        new MaquinaAT();
+        new TipoAT();
+        new PrioridadAT();
+        new EstadoAT();
     }
 
     public function testCreate(): void
