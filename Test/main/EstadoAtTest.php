@@ -39,7 +39,6 @@ final class EstadoAtTest extends TestCase
         self::setDefaultSettings();
         self::installAccountingPlan();
         self::removeTaxRegularization();
-        
     }
 
     public function testInstall(): void

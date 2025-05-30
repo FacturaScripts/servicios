@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 final class ServicioAtTest extends TestCase
 {
     use DefaultSettingsTrait;
+    use RandomDataTrait;
     use LogErrorsTrait;
 
     public static function setUpBeforeClass(): void
