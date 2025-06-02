@@ -31,6 +31,7 @@ use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Almacen;
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
 
@@ -311,6 +312,7 @@ class ServicioAT extends ModelOnChangeClass
         new MaquinaAT();
         new Almacen();
         new Agente();
+        new Empresa();
 
         return parent::install();
     }

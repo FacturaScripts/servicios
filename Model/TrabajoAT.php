@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Model\Agente;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
@@ -131,8 +132,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     {
         new DinServicioAT();
         new Variante();
-        new ServicioATLog();
-        new Stock();
+        new Agente();
 
         return parent::install();
     }

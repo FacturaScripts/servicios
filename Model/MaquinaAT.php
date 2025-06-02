@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\Fabricante;
 
 /**
@@ -75,6 +76,7 @@ class MaquinaAT extends Base\ModelClass
     public function install(): string
     {
         new Fabricante();
+        new Cliente();
 
         return parent::install();
     }
