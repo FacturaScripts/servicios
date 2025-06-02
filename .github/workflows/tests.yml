@@ -137,7 +137,7 @@ jobs:
           fi
 
       - name: Instalar el Plugin ${{ env.NOMBRE_PLUGIN }}
-        run: php Test/install-plugins.php
+        run: php Test/install-plugins.php      
 
       - name: Ejecutar tests en ${{ matrix.database }}
         run: vendor/bin/phpunit -c phpunit-plugins.xml --verbose
