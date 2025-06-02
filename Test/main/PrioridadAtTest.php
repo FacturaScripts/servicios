@@ -21,8 +21,8 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
+use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,12 +30,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class PrioridadAtTest extends TestCase
 {
-    use MacroTrait;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::installDependencies();
-    }
+    use LogErrorsTrait;
 
     public function testCreate(): void
     {

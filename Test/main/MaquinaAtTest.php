@@ -20,8 +20,9 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
+use FacturaScripts\Test\Traits\LogErrorsTrait;
+use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,12 +30,8 @@ use PHPUnit\Framework\TestCase;
  */
 final class MaquinaAtTest extends TestCase
 {
-    use MacroTrait;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::installDependencies();
-    }
+    use LogErrorsTrait;
+    use RandomDataTrait;
 
     public function testCreate(): void
     {

@@ -20,20 +20,24 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Dinamic\Model\ServicioAT;
-use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
+use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
+use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
+use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Plugins\Servicios\Model\TipoAT;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
+use FacturaScripts\Test\Traits\LogErrorsTrait;
+use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
-use FacturaScripts\Dinamic\Model\TipoAT;
-use FacturaScripts\Dinamic\Model\PrioridadAT;
-use FacturaScripts\Dinamic\Model\EstadoAT;
 
 final class ServicioAtTest extends TestCase
 {
-    use MacroTrait;
+    use DefaultSettingsTrait;
+    use LogErrorsTrait;
+    use RandomDataTrait;
 
     public static function setUpBeforeClass(): void
     {
-        self::installDependencies();
+        self::setDefaultSettings();
     }
 
     public function testCreate(): void

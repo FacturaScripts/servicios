@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Plugins\Servicios\Lib\Trait\MacroTrait;
 use FacturaScripts\Plugins\Servicios\Mod\SalesHeaderHTMLMod;
+use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,12 +28,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ModTest extends TestCase
 {
-    use MacroTrait;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::installDependencies();
-    }
+    use LogErrorsTrait;
 
     public function testSalesHeaderHTMLMod()
     {
