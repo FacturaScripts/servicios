@@ -69,6 +69,13 @@ class ServicioATLog extends ModelClass
         return $service;
     }
 
+    public function install(): string
+    {
+        new ServicioAT();
+
+        return parent::install();
+    }
+
     public static function primaryColumn(): string
     {
         return 'id';

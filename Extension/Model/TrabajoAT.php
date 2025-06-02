@@ -40,6 +40,13 @@ class TrabajoAT
         };
     }
 
+    public function install(): Closure
+    {
+        return function () {
+            new MovimientoStock();
+        };
+    }
+
     protected function onDelete(): Closure
     {
         return function () {

@@ -127,6 +127,16 @@ class TrabajoAT extends Base\ModelOnChangeClass
         return $variante;
     }
 
+    public function install(): string
+    {
+        new DinServicioAT();
+        new Variante();
+        new ServicioATLog();
+        new Stock();
+
+        return parent::install();
+    }
+
     public static function primaryColumn(): string
     {
         return 'idtrabajo';

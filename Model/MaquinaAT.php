@@ -72,6 +72,13 @@ class MaquinaAT extends Base\ModelClass
         return $fabricante;
     }
 
+    public function install(): string
+    {
+        new Fabricante();
+
+        return parent::install();
+    }
+
     public static function primaryColumn(): string
     {
         return 'idmaquina';
