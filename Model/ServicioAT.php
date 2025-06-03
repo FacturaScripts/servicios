@@ -302,17 +302,15 @@ class ServicioAT extends ModelOnChangeClass
 
     public function install(): string
     {
+        new Agente();
+        new Almacen();
+        new Cliente();
+        new MaquinaAT();
+        new Empresa();
+        new EstadoAT();
         new User();
         new PrioridadAT();
         new TipoAT();
-        new EstadoAT();
-        new Cliente();
-        new DinTrabajoAT();
-        new ServicioATLog();
-        new MaquinaAT();
-        new Almacen();
-        new Agente();
-        new Empresa();
 
         return parent::install();
     }

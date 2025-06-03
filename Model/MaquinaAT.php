@@ -75,8 +75,8 @@ class MaquinaAT extends Base\ModelClass
 
     public function install(): string
     {
-        new Fabricante();
         new Cliente();
+        new Fabricante();
 
         return parent::install();
     }
