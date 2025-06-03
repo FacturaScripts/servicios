@@ -136,6 +136,10 @@ class EstadoAT extends Base\ModelClass
         $this->color = Tools::noHtml($this->color);
         $this->nombre = Tools::noHtml($this->nombre);
 
+        if (empty($this->id)) {
+            $this->id = $this->newCode();
+        }
+
         return parent::test();
     }
 
