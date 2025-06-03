@@ -23,6 +23,7 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
 use FacturaScripts\Plugins\Servicios\Model\ServicioATLog;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,12 @@ final class ServicioAtLogTest extends TestCase
 {
     use LogErrorsTrait;
     use RandomDataTrait;
+    use DefaultSettingsTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+    }
 
     public function testCreate(): void
     {
