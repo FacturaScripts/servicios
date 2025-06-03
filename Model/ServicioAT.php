@@ -31,6 +31,8 @@ use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Almacen;
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\Empresa;
+use FacturaScripts\Dinamic\Model\PedidoCliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
 
@@ -301,11 +303,16 @@ class ServicioAT extends ModelOnChangeClass
 
     public function install(): string
     {
-        // needed dependencies
+        new Agente();
+        new Almacen();
+        new Cliente();
         new MaquinaAT();
+        new Empresa();
         new EstadoAT();
+        new User();
         new PrioridadAT();
         new TipoAT();
+        new PedidoCliente();
 
         return parent::install();
     }

@@ -23,6 +23,7 @@ use FacturaScripts\Core\Model\Base\ModelClass;
 use FacturaScripts\Core\Model\Base\ModelTrait;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\User;
 
 /**
  * Description of ServicioATLog
@@ -67,6 +68,13 @@ class ServicioATLog extends ModelClass
         $service = new ServicioAT();
         $service->loadFromCode($this->idservicio);
         return $service;
+    }
+
+    public function install(): string
+    {
+        new User();
+
+        return parent::install();
     }
 
     public static function primaryColumn(): string

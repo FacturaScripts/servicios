@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\Fabricante;
 
 /**
@@ -70,6 +71,14 @@ class MaquinaAT extends Base\ModelClass
         $fabricante = new Fabricante();
         $fabricante->loadFromCode($this->codfabricante);
         return $fabricante;
+    }
+
+    public function install(): string
+    {
+        new Cliente();
+        new Fabricante();
+
+        return parent::install();
     }
 
     public static function primaryColumn(): string

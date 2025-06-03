@@ -22,6 +22,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\User;
 
 /**
  * Description of EstadoAT
@@ -93,6 +94,13 @@ class EstadoAT extends Base\ModelClass
         return true;
     }
 
+    public function install(): string
+    {
+        new User();
+
+        return parent::install();
+    }
+
     public static function primaryColumn(): string
     {
         return 'id';
@@ -127,6 +135,10 @@ class EstadoAT extends Base\ModelClass
     {
         $this->color = Tools::noHtml($this->color);
         $this->nombre = Tools::noHtml($this->nombre);
+
+        if (empty($this->id)) {
+            $this->id = $this->newCode();
+        }
 
         return parent::test();
     }

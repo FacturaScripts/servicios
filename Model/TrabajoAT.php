@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Model\Agente;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
@@ -125,6 +126,15 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $where = [new DataBaseWhere('referencia', $this->referencia)];
         $variante->loadFromCode('', $where);
         return $variante;
+    }
+
+    public function install(): string
+    {
+        new DinServicioAT();
+        new Variante();
+        new Agente();
+
+        return parent::install();
     }
 
     public static function primaryColumn(): string

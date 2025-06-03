@@ -100,6 +100,10 @@ class PrioridadAT extends Base\ModelClass
     {
         $this->nombre = Tools::noHtml($this->nombre);
 
+        if (empty($this->id)) {
+            $this->id = $this->newCode();
+        }
+
         return parent::test();
     }
 
