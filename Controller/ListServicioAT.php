@@ -175,6 +175,8 @@ class ListServicioAT extends ListController
             ->addSearchFields(['serviciosat.codigo', 'serviciosat_trabajos.descripcion', 'serviciosat_trabajos.observaciones', 'serviciosat_trabajos.referencia'])
             ->addFilterDatePicker('fechainicio', 'from-date', 'serviciosat_trabajos.fechainicio', '>=')
             ->addFilterDatePicker('fechafin', 'until-date', 'serviciosat_trabajos.fechafin', '<=')
+            ->addFilterPeriod('fechainicio', 'start-date', 'fechainicio')
+            ->addFilterPeriod('fechafin', 'end-date', 'fechafin')
             ->addFilterSelect('nick', 'user', 'serviciosat_trabajos.nick', $users)
             ->addFilterSelect('codagente', 'agent', 'serviciosat_trabajos.codagente', $agents)
             ->addFilterAutocomplete('codcliente', 'customer', 'serviciosat.codcliente', 'clientes', 'codcliente', 'nombre')
