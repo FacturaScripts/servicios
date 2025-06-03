@@ -32,6 +32,7 @@ use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Almacen;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\Empresa;
+use FacturaScripts\Dinamic\Model\PedidoCliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
 
@@ -311,6 +312,7 @@ class ServicioAT extends ModelOnChangeClass
         new User();
         new PrioridadAT();
         new TipoAT();
+        new PedidoCliente();
 
         return parent::install();
     }
