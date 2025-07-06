@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * This file is part of Servicios plugin for FacturaScripts
+ * Copyright (C) 2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
+ */
+-->
+<view>
+    <columns>
+        <group name="data" numcolumns="12" valign="bottom">
+            <column name="code" display="none" order="100">
+                <widget type="text" fieldname="id" readonly="true" required="true"/>
+            </column>
+            <column name="service" display="none" order="110">
+                <widget type="text" fieldname="idservice" readonly="true" required="true" />
+            </column>
+            <column name="verification" order="120">
+                <widget type="autocomplete" fieldname="idcheck" readonly="dinamic" required="true">
+                    <values source="serviciosat_checks" fieldcode="id" fieldtitle="name" />
+                </widget>
+            </column>
+            <column name="completed" numcolumns="2" order="130">
+                <widget type="datetime" fieldname="completed" readonly="true" />
+            </column>
+            <column name="checked" numcolumns="2" order="140">
+                <widget type="checkbox" fieldname="checked" />
+            </column>
+        </group>
+    </columns>
+</view>

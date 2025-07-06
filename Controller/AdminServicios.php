@@ -31,6 +31,7 @@ use FacturaScripts\Dinamic\Lib\ExtendedController\PanelController;
 class AdminServicios extends PanelController
 {
     private const VIEW_CONFIG = 'ConfigServicios';
+    private const VIEW_LIST_CATEGORIES = 'ListCategoriaAT';
     private const VIEW_LIST_PRIORITIES = 'EditPrioridadAT';
     private const VIEW_LIST_TYPES = 'EditTipoAT';
     private const VIEW_LIST_STATUS = 'EditEstadoAT';
@@ -54,6 +55,15 @@ class AdminServicios extends PanelController
         $this->createViewStatus();
         $this->createViewPriorities();
         $this->createViewTypes();
+        $this->createViewCategories();
+    }
+
+    private function createViewCategories(string $viewName = self::VIEW_LIST_CATEGORIES)
+    {
+        $this->addListView($viewName, 'CategoriaAT', 'categories', 'fa-solid fa-tags')
+            ->addSearchFields(['name'])
+            ->addOrderBy(['name'], 'description', 1)
+            ->addOrderBy(['id'], 'code');
     }
 
     private function createViewEditConfig(string $viewName = self::VIEW_CONFIG): void
@@ -93,6 +103,10 @@ class AdminServicios extends PanelController
             case self::VIEW_CONFIG:
                 $view->loadData('servicios');
                 $view->model->name = 'servicios';
+                break;
+
+            case self::VIEW_LIST_CATEGORIES:
+                $view->loadData('', [], ['name' => 'ASC']);
                 break;
 
             case self::VIEW_LIST_PRIORITIES:
