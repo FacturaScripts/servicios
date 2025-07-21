@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Document   : serviciosat_serviciocategorias.xml
+    Description:
+        Estructura de la tabla serviciosat_serviciocategorias.
+        Categorias asignadas a un servicio.
+-->
+<table>
+    <column>
+        <name>id</name>
+        <type>serial</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>idcategory</name>
+        <type>integer</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>idservice</name>
+        <type>integer</type>
+        <null>NO</null>
+    </column>
+
+    <constraint>
+        <name>serviciosat_servicecategorias_pkey</name>
+        <type>PRIMARY KEY (id)</type>
+    </constraint>
+    <constraint>
+        <name>serviciosat_servicecategorias_categories</name>
+        <type>FOREIGN KEY (idcategory) REFERENCES serviciosat_categorias (id) ON DELETE CASCADE ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>serviciosat_servicecategorias_servicios</name>
+        <type>FOREIGN KEY (idservice) REFERENCES serviciosat (idservicio) ON DELETE CASCADE ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>uniq_servicecategories_key</name>
+        <type>UNIQUE (idservice, idcategory)</type>
+    </constraint>
+</table>
