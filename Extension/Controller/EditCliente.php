@@ -75,7 +75,7 @@ class EditCliente
                 ->addFilterPeriod('fecha', 'date', 'fecha')
                 ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
                 ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $priority)
-                ->addFilterSelect('idprioridad', 'priority', 'idprioridad', $status)
+                ->addFilterSelect('idestado', 'status', 'idestado', $status)
                 ->addFilterSelect('nick', 'user', 'nick', $users)
                 ->addFilterSelect('asignado', 'assigned', 'asignado', $users)
                 ->addFilterSelect('codagente', 'agent', 'codagente', $agents)

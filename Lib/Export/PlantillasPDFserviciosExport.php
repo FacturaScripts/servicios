@@ -64,13 +64,13 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $headers = [Tools::lang()->trans('description')];
-        $rows = [[$model->descripcion]];
+        $rows = [[nl2br($model->descripcion)]];
         $this->addTablePage($headers, $rows, [], '');
     }
 
     protected function footerData(ServicioAT $model): void
     {
-        $this->template->writeHTML(Tools::settings('servicios', 'print_pdf_footer_text', ''));
+        $this->template->writeHTML(nl2br(Tools::settings('servicios', 'print_pdf_footer_text', '')));
     }
 
     protected function machineData(ServicioAT $model): void
@@ -104,7 +104,7 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $headers = [Tools::lang()->trans('material')];
-        $rows = [[$model->material]];
+        $rows = [[nl2br($model->material)]];
         $this->addTablePage($headers, $rows, [], '');
     }
 
@@ -116,7 +116,7 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $headers = [Tools::lang()->trans('observations')];
-        $rows = [[$model->observaciones]];
+        $rows = [[nl2br($model->observaciones)]];
         $this->addTablePage($headers, $rows, [], '');
     }
 
@@ -161,7 +161,7 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $headers = [Tools::lang()->trans('solution')];
-        $rows = [[$model->solucion]];
+        $rows = [[nl2br($model->solucion)]];
         $this->addTablePage($headers, $rows, [], '');
     }
 
@@ -202,7 +202,7 @@ class PlantillasPDFserviciosExport extends PDFExport
                 $work->horainicio,
                 $work->fechafin,
                 $work->horafin,
-                $work->observaciones
+                nl2br($work->observaciones)
             ];
 
             if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
