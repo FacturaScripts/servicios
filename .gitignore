@@ -1,23 +1,27 @@
+/.idea/
+/Analisis/
+/cache/
+/Cache/
+/Dinamic/
+/doc/
+/MyFiles/
+/nbproject/
 /node_modules/
+/Plugins/
 /vendor/
-package-lock.json
 .DS_Store
 .htaccess
+.vscode
+config.php
+config-mysql.php
+config-postgresql.php
+generateDoc.sh
 package-lock.json
 *.cache
 *.lock
 
-# eclipse
-.buildpath
+# Eclipse config files
 .project
 .settings
-
-# netbeans
-/nbproject/
-
-# phpstorm
-/.idea/
-
-# sscode
-.vscode
-*.code-workspace
+.buildpath
+/amortizaciones-master/nbproject/private/

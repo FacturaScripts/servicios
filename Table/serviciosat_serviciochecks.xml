@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Document   : serviciosat_serviciochecks.xml
+    Description:
+        Estructura de la tabla serviciosat_serviciochecks.
+        Verificaciones asignadas a un servicio.
+-->
+<table>
+    <column>
+        <name>completed</name>
+        <type>timestamp</type>
+    </column>
+    <column>
+        <name>id</name>
+        <type>serial</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>idcheck</name>
+        <type>integer</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>idservice</name>
+        <type>integer</type>
+        <null>NO</null>
+    </column>
+    <column>
+        <name>checked</name>
+        <type>boolean</type>
+        <null>NO</null>
+    </column>
+
+    <constraint>
+        <name>serviciosat_serviciochecks_pkey</name>
+        <type>PRIMARY KEY (id)</type>
+    </constraint>
+    <constraint>
+        <name>serviciosat_serviciochecks_checks</name>
+        <type>FOREIGN KEY (idcheck) REFERENCES serviciosat_checks (id) ON DELETE CASCADE ON UPDATE CASCADE</type>
+    </constraint>
+    <constraint>
+        <name>serviciosat_serviciochecks_servicios</name>
+        <type>FOREIGN KEY (idservice) REFERENCES serviciosat (idservicio) ON DELETE CASCADE ON UPDATE CASCADE</type>
+    </constraint>
+</table>
