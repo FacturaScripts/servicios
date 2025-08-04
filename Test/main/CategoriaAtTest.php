@@ -33,12 +33,12 @@ final class CategoriaAtTest extends TestCase
 
     public function testPrimaryColumn(): void
     {
-        $this->assertSame('id', CategoriaAT::primaryColumn());
+        $this->assertEquals('id', CategoriaAT::primaryColumn());
     }
 
     public function testTableName(): void
     {
-        $this->assertSame('serviciosat_categorias', CategoriaAT::tableName());
+        $this->assertEquals('serviciosat_categorias', CategoriaAT::tableName());
     }
 
     public function testFunction(): void
@@ -49,20 +49,24 @@ final class CategoriaAtTest extends TestCase
         $resultado = $categoria->test();
 
         $this->assertTrue($resultado);
-        $this->assertSame('&lt;strong&gt;Test Function&lt;/strong&gt;', $categoria->name);
+        $this->assertEquals('&lt;strong&gt;Test Function&lt;/strong&gt;', $categoria->name);
     }
 
     public function testUrlWhithoutParameters(): void
     {
         $categoria = new CategoriaAT();
-        $this->assertSame('AdminServicios?activetab=ListCategoriaAT', $categoria->url());
+        $this->assertEquals('AdminServicios?activetab=ListCategoriaAT', $categoria->url());
     }
 
     public function testUrlWithParameters(): void
     {
         $categoria = new CategoriaAT();
         $categoria->id = 999;
-        $this->assertSame('EditCategoriaAT?code=999', $categoria->url('edit', 'CustomList'));
+        $this->assertEquals('EditCategoriaAT?code=999', $categoria->url('edit', 'CustomList'));
     }
 
+    protected function tearDown(): void
+    {
+        $this->logErrors();
+    }
 }
