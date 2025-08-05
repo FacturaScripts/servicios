@@ -30,7 +30,7 @@
             </column>
             <column name="category" order="120">
                 <widget type="autocomplete" fieldname="idcategory" readonly="dinamic" required="true">
-                    <values source="serviciosat_categories" fieldcode="id" fieldtitle="name" />
+                    <values source="serviciosat_categorias" fieldcode="id" fieldtitle="name" />
                 </widget>
             </column>
         </group>

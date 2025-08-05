@@ -27,7 +27,7 @@
             </column>
             <column name="category" display="none" order="110">
                 <widget type="autocomplete" fieldname="idcategory" required="true">
-                    <values source="serviciosat_categories" fieldcode="id" fieldtitle="name"/>
+                    <values source="serviciosat_categorias" fieldcode="id" fieldtitle="name"/>
                 </widget>
             </column>
             <column name="description" order="110">
