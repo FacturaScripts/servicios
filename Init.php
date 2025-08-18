@@ -19,7 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios;
 
-use FacturaScripts\Core\Base\AjaxForms\SalesHeaderHTML;
+use FacturaScripts\Core\Lib\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Role;

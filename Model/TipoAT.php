@@ -41,7 +41,7 @@ class TipoAT extends Base\ModelClass
     /** @var string */
     public $name;
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->default = true;

@@ -60,7 +60,7 @@ class MaquinaAT extends Base\ModelClass
     /** @var string */
     public $referencia;
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->fecha = Tools::date();

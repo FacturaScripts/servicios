@@ -90,7 +90,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     /** @var string */
     protected $messageLog = 'updated-model';
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->cantidad = 1.0;

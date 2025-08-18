@@ -63,7 +63,7 @@ class EstadoAT extends Base\ModelClass
     /** @var bool */
     public $predeterminado;
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->editable = true;

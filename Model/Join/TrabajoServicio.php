@@ -20,6 +20,8 @@
 namespace FacturaScripts\Plugins\Servicios\Model\Join;
 
 use FacturaScripts\Core\Model\Base\JoinModel;
+use FacturaScripts\Core\Tools;
+
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
 
