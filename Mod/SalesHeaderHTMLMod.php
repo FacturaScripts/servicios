@@ -65,7 +65,7 @@ class SalesHeaderHTMLMod implements SalesModInterface
     private static function servicio(Translator $i18n, SalesDocument $model): string
     {
         return property_exists($model, 'idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
-            . '<div class="form-group">'
+            . '<div class="mb-3">'
             . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '">' . $i18n->trans('service') . '</a>'
             . '<input type="text" value="' . $model->{'idservicio'} . '" class="form-control" disabled />'
             . '</div>'
