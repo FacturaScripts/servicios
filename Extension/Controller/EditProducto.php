@@ -68,7 +68,7 @@ class EditProducto
 
             $variants = [];
             $product = $this->getModel();
-            $product->loadFromCode($this->request->get('code'));
+            $product->load($this->request->get('code'));
             foreach ($product->getVariants() as $variant) {
                 $variants[] = [
                     'code' => $variant->referencia,

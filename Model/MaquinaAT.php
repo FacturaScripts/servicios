@@ -69,7 +69,7 @@ class MaquinaAT extends Base\ModelClass
     public function getFabricante(): Fabricante
     {
         $fabricante = new Fabricante();
-        $fabricante->loadFromCode($this->codfabricante);
+        $fabricante->load($this->codfabricante);
         return $fabricante;
     }
 

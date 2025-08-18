@@ -222,7 +222,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $log = new ServicioATLog();
         $log->idservicio = $this->idservicio;
         $log->message = Tools::lang()->trans('new-work-created', [
-            '%key%' => $this->primaryColumnValue(),
+            '%key%' => $this->id(),
             '%service-key%' => $service->idservicio
         ]);
         $log->context = $this;

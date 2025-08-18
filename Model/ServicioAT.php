@@ -194,7 +194,7 @@ class ServicioAT extends ModelOnChangeClass
     {
         $asignado = is_null($asignado) ? $this->asignado : $asignado;
         $user = new User();
-        $user->loadFromCode($asignado);
+        $user->load($asignado);
         return $user;
     }
 
@@ -229,7 +229,7 @@ class ServicioAT extends ModelOnChangeClass
     {
         $codcliente = is_null($codcliente) ? $this->codcliente : $codcliente;
         $customer = new Cliente();
-        $customer->loadFromCode($codcliente);
+        $customer->load($codcliente);
         return $customer;
     }
 
@@ -246,7 +246,7 @@ class ServicioAT extends ModelOnChangeClass
             }
 
             $machine = new MaquinaAT();
-            $machine->loadFromCode($code);
+            $machine->load($code);
             $result[] = $machine;
         }
 
@@ -257,28 +257,28 @@ class ServicioAT extends ModelOnChangeClass
     {
         $idestado = $idestado ?? $this->idestado;
         $status = new EstadoAT();
-        $status->loadFromCode($idestado);
+        $status->load($idestado);
         return $status;
     }
 
     public function getPriority(): PrioridadAT
     {
         $priority = new PrioridadAT();
-        $priority->loadFromCode($this->idprioridad);
+        $priority->load($this->idprioridad);
         return $priority;
     }
 
     public function getType(): TipoAT
     {
         $type = new TipoAT();
-        $type->loadFromCode($this->idtipo);
+        $type->load($this->idtipo);
         return $type;
     }
 
     public function getSubject(): Cliente
     {
         $cliente = new Cliente();
-        $cliente->loadFromCode($this->codcliente);
+        $cliente->load($this->codcliente);
         return $cliente;
     }
 
@@ -297,7 +297,7 @@ class ServicioAT extends ModelOnChangeClass
     {
         $nick = is_null($nick) ? $this->nick : $nick;
         $user = new User();
-        $user->loadFromCode($nick);
+        $user->load($nick);
         return $user;
     }
 
@@ -383,7 +383,7 @@ class ServicioAT extends ModelOnChangeClass
         // si tenemos almacén, pero no empresa, obtenemos la empresa del almacén
         if (false === empty($this->codalmacen) && empty($this->codempresa)) {
             $warehouse = new Almacen();
-            if ($warehouse->loadFromCode($this->codalmacen)) {
+            if ($warehouse->load($this->codalmacen)) {
                 $this->idempresa = $warehouse->idempresa;
             }
         }
@@ -433,7 +433,7 @@ class ServicioAT extends ModelOnChangeClass
             $this->notifyCustomer('new-service-customer');
         }
 
-        $message = Tools::lang()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
+        $message = Tools::lang()->trans('new-service-created', ['%number%' => $this->id()]);
         $this->log($message);
 
         parent::onInsert();
@@ -567,7 +567,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function notifyAgent(string $notification): void
     {
         $agent = new Agente();
-        if (false === $agent->loadFromCode($this->codagente) || empty($agent->email)) {
+        if (false === $agent->load($this->codagente) || empty($agent->email)) {
             return;
         }
 
@@ -584,7 +584,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function notifyAssignedUser(string $notification): void
     {
         $assigned = new User();
-        if (false === $assigned->loadFromCode($this->asignado)) {
+        if (false === $assigned->load($this->asignado)) {
             return;
         }
 
@@ -618,7 +618,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function notifyUser(string $notification): void
     {
         $user = new User();
-        if (false === $user->loadFromCode($this->nick)) {
+        if (false === $user->load($this->nick)) {
             return;
         }
 

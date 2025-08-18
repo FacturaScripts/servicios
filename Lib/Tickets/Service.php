@@ -26,7 +26,7 @@ class Service extends BaseTicket
         $ticket = new Ticket();
         $ticket->idprinter = $printer->id;
         $ticket->nick = $user->nick;
-        $ticket->title = Tools::lang()->trans('service') . ': ' . ($model->codigo ?? $model->primaryColumnValue());
+        $ticket->title = Tools::lang()->trans('service') . ': ' . ($model->codigo ?? $model->id());
 
         static::setOpenDrawer(false);
         static::setHeader($model, $printer, $ticket->title);

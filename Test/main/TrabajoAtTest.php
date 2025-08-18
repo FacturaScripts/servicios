@@ -70,7 +70,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertEquals($product->descripcion, $work->descripcion);
 
         // comprobamos que se ha actualizado el neto del servicio
-        $service->load($service->primaryColumnValue());
+        $service->load($service->id());
         $this->assertEquals($product->precio, $service->neto);
 
         // eliminamos el servicio
@@ -200,7 +200,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($work1->save(), 'Error creating TrabajoAT with stock');
 
         // comprobamos que no se ha restado el stock
-        $stock->load($stock->primaryColumnValue());
+        $stock->load($stock->id());
         $this->assertEquals(10, $stock->cantidad);
 
         // activamos la opción de restar stock
@@ -215,14 +215,14 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($work2->save(), 'Error creating TrabajoAT with stock');
 
         // comprobamos que se ha restado el stock
-        $stock->load($stock->primaryColumnValue());
+        $stock->load($stock->id());
         $this->assertEquals(7, $stock->cantidad);
 
         // eliminamos el trabajo 2
         $this->assertTrue($work2->delete(), 'Error deleting TrabajoAT with stock');
 
         // comprobamos que se ha sumado el stock
-        $stock->load($stock->primaryColumnValue());
+        $stock->load($stock->id());
         $this->assertEquals(10, $stock->cantidad);
 
         // desactivamos la opción de restar stock
@@ -232,7 +232,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($work1->delete(), 'Error deleting TrabajoAT with stock');
 
         // comprobamos que no se ha restado el stock
-        $stock->load($stock->primaryColumnValue());
+        $stock->load($stock->id());
         $this->assertEquals(10, $stock->cantidad);
 
         // eliminamos
