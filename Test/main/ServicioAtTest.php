@@ -162,7 +162,7 @@ final class ServicioAtTest extends TestCase
         $this->assertTrue($service->save(), 'Error saving ServicioAT');
 
         // recargamos el servicio
-        $service->loadFromCode($service->idservicio);
+        $service->load($service->idservicio);
 
         // comprobamos que el servicio ya no es editable
         $this->assertFalse($service->editable, 'Error checking editable ServicioAT');
@@ -172,7 +172,7 @@ final class ServicioAtTest extends TestCase
         $this->assertTrue($service->save(), 'Error saving ServicioAT');
 
         // recargamos el servicio
-        $service->loadFromCode($service->idservicio);
+        $service->load($service->idservicio);
 
         // comprobamos que el servicio ya es editable
         $this->assertTrue($service->editable, 'Error checking editable ServicioAT');

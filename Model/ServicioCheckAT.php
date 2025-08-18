@@ -130,7 +130,7 @@ class ServicioCheckAT extends ModelClass
     protected function saveInsert(array $values = []): bool
     {
         $check = new CheckAT();
-        if (false === $check->loadFromCode($this->idcheck)) {
+        if (false === $check->load($this->idcheck)) {
             $this->idcheck = null;
             return false;
         }
@@ -140,7 +140,7 @@ class ServicioCheckAT extends ModelClass
             new DataBaseWhere('idcategory', $check->idcategory)
         ];
         $serviceCategory = new ServicioCategoriaAT();
-        if (false === $serviceCategory->loadFromCode('', $where)) {
+        if (false === $serviceCategory->loadWhere($where)) {
             $this->idcheck = null;
             Tools::log()->warning('check-no-in-service-category');
             return false;

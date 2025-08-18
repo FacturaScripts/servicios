@@ -103,7 +103,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     public function getServicio(): DinServicioAT
     {
         $servicio = new DinServicioAT();
-        $servicio->loadFromCode($this->idservicio);
+        $servicio->load($this->idservicio);
         return $servicio;
     }
 
@@ -124,7 +124,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
     {
         $variante = new Variante();
         $where = [new DataBaseWhere('referencia', $this->referencia)];
-        $variante->loadFromCode('', $where);
+        $variante->loadWhere($where);
         return $variante;
     }
 
@@ -283,7 +283,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
             new DataBaseWhere('referencia', $referencia),
             new DataBaseWhere('codalmacen', $this->getServicio()->codalmacen)
         ];
-        if (false === $stock->loadFromCode('', $where)) {
+        if (false === $stock->loadWhere($where)) {
             // no hay registro de stock, lo creamos
             $stock->referencia = $referencia;
             $stock->codalmacen = $this->getServicio()->codalmacen;

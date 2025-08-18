@@ -66,7 +66,7 @@ class ServicioATLog extends ModelClass
     public function getService(): ServicioAT
     {
         $service = new ServicioAT();
-        $service->loadFromCode($this->idservicio);
+        $service->load($this->idservicio);
         return $service;
     }
 
