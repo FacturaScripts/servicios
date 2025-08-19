@@ -22,15 +22,17 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 
 /**
  * Description of PrioridadAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class PrioridadAT extends Base\ModelClass
+class PrioridadAT extends ModelClass
 {
-    use Base\ModelTrait;
+    use ModelTrait;
 
     /** @var int */
     public $id;
@@ -41,7 +43,7 @@ class PrioridadAT extends Base\ModelClass
     /** @var bool */
     public $predeterminado;
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->predeterminado = false;

@@ -81,7 +81,7 @@ final class PrioridadAtTest extends TestCase
         $this->assertTrue($priority2->predeterminado, 'Error checking predeterminado PrioridadAT 2');
 
         // comprobamos que la prioridad 1 ya no es predeterminada
-        $priority1->loadFromCode($priority1->id);
+        $priority1->load($priority1->id);
         $this->assertFalse($priority1->predeterminado, 'Error checking predeterminado PrioridadAT 1');
 
         // eliminamos

@@ -80,7 +80,7 @@ final class TipoAtTest extends TestCase
         $this->assertTrue($type2->default, 'Error checking default TipoAT 2');
 
         // comprobamos que el tipo 1 ya no es predeterminado
-        $type1->loadFromCode($type1->id);
+        $type1->load($type1->id);
         $this->assertFalse($type1->default, 'Error checking default TipoAT 1');
 
         // eliminamos

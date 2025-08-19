@@ -23,7 +23,7 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
 use FacturaScripts\Core\Model\Base\ModelOnChangeClass;
-use FacturaScripts\Core\Model\Base\ModelTrait;
+use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
@@ -35,13 +35,14 @@ use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\PedidoCliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Core\Template\ModelClass;
 
 /**
  * Description of ServicioAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class ServicioAT extends ModelOnChangeClass
+class ServicioAT extends ModelClass
 {
     use ModelTrait;
     use CompanyRelationTrait;
@@ -127,7 +128,7 @@ class ServicioAT extends ModelOnChangeClass
         $this->save();
     }
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
 
@@ -184,17 +185,17 @@ class ServicioAT extends ModelOnChangeClass
         return true;
     }
 
-    public function getAgent(string $codagente = null): Agente
+    public function getAgent(?string $codagente = null): Agente
     {
         $codagente = is_null($codagente) ? $this->codagente : $codagente;
         return Agentes::get($codagente);
     }
 
-    public function getAsignado(string $asignado = null): User
+    public function getAsignado(?string $asignado = null): User
     {
         $asignado = is_null($asignado) ? $this->asignado : $asignado;
         $user = new User();
-        $user->loadFromCode($asignado);
+        $user->load($asignado);
         return $user;
     }
 
@@ -225,11 +226,11 @@ class ServicioAT extends ModelOnChangeClass
         return $status->all([], [], 0, 0);
     }
 
-    public function getCustomer(string $codcliente = null): Cliente
+    public function getCustomer(?string $codcliente = null): Cliente
     {
         $codcliente = is_null($codcliente) ? $this->codcliente : $codcliente;
         $customer = new Cliente();
-        $customer->loadFromCode($codcliente);
+        $customer->load($codcliente);
         return $customer;
     }
 
@@ -246,39 +247,39 @@ class ServicioAT extends ModelOnChangeClass
             }
 
             $machine = new MaquinaAT();
-            $machine->loadFromCode($code);
+            $machine->load($code);
             $result[] = $machine;
         }
 
         return $result;
     }
 
-    public function getStatus(int $idestado = null): EstadoAT
+    public function getStatus(?int $idestado = null): EstadoAT
     {
         $idestado = $idestado ?? $this->idestado;
         $status = new EstadoAT();
-        $status->loadFromCode($idestado);
+        $status->load($idestado);
         return $status;
     }
 
     public function getPriority(): PrioridadAT
     {
         $priority = new PrioridadAT();
-        $priority->loadFromCode($this->idprioridad);
+        $priority->load($this->idprioridad);
         return $priority;
     }
 
     public function getType(): TipoAT
     {
         $type = new TipoAT();
-        $type->loadFromCode($this->idtipo);
+        $type->load($this->idtipo);
         return $type;
     }
 
     public function getSubject(): Cliente
     {
         $cliente = new Cliente();
-        $cliente->loadFromCode($this->codcliente);
+        $cliente->load($this->codcliente);
         return $cliente;
     }
 
@@ -293,11 +294,11 @@ class ServicioAT extends ModelOnChangeClass
         return $trabajo->all($where, $order, 0, 0);
     }
 
-    public function getUser(string $nick = null): User
+    public function getUser(?string $nick = null): User
     {
         $nick = is_null($nick) ? $this->nick : $nick;
         $user = new User();
-        $user->loadFromCode($nick);
+        $user->load($nick);
         return $user;
     }
 
@@ -383,7 +384,7 @@ class ServicioAT extends ModelOnChangeClass
         // si tenemos almacén, pero no empresa, obtenemos la empresa del almacén
         if (false === empty($this->codalmacen) && empty($this->codempresa)) {
             $warehouse = new Almacen();
-            if ($warehouse->loadFromCode($this->codalmacen)) {
+            if ($warehouse->load($this->codalmacen)) {
                 $this->idempresa = $warehouse->idempresa;
             }
         }
@@ -396,7 +397,7 @@ class ServicioAT extends ModelOnChangeClass
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
     }
 
-    protected function onChange($field)
+    protected function onChange(string $field): bool
     {
         if ($field == 'idestado') {
             $newStatus = $this->getStatus();
@@ -411,7 +412,7 @@ class ServicioAT extends ModelOnChangeClass
 
             // añadimos el cambio al log
             $messageLog = Tools::lang()->trans('changed-status-to', [
-                '%oldStatus%' => $this->getStatus($this->previousData['idestado'])->nombre,
+                '%oldStatus%' => $this->getStatus($this->getOriginal('idestado'))->nombre,
                 '%newStatus%' => $newStatus->nombre
             ]);
             $this->log($messageLog);
@@ -420,7 +421,7 @@ class ServicioAT extends ModelOnChangeClass
         return parent::onChange($field);
     }
 
-    protected function onInsert()
+    protected function onInsert(): void
     {
         // enviamos notificaciones
         if ($this->asignado) {
@@ -433,31 +434,31 @@ class ServicioAT extends ModelOnChangeClass
             $this->notifyCustomer('new-service-customer');
         }
 
-        $message = Tools::lang()->trans('new-service-created', ['%number%' => $this->primaryColumnValue()]);
+        $message = Tools::lang()->trans('new-service-created', ['%number%' => $this->id()]);
         $this->log($message);
 
         parent::onInsert();
     }
 
-    protected function onUpdate()
+    protected function onUpdate(): void
     {
-        if ($this->asignado != $this->previousData['asignado']) {
+        if ($this->asignado != $this->getOriginal('asignado')) {
             $this->onUpdateAsignado();
         }
 
-        if ($this->codagente != $this->previousData['codagente']) {
+        if ($this->codagente != $this->getOriginal('codagente')) {
             $this->onUpdateCodagente();
         }
 
-        if ($this->codcliente != $this->previousData['codcliente']) {
+        if ($this->codcliente != $this->getOriginal('codcliente')) {
             $this->onUpdateCodcliente();
         }
 
-        if ($this->nick != $this->previousData['nick']) {
+        if ($this->nick != $this->getOriginal('nick')) {
             $this->onUpdateUser();
         }
 
-        if ($this->idestado != $this->previousData['idestado']) {
+        if ($this->idestado != $this->getOriginal('idestado')) {
             $this->onUpdateStatus();
         }
 
@@ -467,7 +468,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function onUpdateAsignado(): void
     {
         $newAssigned = $this->getAsignado();
-        $oldAssigned = $this->getAsignado($this->previousData['asignado'] ?? '');
+        $oldAssigned = $this->getAsignado($this->getOriginal('asignado') ?? '');
 
         // añadimos el cambio al log
         $messageLog = Tools::lang()->trans('changed-assigned-to', [
@@ -485,7 +486,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function onUpdateCodagente(): void
     {
         $newAgent = $this->getAgent();
-        $oldAgent = $this->getAgent($this->previousData['codagente'] ?? '');
+        $oldAgent = $this->getAgent($this->getOriginal('codagente') ?? '');
 
         // añadimos el cambio al log
         $messageLog = Tools::lang()->trans('changed-agent-to', [
@@ -503,7 +504,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function onUpdateCodcliente(): void
     {
         $newCustomer = $this->getCustomer();
-        $oldCustomer = $this->getCustomer($this->previousData['codcliente'] ?? '');
+        $oldCustomer = $this->getCustomer($this->getOriginal('codcliente') ?? '');
 
         // añadimos el cambio al log
         $messageLog = Tools::lang()->trans('changed-customer-to', [
@@ -549,7 +550,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function onUpdateUser(): void
     {
         $newUser = $this->getUser();
-        $oldUser = $this->getUser($this->previousData['nick'] ?? '');
+        $oldUser = $this->getUser($this->getOriginal('nick') ?? '');
 
         // añadimos el cambio al log
         $messageLog = Tools::lang()->trans('changed-user-to', [
@@ -567,7 +568,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function notifyAgent(string $notification): void
     {
         $agent = new Agente();
-        if (false === $agent->loadFromCode($this->codagente) || empty($agent->email)) {
+        if (false === $agent->load($this->codagente) || empty($agent->email)) {
             return;
         }
 
@@ -584,7 +585,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function notifyAssignedUser(string $notification): void
     {
         $assigned = new User();
-        if (false === $assigned->loadFromCode($this->asignado)) {
+        if (false === $assigned->load($this->asignado)) {
             return;
         }
 
@@ -618,7 +619,7 @@ class ServicioAT extends ModelOnChangeClass
     protected function notifyUser(string $notification): void
     {
         $user = new User();
-        if (false === $user->loadFromCode($this->nick)) {
+        if (false === $user->load($this->nick)) {
             return;
         }
 
@@ -630,11 +631,5 @@ class ServicioAT extends ModelOnChangeClass
             'status' => $this->getStatus()->nombre,
             'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
         ]);
-    }
-
-    protected function setPreviousData(array $fields = [])
-    {
-        $more = ['idestado', 'asignado', 'codagente', 'codcliente', 'nick'];
-        parent::setPreviousData(array_merge($more, $fields));
     }
 }

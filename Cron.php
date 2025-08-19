@@ -36,7 +36,7 @@ class Cron extends CronClass
                         $cliente = $servicio->getCustomer();
 
                         $notification = new EmailNotification();
-                        $notification->loadFromCode('new-start-service');
+                        $notification->load('new-start-service');
 
                         MailNotifier::send('new-start-service', $cliente->email, $cliente->codcliente, [
                             'number' => $servicio->idservicio,

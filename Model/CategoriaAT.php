@@ -20,15 +20,17 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 
 /**
  * Model class for the category of AT service.
  *
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
-class CategoriaAT extends Base\ModelClass
+class CategoriaAT extends ModelClass
 {
-    use Base\ModelTrait;
+    use ModelTrait;
 
     /**
      * Primary key of the table.

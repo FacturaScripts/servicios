@@ -19,6 +19,8 @@
 namespace FacturaScripts\Plugins\Servicios\Lib\Random;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
+
 use FacturaScripts\Plugins\Randomizer\Lib\Random\NewItems;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;

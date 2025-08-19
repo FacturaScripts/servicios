@@ -68,7 +68,7 @@ class EditServicioAT extends EditController
 
         $model = new TrabajoAT();
         $code = $this->request->request->get('code', '');
-        if (false === $model->loadFromCode($code)) {
+        if (false === $model->load($code)) {
             return true;
         }
 
@@ -409,7 +409,7 @@ class EditServicioAT extends EditController
 
         $service = new ServicioAT();
         $code = $this->request->get('code', '');
-        if (false === $service->loadFromCode($code) || false === $service->editable) {
+        if (false === $service->load($code) || false === $service->editable) {
             return true;
         }
 
@@ -431,7 +431,7 @@ class EditServicioAT extends EditController
 
         $service = new ServicioAT();
         $code = $this->request->get('code', '');
-        if (false === $service->loadFromCode($code) || false === $service->editable) {
+        if (false === $service->load($code) || false === $service->editable) {
             return true;
         }
 
@@ -453,7 +453,7 @@ class EditServicioAT extends EditController
 
         $service = new ServicioAT();
         $code = $this->request->get('code', '');
-        if (false === $service->loadFromCode($code) || false === $service->editable) {
+        if (false === $service->load($code) || false === $service->editable) {
             return true;
         }
 

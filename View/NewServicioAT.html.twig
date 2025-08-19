@@ -15,7 +15,7 @@
                 <div class="card shadow mb-5">
                     <div class="card-body"></div>
                     <div class="card-footer p-2">
-                        <button class="btn btn-lg btn-block btn-success btn-spin-action" onclick="initNewService()">
+                        <button class="btn btn-lg w-100 btn-success btn-spin-action" onclick="initNewService()">
                             {{ trans('new-service') }}
                         </button>
                     </div>
@@ -34,14 +34,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="warehouseModalLabel">
-                            <i class="fa-solid fa-warehouse mr-1"></i> {{ trans('warehouse') }}
+                            <i class="fa-solid fa-warehouse me-1"></i> {{ trans('warehouse') }}
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body">
-                        <select class="form-control mb-3" id="warehouseSelect">
+                        <select class="form-select mb-3" id="warehouseSelect">
                             {% for company in fsc.getCompanies() %}
                                 <optgroup label="{{ company.nombrecorto }}">
                                     {% for warehouse in company.getWarehouses() %}
@@ -57,7 +55,7 @@
                                 </optgroup>
                             {% endfor %}
                         </select>
-                        <button type="button" class="btn btn-block btn-primary btn-spin-action"
+                        <button type="button" class="btn w-100 btn-primary btn-spin-action"
                                 onclick="saveWarehouse()">
                             {{ trans('continue') }}
                         </button>
@@ -75,21 +73,17 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="customerModalLabel">
-                            <i class="fa-solid fa-users mr-1"></i> {{ trans('customers') }}
+                            <i class="fa-solid fa-users me-1"></i> {{ trans('customers') }}
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body p-0">
                         <div class="input-group p-3">
                             <input type="text" id="findCustomerInput" class="form-control ui-autocomplete-input"
                                    placeholder="{{ trans('search') }}" autocomplete="off"/>
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                            <button class="btn btn-primary" type="button">
                                     <i class="fa-solid fa-search"></i>
                                 </button>
-                            </div>
                         </div>
                         <table class="table table-hover mb-0">
                             {% for customer in fsc.getModalCustomers() %}
@@ -103,13 +97,13 @@
                         </table>
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-block btn-success btn-spin-action"
+                        <button type="button" class="btn w-100 btn-success btn-spin-action"
                                 onclick="showModalNewCustomer()">
-                            <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
+                            <i class="fa-solid fa-user-plus me-1"></i> {{ trans('new-customer') | capitalize }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action"
+                        <button type="button" class="btn w-100 btn-outline-secondary btn-spin-action"
                                 onclick="showModalWarehouse()">
-                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-warehouse') }}
+                            <i class="fa-solid fa-arrow-left me-1"></i> {{ trans('change-warehouse') }}
                         </button>
                     </div>
                 </div>
@@ -125,64 +119,62 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newCustomerModalLabel">
-                            <i class="fa-solid fa-user-plus mr-1"></i> {{ trans('new-customer') | capitalize }}
+                            <i class="fa-solid fa-user-plus me-1"></i> {{ trans('new-customer') | capitalize }}
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-row">
+                        <div class="row">
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('name') }}
                                     <input type="text" name="name" class="form-control" maxlength="100"
                                            onkeyup="return checkCustomer(this)"/>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('cifnif') }}
                                     <input type="text" name="cifnif" class="form-control" maxlength="30"
                                            onkeyup="return checkCustomer(this)"/>
                                 </div>
                             </div>
                             <div id="checkDuplicateCustomerMsg"
-                                 class="col-12 form-group alert alert-danger text-center d-none">
+                                 class="col-12 mb-3 alert alert-danger text-center d-none">
                                 {{ trans('duplicate-customer-name-or-cif') }}
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="row">
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('phone') }}
                                     <input type="text" name="phone1" class="form-control" maxlength="30"/>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('phone2') }}
                                     <input type="text" name="phone2" class="form-control" maxlength="30"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ trans('email') }}
                             <input type="email" name="email" class="form-control" maxlength="100"/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ trans('address') }}
                             <input type="text" name="address" class="form-control" maxlength="100"/>
                         </div>
-                        <div class="form-row">
+                        <div class="row">
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('zip-code') }}
                                     <input type="text" name="zip" class="form-control" maxlength="10"/>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('city') }}
                                     <input list="cities" name="city" class="form-control" maxlength="100"/>
                                     <datalist id="cities">
@@ -193,9 +185,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="row">
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('province') }}
                                     <input list="provinces" name="province" class="form-control" maxlength="100"/>
                                     <datalist id="provinces">
@@ -206,9 +198,9 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {{ trans('country') }}
-                                    <select name="country" class="form-control" required>
+                                    <select name="country" class="form-select" required>
                                         {% for country in fsc.codeModel.all('paises','codpais','nombre',false) %}
                                             {% if country.code == settings('default','codpais') %}
                                                 <option value="{{ country.code }}" selected>
@@ -227,13 +219,13 @@
                         {% endfor %}
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action"
+                        <button type="button" class="btn btn-lg w-100 btn-success btn-spin-action"
                                 onclick="saveNewCustomer()">
-                            <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
+                            <i class="fa-solid fa-floppy-disk me-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action"
+                        <button type="button" class="btn w-100 btn-outline-secondary btn-spin-action"
                                 onclick="showModalCustomer()">
-                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
+                            <i class="fa-solid fa-arrow-left me-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
                 </div>
@@ -249,11 +241,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="machineModalLabel">
-                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('machines') }}
+                            <i class="fa-solid fa-laptop-medical me-1"></i> {{ trans('machines') }}
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body p-0">
                         <table class="table table-hover mb-0">
@@ -268,17 +258,17 @@
                         </table>
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-block btn-primary btn-spin-action"
+                        <button type="button" class="btn w-100 btn-primary btn-spin-action"
                                 onclick="saveMachine(null)">
-                            <i class="fa-solid fa-ban mr-1"></i> {{ trans('no-machine') }}
+                            <i class="fa-solid fa-ban me-1"></i> {{ trans('no-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-success btn-spin-action"
+                        <button type="button" class="btn w-100 btn-success btn-spin-action"
                                 onclick="showModalNewMachine()">
-                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
+                            <i class="fa-solid fa-laptop-medical me-1"></i> {{ trans('new-machine') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary mt-4 btn-spin-action"
+                        <button type="button" class="btn w-100 btn-outline-secondary mt-4 btn-spin-action"
                                 onclick="showModalCustomer()">
-                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-customer') }}
+                            <i class="fa-solid fa-arrow-left me-1"></i> {{ trans('change-customer') }}
                         </button>
                     </div>
                 </div>
@@ -294,30 +284,28 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newMachineModalLabel">
-                            <i class="fa-solid fa-laptop-medical mr-1"></i> {{ trans('new-machine') }}
+                            <i class="fa-solid fa-laptop-medical me-1"></i> {{ trans('new-machine') }}
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('close') }}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ trans('name') }}
                             <input type="text" name="name" class="form-control" maxlength="100" required/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ trans('serial-number') }}
                             <input type="text" name="serial_number" class="form-control" maxlength="100"/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ trans('manufacturer') }}
-                            <select name="manufacturer" class="form-control" required>
+                            <select name="manufacturer" class="form-select" required>
                                 {% for manufacture in fsc.codeModel.all('fabricantes','codfabricante','nombre') %}
                                     <option value="{{ manufacture.code }}">{{ manufacture.description }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {{ trans('description') }}
                             <textarea name="description" class="form-control" maxlength="100"></textarea>
                         </div>
@@ -326,13 +314,13 @@
                         {% endfor %}
                     </div>
                     <div class="modal-footer p-2">
-                        <button type="button" class="btn btn-lg btn-block btn-success btn-spin-action"
+                        <button type="button" class="btn btn-lg w-100 btn-success btn-spin-action"
                                 onclick="saveNewMachine()">
-                            <i class="fa-solid fa-floppy-disk mr-1"></i> {{ trans('save') }}
+                            <i class="fa-solid fa-floppy-disk me-1"></i> {{ trans('save') }}
                         </button>
-                        <button type="button" class="btn btn-block btn-outline-secondary btn-spin-action"
+                        <button type="button" class="btn w-100 btn-outline-secondary btn-spin-action"
                                 onclick="showModalMachine()">
-                            <i class="fa-solid fa-arrow-left mr-1"></i> {{ trans('change-machine') }}
+                            <i class="fa-solid fa-arrow-left me-1"></i> {{ trans('change-machine') }}
                         </button>
                     </div>
                 </div>

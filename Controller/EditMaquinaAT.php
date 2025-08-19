@@ -22,6 +22,8 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
+use FacturaScripts\Core\Tools;
+
 
 /**
  * Description of EditMaquinaAT

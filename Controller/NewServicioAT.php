@@ -199,7 +199,7 @@ class NewServicioAT extends Controller
         }
 
         $machine = new MaquinaAT();
-        if (false === $machine->loadFromCode($this->idmaquina)) {
+        if (false === $machine->load($this->idmaquina)) {
             return false;
         }
 
@@ -252,7 +252,7 @@ class NewServicioAT extends Controller
         $orderBy = ['nombre' => 'ASC'];
 
         $customer = new Cliente();
-        if (false === $customer->loadFromCode($this->request->get('codcliente'))) {
+        if (false === $customer->load($this->request->get('codcliente'))) {
             Tools::log()->error('customer-not-found');
             return [
                 'renderCustomerMachines' => false,

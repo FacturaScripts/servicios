@@ -20,6 +20,8 @@ namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
+use FacturaScripts\Core\Tools;
+
 use FacturaScripts\Dinamic\Lib\ExtendedController\EditController;
 
 /**
