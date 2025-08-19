@@ -48,6 +48,8 @@
     "new-service-status-body": "Hi {name}, service {number} now has status {status}. You can see more details here: {url}",
     "new-service-user": "Service {number} assigned",
     "new-service-user-body": "Hello {name}, you have been assigned the service {number} for the client {client}. You can see more details from here: {url}",
+    "new-start-service": "The service {number} will start soon.",
+    "new-start-service-body": "Hello {name}, the service {number} is scheduled to start in the coming days. You can see more details here: {url}",
     "new-work-created": "Job %key% created in service %service-key%",
     "new-work-status": "New work status",
     "no-machine": "No machine",

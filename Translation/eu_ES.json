@@ -48,6 +48,8 @@
     "new-service-status-body": "Kaixo {name}, {number} zerbitzuak {status} egoera du orain. Xehetasun gehiago hemen ikusi ditzakezu: {url}",
     "new-service-user": "{number} zerbitzua esleitu da",
     "new-service-user-body": "Kaixo {name}, {number} zerbitzua esleitu zaizu {bezero} bezeroarentzat. Hemendik xehetasun gehiago ikusi ditzakezu: {url}",
+    "new-start-service": "Zenbakidun zerbitzua berehala hasiko da",
+    "new-start-service-body": "Kaixo {name}, {number} zerbitzua hurrengo egunotan hasiko da. Informazio gehiago hemen ikus dezakezu: {url}",
     "new-work-created": "%key% lana sortu da %service-key% zerbitzuan",
     "new-work-status": "Lan berrien estatusa",
     "no-machine": "Makinarik ez",

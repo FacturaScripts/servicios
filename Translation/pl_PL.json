@@ -1,6 +1,6 @@
 {
     "add-description": "Dodaj opis",
-    "add-end-date": "Dodaj datę końcową",
+    "add-end-date": "Dodaj datę zakończenia",
     "add-machine": "Dodaj maszynę",
     "add-material": "Dodaj materiał",
     "add-observations": "Dodaj uwagi",
@@ -48,6 +48,8 @@
     "new-service-status-body": "Cześć {name}, usługa {number} ma teraz status {status}. Możesz zobaczyć więcej szczegółów tutaj: {url}",
     "new-service-user": "Usługa {number} przypisana",
     "new-service-user-body": "Cześć {name}, przydzielono Ci usługę {number} dla klienta {cliente}. Możesz zobaczyć więcej szczegółów tutaj: {url}",
+    "new-start-service": "Usługa {number} wkrótce się zacznie",
+    "new-start-service-body": "Cześć {name}, usługa {number} ma rozpocząć się w ciągu najbliższych dni. Możesz zobaczyć więcej szczegółów tutaj: {url}",
     "new-work-created": "Praca %key% dodana do usługi",
     "new-work-status": "Akcja dla nowych zadań",
     "no-machine": "Brak maszyny",

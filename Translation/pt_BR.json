@@ -48,6 +48,8 @@
     "new-service-status-body": "Olá {name}, o serviço {number} agora tem o estado {status}. Você pode ver mais detalhes aqui: {url}",
     "new-service-user": "Utilizador de serviço {number} atribuido",
     "new-service-user-body": "Oi {name}, o serviço {number} foi atribuído a você para o cliente {cliente}. Você pode ver mais detalhes aqui: {url}",
+    "new-start-service": "O serviço {number} começará em breve",
+    "new-start-service-body": "Olá {name}, o serviço {number} está programado para começar nos próximos dias. Pode ver mais detalhes aqui: {url}",
     "new-work-created": "T",
     "new-work-status": "Novo estado de trabalho",
     "no-machine": "Sem máquina",

@@ -48,6 +48,8 @@
     "new-service-status-body": "Hola {name}, el servicio {number} ahora tiene estado {status}. Puedes ver más detalles aquí: {url}",
     "new-service-user": "Servicio {number} asignado",
     "new-service-user-body": "Hola {name}, te han asignado el servicio {number} para el cliente {cliente}. Puedes ver más detalles desde aquí: {url}",
+    "new-start-service": "Služba {number} brzy začne",
+    "new-start-service-body": "Ahoj {name}, služba {number} je naplánována na zahájení v příštích dnech. Můžete si zde prohlédnout více podrobností: {url}",
     "new-work-created": "Trabajo %key% añadido al servicio",
     "new-work-status": "Acción para nuevos trabajos",
     "no-machine": "Ninguna máquina",
