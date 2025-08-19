@@ -91,7 +91,9 @@ final class Init extends InitClass
         new Model\MaquinaAT();
         new Model\PrioridadAT();
         new Model\TipoAT();
+        new Model\CheckAT();
         new Model\ServicioAT();
+        new Model\ServicioCheckAT();
         new PresupuestoCliente();
         new AlbaranCliente();
         new FacturaCliente();
@@ -195,7 +197,7 @@ final class Init extends InitClass
         $notificationModel = new EmailNotification();
         $keys = [
             'new-service-assignee', 'new-service-agent', 'new-service-customer',
-            'new-service-status', 'new-service-user'
+            'new-service-status', 'new-service-user', 'new-start-service'
         ];
         foreach ($keys as $key) {
             if ($notificationModel->loadFromCode($key)) {
