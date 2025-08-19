@@ -26,15 +26,17 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\Variante;
+use FacturaScripts\Core\Template\ModelTrait;
+use FacturaScripts\Core\Template\ModelClass;
 
 /**
  * Description of TrabajoAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class TrabajoAT extends Base\ModelOnChangeClass
+class TrabajoAT extends ModelClass
 {
-    use Base\ModelTrait;
+    use ModelTrait;
 
     const STATUS_NONE = 0;
     const STATUS_MAKE_INVOICE = 1;
@@ -177,7 +179,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
             case 'cantidad':
             case 'estado':
             case 'referencia':
-                $this->updateStock($this->previousData['referencia'], $this->previousData['cantidad'], $this->previousData['estado']);
+                $this->updateStock($this->getOriginal('referencia'), $this->getOriginal('cantidad'), $this->getOriginal('estado'));
                 $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
                 break;
         }
@@ -190,7 +192,7 @@ class TrabajoAT extends Base\ModelOnChangeClass
         // añadimos el cambio al log
         $this->messageLog = Tools::lang()->trans('changed-quantity-work-to', [
             '%reference%' => $this->referencia,
-            '%oldQuantity%' => $this->previousData['cantidad'],
+            '%oldQuantity%' => $this->getOriginal('cantidad'),
             '%newQuantity%' => $this->cantidad,
             '%work%' => $this->idtrabajo
         ]);
@@ -200,19 +202,19 @@ class TrabajoAT extends Base\ModelOnChangeClass
     {
         // añadimos el cambio al log
         $this->messageLog = Tools::lang()->trans('changed-referencia-work-to', [
-            '%oldReference%' => $this->previousData['referencia'],
+            '%oldReference%' => $this->getOriginal('referencia'),
             '%newReference%' => $this->referencia,
             '%work%' => $this->idtrabajo
         ]);
     }
 
-    protected function onDelete()
+    protected function onDelete(): void
     {
         parent::onDelete();
         $this->updateStock($this->referencia, $this->cantidad, $this->estado);
     }
 
-    protected function onInsert()
+    protected function onInsert(): void
     {
         $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
 
@@ -231,16 +233,16 @@ class TrabajoAT extends Base\ModelOnChangeClass
         parent::onInsert();
     }
 
-    protected function onUpdate()
+    protected function onUpdate(): void
     {
         $service = $this->getServicio();
         $service->calculatePriceNet();
 
-        if ($this->cantidad != $this->previousData['cantidad']) {
+        if ($this->cantidad != $this->getOriginal('cantidad')) {
             $this->onChangeCantidad();
         }
 
-        if ($this->referencia != $this->previousData['referencia']) {
+        if ($this->referencia != $this->getOriginal('referencia')) {
             $this->onChangeReferencia();
         }
 
@@ -251,12 +253,6 @@ class TrabajoAT extends Base\ModelOnChangeClass
         $log->save();
 
         parent::onUpdate();
-    }
-
-    protected function setPreviousData(array $fields = [])
-    {
-        $more = ['cantidad', 'estado', 'referencia'];
-        parent::setPreviousData(array_merge($fields, $more));
     }
 
     protected function updateStock(?string $referencia, float $cantidad, int $estado): void

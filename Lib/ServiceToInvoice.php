@@ -21,7 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Lib;
 
 use FacturaScripts\Core\Lib\Calculator;
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Base\ExtensionsTrait;
+use FacturaScripts\Core\Template\ExtensionsTrait;
 use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;

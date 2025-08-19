@@ -19,7 +19,7 @@ use FacturaScripts\Dinamic\Model\User;
  */
 class Service extends BaseTicket
 {
-    public static function print(ModelClass $model, TicketPrinter $printer, User $user, Agente $agent = null): bool
+    public static function print(ModelClass $model, TicketPrinter $printer, User $user, ?Agente $agent = null): bool
     {
         static::init();
 

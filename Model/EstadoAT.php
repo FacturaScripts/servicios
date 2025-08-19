@@ -23,15 +23,17 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 
 /**
  * Description of EstadoAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class EstadoAT extends Base\ModelClass
+class EstadoAT extends ModelClass
 {
-    use Base\ModelTrait;
+    use ModelTrait;
 
     /** @var string */
     public $asignado;
