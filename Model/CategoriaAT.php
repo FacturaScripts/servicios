@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Model\Base;
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
+use FacturaScripts\Core\Tools;
 
 /**
  * Model class for the category of AT service.
@@ -47,16 +47,6 @@ class CategoriaAT extends ModelClass
     public $name;
 
     /**
-     * Returns the name of the column that is the model's primary key.
-     *
-     * @return string
-     */
-    public static function primaryColumn(): string
-    {
-        return 'id';
-    }
-
-    /**
      * Returns the name of the table that uses this model.
      *
      * @return string
@@ -75,6 +65,7 @@ class CategoriaAT extends ModelClass
     public function test(): bool
     {
         $this->name = Tools::noHtml($this->name);
+
         return parent::test();
     }
 

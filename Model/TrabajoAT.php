@@ -21,13 +21,12 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Agente;
-use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\Variante;
-use FacturaScripts\Core\Template\ModelTrait;
-use FacturaScripts\Core\Template\ModelClass;
 
 /**
  * Description of TrabajoAT
@@ -187,7 +186,7 @@ class TrabajoAT extends ModelClass
         return parent::onChange($field);
     }
 
-    protected function onChangeCantidad()
+    protected function onChangeCantidad(): void
     {
         // añadimos el cambio al log
         $this->messageLog = Tools::lang()->trans('changed-quantity-work-to', [
@@ -198,7 +197,7 @@ class TrabajoAT extends ModelClass
         ]);
     }
 
-    protected function onChangeReferencia()
+    protected function onChangeReferencia(): void
     {
         // añadimos el cambio al log
         $this->messageLog = Tools::lang()->trans('changed-referencia-work-to', [
@@ -211,6 +210,7 @@ class TrabajoAT extends ModelClass
     protected function onDelete(): void
     {
         parent::onDelete();
+
         $this->updateStock($this->referencia, $this->cantidad, $this->estado);
     }
 

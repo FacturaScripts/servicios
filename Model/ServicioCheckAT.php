@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
@@ -79,17 +80,8 @@ class ServicioCheckAT extends ModelClass
     {
         new ServicioAT();
         new CheckAT();
-        return parent::install();
-    }
 
-    /**
-     * Returns the name of the column that is the model's primary key.
-     *
-     * @return string
-     */
-    public static function primaryColumn(): string
-    {
-        return 'id';
+        return parent::install();
     }
 
     /**
@@ -117,17 +109,11 @@ class ServicioCheckAT extends ModelClass
         } else {
             $this->completed = null;
         }
+
         return parent::test();
     }
 
-    /**
-     * Insert the model data in the database.
-     * Check if the verification has a category of the service.
-     *
-     * @param array $values
-     * @return bool
-     */
-    protected function saveInsert(array $values = []): bool
+    protected function saveInsert(): bool
     {
         $check = new CheckAT();
         if (false === $check->load($this->idcheck)) {
@@ -146,6 +132,6 @@ class ServicioCheckAT extends ModelClass
             return false;
         }
 
-        return parent::saveInsert($values);
+        return parent::saveInsert();
     }
 }

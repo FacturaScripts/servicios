@@ -103,11 +103,6 @@ class EstadoAT extends ModelClass
         return parent::install();
     }
 
-    public static function primaryColumn(): string
-    {
-        return 'id';
-    }
-
     public function save(): bool
     {
         if (false === parent::save()) {

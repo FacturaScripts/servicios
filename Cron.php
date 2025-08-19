@@ -1,21 +1,30 @@
 <?php
+/**
+ * This file is part of Servicios plugin for FacturaScripts
+ * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace FacturaScripts\Plugins\Servicios;
 
-use DateTime;
 use FacturaScripts\Core\Lib\Email\MailNotifier;
 use FacturaScripts\Core\Template\CronClass;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\EmailNotification;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 
-/**
- * El cron de FacturaScripts ejecutará todos los procesos cron de los plugins activos,
- * siempre y cuando haya sido configurado en el sistema o hosting.
- * Así que si necesita ejecutar algo de forma periódica, el mejor lugar es el cron de su plugin.
- *
- * https://facturascripts.com/publicaciones/el-archivo-cron-php-855
- */
 class Cron extends CronClass
 {
     public function run(): void
@@ -23,9 +32,7 @@ class Cron extends CronClass
         $this->job('send-service-notification')
             ->everyDayAt(8)
             ->run(function () {
-                $service = new ServicioAT();
-
-                foreach ($service->all() as $servicio) {
+                foreach (ServicioAT::all() as $servicio) {
 
                     $fecha = Tools::date($servicio->fecha);
                     $fecha = Tools::dateOperation($fecha, '-1 day');

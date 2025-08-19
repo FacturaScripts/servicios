@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Template\ModelClass;
@@ -78,17 +79,8 @@ class CheckAT extends ModelClass
     public function install(): string
     {
         new CategoriaAT();
-        return parent::install();
-    }
 
-    /**
-     * Returns the name of the column that is the model's primary key.
-     *
-     * @return string
-     */
-    public static function primaryColumn(): string
-    {
-        return 'id';
+        return parent::install();
     }
 
     /**
@@ -110,9 +102,11 @@ class CheckAT extends ModelClass
     public function test(): bool
     {
         $this->name = Tools::noHtml($this->name);
+
         if (is_null($this->priority)) {
             $this->priority = 0;
         }
+
         return parent::test();
     }
 }

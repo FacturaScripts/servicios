@@ -20,10 +20,9 @@
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Model\Base;
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
+use FacturaScripts\Core\Tools;
 
 /**
  * Description of TipoAT
@@ -32,9 +31,9 @@ use FacturaScripts\Core\Template\ModelTrait;
  */
 class TipoAT extends ModelClass
 {
-
     use ModelTrait;
 
+    /** @var int */
     public $id;
 
     /** @var bool */
@@ -47,11 +46,6 @@ class TipoAT extends ModelClass
     {
         parent::clear();
         $this->default = true;
-    }
-
-    public static function primaryColumn(): string
-    {
-        return 'id';
     }
 
     public function save(): bool

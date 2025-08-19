@@ -68,11 +68,6 @@ class PrioridadAT extends ModelClass
         return true;
     }
 
-    public static function primaryColumn(): string
-    {
-        return 'id';
-    }
-
     public function save(): bool
     {
         if (false === parent::save()) {

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
@@ -63,17 +64,8 @@ class ServicioCategoriaAT extends ModelClass
     public function install(): string
     {
         new CheckAT();
-        return parent::install();
-    }
 
-    /**
-     * Returns the name of the column that is the model's primary key.
-     *
-     * @return string
-     */
-    public static function primaryColumn(): string
-    {
-        return 'id';
+        return parent::install();
     }
 
     /**
@@ -110,6 +102,7 @@ class ServicioCategoriaAT extends ModelClass
             Tools::log()->warning('duplicate-service-category');
             return false;
         }
+
         return true;
     }
 
@@ -126,21 +119,14 @@ class ServicioCategoriaAT extends ModelClass
         return parent::url($type, $list);
     }
 
-    /**
-     * Insert the model data in the database.
-     * Add the service checklists to the service.
-     *
-     * @param array $values
-     * @return bool
-     */
-    protected function saveInsert(array $values = []): bool
+    protected function saveInsert(): bool
     {
-        if (false === parent::saveInsert($values)) {
+        if (false === parent::saveInsert()) {
             return false;
         }
 
         $serviceCheck = new ServicioCheckAT();
-        $whereCheck = [ new DataBaseWhere('idcategory', $this->idcategory) ];
+        $whereCheck = [new DataBaseWhere('idcategory', $this->idcategory)];
         foreach (CheckAT::all($whereCheck) as $check) {
             $where = [
                 new DataBaseWhere('idcheck', $check->id),

@@ -19,12 +19,11 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Model\Base;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\Fabricante;
-use FacturaScripts\Core\Template\ModelClass;
-use FacturaScripts\Core\Template\ModelTrait;
 
 /**
  * Description of MaquinaAT

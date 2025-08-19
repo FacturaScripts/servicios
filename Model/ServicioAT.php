@@ -22,9 +22,9 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
-use FacturaScripts\Core\Model\Base\ModelOnChangeClass;
-use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Session;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
@@ -35,7 +35,6 @@ use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\PedidoCliente;
 use FacturaScripts\Dinamic\Model\TrabajoAT as DinTrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
-use FacturaScripts\Core\Template\ModelClass;
 
 /**
  * Description of ServicioAT
@@ -519,7 +518,7 @@ class ServicioAT extends ModelClass
         }
     }
 
-    protected function onUpdateStatus()
+    protected function onUpdateStatus(): void
     {
         $notification = 'new-service-status';
 
