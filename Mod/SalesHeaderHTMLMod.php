@@ -19,18 +19,20 @@
 
 namespace FacturaScripts\Plugins\Servicios\Mod;
 
-use FacturaScripts\Core\Base\Contract\SalesModInterface;
+use FacturaScripts\Core\Contract\SalesModInterface;
 use FacturaScripts\Core\Base\Translator;
 use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Core\Model\User;
+use FacturaScripts\Core\Tools;
+
 
 class SalesHeaderHTMLMod implements SalesModInterface
 {
-    public function apply(SalesDocument &$model, array $formData, User $user)
+    public function apply(SalesDocument &$model, array $formData): void
     {
     }
 
-    public function applyBefore(SalesDocument &$model, array $formData, User $user)
+    public function applyBefore(SalesDocument &$model, array $formData): void
     {
     }
 
@@ -53,20 +55,20 @@ class SalesHeaderHTMLMod implements SalesModInterface
         return ['servicio'];
     }
 
-    public function renderField(Translator $i18n, SalesDocument $model, string $field): ?string
+    public function renderField(SalesDocument $model, string $field): ?string
     {
         if ($field == 'servicio') {
-            return $this->servicio($i18n, $model);
+            return $this->servicio($model);
         }
 
         return null;
     }
 
-    private static function servicio(Translator $i18n, SalesDocument $model): string
+    private static function servicio(SalesDocument $model): string
     {
         return property_exists($model, 'idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
-            . '<div class="form-group">'
-            . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '">' . $i18n->trans('service') . '</a>'
+            . '<div class="mb-3">'
+            . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '">' . Tools::trans('service') . '</a>'
             . '<input type="text" value="' . $model->{'idservicio'} . '" class="form-control" disabled />'
             . '</div>'
             . '</div>' : '';

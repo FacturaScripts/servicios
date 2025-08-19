@@ -34,7 +34,7 @@ class TrabajoAT
                 new DataBaseWhere('docid', $this->idtrabajo),
                 new DataBaseWhere('docmodel', 'TrabajoAT'),
             ];
-            if ($movement->loadFromCode('', $where)) {
+            if ($movement->laodWhere($where)) {
                 $movement->delete();
             }
         };
@@ -95,7 +95,7 @@ class TrabajoAT
                 new DataBaseWhere('docid', $this->idtrabajo),
                 new DataBaseWhere('docmodel', 'TrabajoAT'),
             ];
-            if (false === $movement->loadFromCode('', $where)) {
+            if (false === $movement->loadWhere($where)) {
                 // si no existe, lo creamos
                 $movement->referencia = $this->referencia;
                 $movement->docid = $this->idtrabajo;

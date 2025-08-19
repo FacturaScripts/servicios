@@ -23,15 +23,17 @@ use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\Fabricante;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 
 /**
  * Description of MaquinaAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class MaquinaAT extends Base\ModelClass
+class MaquinaAT extends ModelClass
 {
-    use Base\ModelTrait;
+    use ModelTrait;
 
     /** @var string */
     public $codagente;
@@ -60,7 +62,7 @@ class MaquinaAT extends Base\ModelClass
     /** @var string */
     public $referencia;
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->fecha = Tools::date();
@@ -69,7 +71,7 @@ class MaquinaAT extends Base\ModelClass
     public function getFabricante(): Fabricante
     {
         $fabricante = new Fabricante();
-        $fabricante->loadFromCode($this->codfabricante);
+        $fabricante->load($this->codfabricante);
         return $fabricante;
     }
 

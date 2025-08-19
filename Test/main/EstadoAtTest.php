@@ -93,7 +93,7 @@ final class EstadoAtTest extends TestCase
         $this->assertTrue($status2->predeterminado, 'Error checking predeterminado EstadoAT 2');
 
         // comprobamos que el estado 1 ya no es predeterminado
-        $status1->loadFromCode($status1->id);
+        $status1->load($status1->id);
         $this->assertFalse($status1->predeterminado, 'Error checking predeterminado EstadoAT 1');
 
         // eliminamos

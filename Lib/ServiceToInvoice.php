@@ -19,9 +19,9 @@
 
 namespace FacturaScripts\Plugins\Servicios\Lib;
 
-use FacturaScripts\Core\Base\Calculator;
+use FacturaScripts\Core\Lib\Calculator;
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Base\ExtensionsTrait;
+use FacturaScripts\Core\Template\ExtensionsTrait;
 use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
@@ -48,7 +48,7 @@ class ServiceToInvoice
     public static function deliveryNote(ServicioAT &$service): bool
     {
         $customer = new Cliente();
-        if (false === $customer->loadFromCode($service->codcliente)) {
+        if (false === $customer->load($service->codcliente)) {
             return false;
         }
 
@@ -111,7 +111,7 @@ class ServiceToInvoice
     public static function estimation(ServicioAT &$service): bool
     {
         $customer = new Cliente();
-        if (false === $customer->loadFromCode($service->codcliente)) {
+        if (false === $customer->load($service->codcliente)) {
             return false;
         }
 
@@ -179,7 +179,7 @@ class ServiceToInvoice
     public static function invoice(ServicioAT &$service): bool
     {
         $customer = new Cliente();
-        if (false === $customer->loadFromCode($service->codcliente)) {
+        if (false === $customer->load($service->codcliente)) {
             return false;
         }
 

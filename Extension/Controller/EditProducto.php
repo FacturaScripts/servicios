@@ -21,6 +21,8 @@ namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
+
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
@@ -66,7 +68,7 @@ class EditProducto
 
             $variants = [];
             $product = $this->getModel();
-            $product->loadFromCode($this->request->get('code'));
+            $product->load($this->request->get('code'));
             foreach ($product->getVariants() as $variant) {
                 $variants[] = [
                     'code' => $variant->referencia,

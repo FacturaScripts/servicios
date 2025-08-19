@@ -5,7 +5,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Lib\Tickets;
 
-use FacturaScripts\Core\Model\Base\ModelClass;
+use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\Tickets\BaseTicket;
 use FacturaScripts\Dinamic\Model\Agente;
@@ -19,14 +19,14 @@ use FacturaScripts\Dinamic\Model\User;
  */
 class Service extends BaseTicket
 {
-    public static function print(ModelClass $model, TicketPrinter $printer, User $user, Agente $agent = null): bool
+    public static function print(ModelClass $model, TicketPrinter $printer, User $user, ?Agente $agent = null): bool
     {
         static::init();
 
         $ticket = new Ticket();
         $ticket->idprinter = $printer->id;
         $ticket->nick = $user->nick;
-        $ticket->title = Tools::lang()->trans('service') . ': ' . ($model->codigo ?? $model->primaryColumnValue());
+        $ticket->title = Tools::lang()->trans('service') . ': ' . ($model->codigo ?? $model->id());
 
         static::setOpenDrawer(false);
         static::setHeader($model, $printer, $ticket->title);

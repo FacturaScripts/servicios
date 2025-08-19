@@ -22,16 +22,18 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 
 /**
  * Description of TipoAT
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class TipoAT extends Base\ModelClass
+class TipoAT extends ModelClass
 {
 
-    use Base\ModelTrait;
+    use ModelTrait;
 
     public $id;
 
@@ -41,7 +43,7 @@ class TipoAT extends Base\ModelClass
     /** @var string */
     public $name;
 
-    public function clear()
+    public function clear(): void
     {
         parent::clear();
         $this->default = true;

@@ -21,6 +21,8 @@ namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Tools;
+
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
 /**
