@@ -48,7 +48,7 @@
     "new-service-status-body": "Ciao {name}, il servizio {number} ha ora lo stato {status}. Puoi vedere ulteriori dettagli qui: {url}",
     "new-service-user": "Servizio {number} assegnato",
     "new-service-user-body": "Ciao {name}, ti è stato assegnato il servizio {number} per il cliente {cliente}. Puoi vedere ulteriori dettagli da qui: {url}",
-    "new-start-service": "El servicio {number} empezará próximamente",
+    "new-start-service": "Il servizio {number} inizierà a breve",
     "new-start-service-body": "Ciao {name}, il servizio {number} è programmato per iniziare nei prossimi giorni. Puoi vedere maggiori dettagli qui: {url}",
     "new-work-created": "Lavoro %key% creato nel servizio %service-key%",
     "new-work-status": "Stato per nuovi lavori",

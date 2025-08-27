@@ -574,6 +574,7 @@ class ServicioAT extends ModelClass
         MailNotifier::send($notification, $agent->email, $agent->nombre, [
             'number' => $this->idservicio,
             'code' => $this->codigo,
+            'date' => $this->fecha,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -591,6 +592,7 @@ class ServicioAT extends ModelClass
         MailNotifier::send($notification, $assigned->email, $assigned->nick, [
             'number' => $this->idservicio,
             'code' => $this->codigo,
+            'date' => $this->fecha,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -608,6 +610,7 @@ class ServicioAT extends ModelClass
         MailNotifier::send($notification, $customer->email, $customer->nombre, [
             'number' => $this->idservicio,
             'code' => $this->codigo,
+            'date' => $this->fecha,
             'customer' => $customer->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,
@@ -625,6 +628,7 @@ class ServicioAT extends ModelClass
         MailNotifier::send($notification, $user->email, $user->nick, [
             'number' => $this->idservicio,
             'code' => $this->codigo,
+            'date' => $this->fecha,
             'customer' => $this->getSubject()->nombre,
             'author' => $this->nick,
             'status' => $this->getStatus()->nombre,

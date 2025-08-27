@@ -48,7 +48,7 @@
     "new-service-status-body": "Ola {name}, o servizo {number} agora ten estado {status}. Podes ver máis detalles aquí: {url}",
     "new-service-user": "Servizo {number} asignado",
     "new-service-user-body": "Ola {name}, asignáronche o servizo {number} para o cliente {cliente}. Podes ver máis detalles desde aquí: {url}",
-    "new-start-service": "O servizo {number} comezará proximamente",
+    "new-start-service": "O servizo {number} empezará proximamente",
     "new-start-service-body": "Ola {name}, o servizo {number} está programado para comezar nos próximos días. Podes ver máis detalles aquí: {url}",
     "new-work-created": "Traballo %key% creado no servizo %service-key%",
     "new-work-status": "Estado para novos traballos",
