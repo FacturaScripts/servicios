@@ -64,8 +64,10 @@ final class Init extends InitClass
         // export manager
         if (Plugins::isEnabled('PlantillasPDF')) {
             ExportManager::addOptionModel('PlantillasPDFserviciosExport', 'PDF', 'ServicioAT');
+            ExportManager::addOptionModel('PlantillasMAILserviciosExport', 'MAIL', 'ServicioAT');
         } else {
             ExportManager::addOptionModel('PDFserviciosExport', 'PDF', 'ServicioAT');
+            ExportManager::addOptionModel('MAILserviciosExport', 'MAIL', 'ServicioAT');
         }
 
         // mod para los documentos de venta
