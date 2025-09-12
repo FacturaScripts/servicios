@@ -92,7 +92,9 @@ class EditServicioAT extends EditController
     protected function createViews()
     {
         parent::createViews();
+
         $this->setTabsPosition('top');
+
         $this->createViewsWorks();
         $this->createViewsCategories();
         $this->createViewsChecks();
@@ -350,7 +352,7 @@ class EditServicioAT extends EditController
 
             case 'EditServicioCategoriaAT':
             case 'EditServicioCheckAT':
-                $where = [ new DataBaseWhere('idservice', $idservicio) ];
+                $where = [new DataBaseWhere('idservice', $idservicio)];
                 $view->loadData('', $where);
                 // Remove checks if the service has no categories and checks.
                 if ($viewName === 'EditServicioCheckAT'

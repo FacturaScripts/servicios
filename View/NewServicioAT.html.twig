@@ -36,7 +36,8 @@
                         <h5 class="modal-title" id="warehouseModalLabel">
                             <i class="fa-solid fa-warehouse me-1"></i> {{ trans('warehouse') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <select class="form-select mb-3" id="warehouseSelect">
@@ -75,15 +76,16 @@
                         <h5 class="modal-title" id="customerModalLabel">
                             <i class="fa-solid fa-users me-1"></i> {{ trans('customers') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body p-0">
                         <div class="input-group p-3">
                             <input type="text" id="findCustomerInput" class="form-control ui-autocomplete-input"
                                    placeholder="{{ trans('search') }}" autocomplete="off"/>
                             <button class="btn btn-primary" type="button">
-                                    <i class="fa-solid fa-search"></i>
-                                </button>
+                                <i class="fa-solid fa-search"></i>
+                            </button>
                         </div>
                         <table class="table table-hover mb-0">
                             {% for customer in fsc.getModalCustomers() %}
@@ -121,10 +123,11 @@
                         <h5 class="modal-title" id="newCustomerModalLabel">
                             <i class="fa-solid fa-user-plus me-1"></i> {{ trans('new-customer') | capitalize }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row g-2">
                             <div class="col">
                                 <div class="mb-3">
                                     {{ trans('name') }}
@@ -144,7 +147,7 @@
                                 {{ trans('duplicate-customer-name-or-cif') }}
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row g-2">
                             <div class="col">
                                 <div class="mb-3">
                                     {{ trans('phone') }}
@@ -166,7 +169,7 @@
                             {{ trans('address') }}
                             <input type="text" name="address" class="form-control" maxlength="100"/>
                         </div>
-                        <div class="row">
+                        <div class="row g-2">
                             <div class="col">
                                 <div class="mb-3">
                                     {{ trans('zip-code') }}
@@ -185,7 +188,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row g-2">
                             <div class="col">
                                 <div class="mb-3">
                                     {{ trans('province') }}
@@ -243,7 +246,8 @@
                         <h5 class="modal-title" id="machineModalLabel">
                             <i class="fa-solid fa-laptop-medical me-1"></i> {{ trans('machines') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body p-0">
                         <table class="table table-hover mb-0">
@@ -286,7 +290,8 @@
                         <h5 class="modal-title" id="newMachineModalLabel">
                             <i class="fa-solid fa-laptop-medical me-1"></i> {{ trans('new-machine') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('close') }}"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="{{ trans('close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
