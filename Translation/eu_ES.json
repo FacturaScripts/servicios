@@ -73,7 +73,7 @@
     "print-ticket-desc": "Konfigurazio honek zerbitzuko tiketetan bakarrik aplikatuko da. Tiketak plugin-a instalatuta izan behar du.",
     "print-works": "Lanak inprimatu",
     "print-works-description": "Lanen deskribapena inprimatu",
-    "print-works-price": "Lanen prezioa inprimatu",
+    "print-works-price": "Lanaren prezioa inprimatu",
     "print-works-quantity": "Lan kopurua inprimatu",
     "print-works-reference": "Lanaren erreferentzia inprimatu",
     "solution": "Soluzioa",

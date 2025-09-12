@@ -48,7 +48,7 @@
     "new-service-status-body": "Hola {name}, el servei {number} ara té l'estat {status}. Podeu veure més detalls ací: {url}",
     "new-service-user": "Servei {number} assignat",
     "new-service-user-body": "Hola {name}, t'han assignat el servei {number} per al client {cliente}. Pots veure més detalls des d'ací: {url}",
-    "new-start-service": "El servei {number} començarà pròximament",
+    "new-start-service": "El servici {number} començarà pròximament",
     "new-start-service-body": "Hola {name}, el servei {number} està programat per començar en els pròxims dies. Pots veure més detalls ací: {url}",
     "new-work-created": "Treball %key% creat en el servei %service-key%",
     "new-work-status": "Estat per als nous treballs",
