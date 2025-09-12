@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2021-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,8 +25,6 @@ use FacturaScripts\Dinamic\Lib\Email\NewMail;
 use FacturaScripts\Dinamic\Lib\Export\PlantillasPDFserviciosExport;
 
 /**
- * Copia del fichero MAILExport (la implementación) de Facturascripts2025 y hereda PDFserviciosExport
- *
  * @author Carlos García Gómez <carlos@facturascripts.com>
  */
 class PlantillasMAILserviciosExport extends PlantillasPDFserviciosExport 
