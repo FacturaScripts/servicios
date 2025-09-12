@@ -93,8 +93,8 @@ class CopyModel
             $fieldsWork = array_keys((new TrabajoAT())->getModelFields());
             $fieldsWorkExclude = ['estado', 'idservicio', 'idtrabajo', 'fechainicio', 'horainicio'];
 
-            $startDate = $this->request->request->get('fechainicio', []);
-            $startHour = $this->request->request->get('horainicio', []);
+            $startDate = $this->request->request->getArray('fechainicio', false);
+            $startHour = $this->request->request->getArray('horainicio', false);
             foreach ($worksServiceOrigen as $index => $work) {
                 $workDestiny = new TrabajoAT();
 
