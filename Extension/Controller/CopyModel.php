@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,8 +24,8 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\AttachedFileRelation;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\CodeModel;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
-use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\TrabajoAT;
 
 /**
  * @author Daniel Fernández Giménez <hola@danielfg.es>
@@ -93,8 +93,8 @@ class CopyModel
             $fieldsWork = array_keys((new TrabajoAT())->getModelFields());
             $fieldsWorkExclude = ['estado', 'idservicio', 'idtrabajo', 'fechainicio', 'horainicio'];
 
-            $startDate = $this->request->request->get('fechainicio', []);
-            $startHour = $this->request->request->get('horainicio', []);
+            $startDate = $this->request->request->getArray('fechainicio');
+            $startHour = $this->request->request->getArray('horainicio');
             foreach ($worksServiceOrigen as $index => $work) {
                 $workDestiny = new TrabajoAT();
 
