@@ -38,7 +38,7 @@ class TrabajoAT
                 new DataBaseWhere('docid', $this->idtrabajo),
                 new DataBaseWhere('docmodel', 'TrabajoAT'),
             ];
-            if ($movement->laodWhere($where)) {
+            if ($movement->loadWhere($where)) {
                 $movement->delete();
             }
         };
