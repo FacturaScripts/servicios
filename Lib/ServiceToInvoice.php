@@ -64,8 +64,8 @@ class ServiceToInvoice
         $newAlbaran->idservicio = $service->idservicio;
         $newAlbaran->nick = $service->nick;
 
-        if (property_exists($service, 'idproyecto') &&
-            property_exists($newAlbaran, 'idproyecto') &&
+        if ($service->hasColumn('idproyecto') &&
+            $newAlbaran->hasColumn('idproyecto') &&
             $service->idproyecto) {
             $newAlbaran->idproyecto = $service->idproyecto;
         }
@@ -127,8 +127,8 @@ class ServiceToInvoice
         $newEstimation->idservicio = $service->idservicio;
         $newEstimation->nick = $service->nick;
 
-        if (property_exists($service, 'idproyecto') &&
-            property_exists($newEstimation, 'idproyecto') &&
+        if ($service->hasColumn('idproyecto') &&
+            $newEstimation->hasColumn('idproyecto') &&
             $service->idproyecto) {
             $newEstimation->idproyecto = $service->idproyecto;
         }
@@ -195,8 +195,8 @@ class ServiceToInvoice
         $newInvoice->idservicio = $service->idservicio;
         $newInvoice->nick = $service->nick;
 
-        if (property_exists($service, 'idproyecto') &&
-            property_exists($newInvoice, 'idproyecto') &&
+        if ($service->hasColumn('idproyecto') &&
+            $newInvoice->hasColumn('idproyecto') &&
             $service->idproyecto) {
             $newInvoice->idproyecto = $service->idproyecto;
         }
@@ -338,6 +338,7 @@ class ServiceToInvoice
     {
         $newLine = empty($work->referencia) ? $doc->getNewLine() : $doc->getNewProductLine($work->referencia);
         $newLine->cantidad = $work->cantidad;
+        $newLine->idtrabajo = $work->idtrabajo;
         if ($work->precio) {
             $newLine->pvpunitario = $work->precio;
         }

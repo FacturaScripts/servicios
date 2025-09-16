@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2022-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2022-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -66,7 +66,7 @@ class SalesHeaderHTMLMod implements SalesModInterface
 
     private static function servicio(SalesDocument $model): string
     {
-        return property_exists($model, 'idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
+        return $model->hasColumn('idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
             . '<div class="mb-3">'
             . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '">' . Tools::trans('service') . '</a>'
             . '<input type="text" value="' . $model->{'idservicio'} . '" class="form-control" disabled />'
