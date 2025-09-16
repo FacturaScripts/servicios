@@ -24,6 +24,10 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\StockAvanzado\Model\MovimientoStock;
 
+/**
+ * Este modelo aunque es del propio plugin tiene una extensión por el plugin Vemax
+ * Necesitamos que el corte añada un pipe a la función mágica __get() para que Vemax use extensiones y no herencia
+ */
 class TrabajoAT
 {
     protected function deleteStockMovement(): Closure
