@@ -19,10 +19,10 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 
 /**
  * Description of TipoAT
@@ -56,10 +56,10 @@ class TipoAT extends ModelClass
 
         if ($this->default) {
             $where = [
-                new DataBaseWhere('default', true),
-                new DataBaseWhere('id', $this->id, '!=')
+                Where::column('default', true),
+                Where::column('id', $this->id, '!=')
             ];
-            foreach ($this->all($where, [], 0, 0) as $type) {
+            foreach ($this->all($where) as $type) {
                 $type->default = false;
                 $type->save();
             }

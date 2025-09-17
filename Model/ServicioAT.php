@@ -19,13 +19,13 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
@@ -203,8 +203,7 @@ class ServicioAT extends ModelClass
      */
     public function getAvailablePriority(): array
     {
-        $priority = new PrioridadAT();
-        return $priority->all([], [], 0, 0);
+        return PrioridadAT::all();
     }
 
     /**
@@ -212,8 +211,7 @@ class ServicioAT extends ModelClass
      */
     public function getAvailableTypes(): array
     {
-        $type = new TipoAT();
-        return $type->all([], [], 0, 0);
+        return TipoAT::all();
     }
 
     /**
@@ -221,8 +219,7 @@ class ServicioAT extends ModelClass
      */
     public function getAvailableStatus(): array
     {
-        $status = new EstadoAT();
-        return $status->all([], [], 0, 0);
+        return EstadoAT::all();
     }
 
     public function getCustomer(?string $codcliente = null): Cliente
@@ -287,10 +284,9 @@ class ServicioAT extends ModelClass
      */
     public function getTrabajos(): array
     {
-        $trabajo = new DinTrabajoAT();
-        $where = [new DataBaseWhere('idservicio', $this->idservicio)];
+        $where = [Where::column('idservicio', $this->idservicio)];
         $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
-        return $trabajo->all($where, $order, 0, 0);
+        return DinTrabajoAT::all($where, $order);
     }
 
     public function getUser(?string $nick = null): User

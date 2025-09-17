@@ -20,9 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Tools;
-
+use FacturaScripts\Core\Where;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
@@ -55,7 +53,7 @@ class EditProducto
                 ];
             }
 
-            $where = [new DataBaseWhere('serviciosat_trabajos.referencia', implode(',', $references), 'IN')];
+            $where = [Where::in('serviciosat_trabajos', implode(',', $references))];
             $view->loadData('', $where);
         };
     }

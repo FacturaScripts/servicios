@@ -20,9 +20,9 @@
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\AttachedFileRelation;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\CodeModel;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -124,10 +124,10 @@ class CopyModel
 
             if ((bool)$this->request->request->get('copy-attachments', false)) {
                 $where = [
-                    new DataBaseWhere('model', $this->modelClass),
-                    new DataBaseWhere('modelid|modelcode', $serviceOrigen->idservicio),
+                    Where::column('model', $this->modelClass),
+                    Where::column('modelid|modelcode', $serviceOrigen->idservicio),
                 ];
-                foreach (AttachedFileRelation::all($where, [], 0, 0) as $file) {
+                foreach (AttachedFileRelation::all($where) as $file) {
                     $newRelation = new AttachedFileRelation();
                     $newRelation->model = $this->modelClass;
                     $newRelation->modelid = $serviceDestiny->idservicio;

@@ -19,10 +19,10 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 
 /**
  * Model class for the category assigned to one AT service.
@@ -93,9 +93,9 @@ class ServicioCategoriaAT extends ModelClass
         }
 
         $where = [
-            new DataBaseWhere('id', $this->id, '!='),
-            new DataBaseWhere('idcategory', $this->idcategory),
-            new DataBaseWhere('idservice', $this->idservice),
+            Where::column('id', $this->id, '!='),
+            Where::column('idcategory', $this->idcategory),
+            Where::column('idservice', $this->idservice),
         ];
         $serviceCategory = new ServicioCategoriaAT();
         if ($serviceCategory->loadWhere($where)) {
@@ -126,11 +126,11 @@ class ServicioCategoriaAT extends ModelClass
         }
 
         $serviceCheck = new ServicioCheckAT();
-        $whereCheck = [new DataBaseWhere('idcategory', $this->idcategory)];
+        $whereCheck = [Where::column('idcategory', $this->idcategory)];
         foreach (CheckAT::all($whereCheck) as $check) {
             $where = [
-                new DataBaseWhere('idcheck', $check->id),
-                new DataBaseWhere('idservice', $this->idservice),
+                Where::column('idcheck', $check->id),
+                Where::column('idservice', $this->idservice),
             ];
 
             if ($serviceCheck->loadWhere($where)) {

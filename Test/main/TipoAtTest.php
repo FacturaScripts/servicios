@@ -20,7 +20,7 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\TipoAT;
+use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 

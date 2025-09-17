@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Plugins\Servicios\Mod;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
 use FacturaScripts\Dinamic\Model\MovimientoStock;
 use FacturaScripts\Plugins\StockAvanzado\Contract\StockMovementModInterface;
@@ -31,7 +31,7 @@ class StockMovementMod implements StockMovementModInterface
     {
         // generamos un movimiento para cada trabajo con referencia
         $model = new TrabajoAT();
-        $where = [new DataBaseWhere('referencia', '', '!=')];
+        $where = [Where::column('referencia', '', '!=')];
         $orderBy = ['idtrabajo' => 'ASC'];
         $limit = 1000;
         $offset = 0;

@@ -20,8 +20,8 @@
 namespace FacturaScripts\Plugins\Servicios\Extension\Model;
 
 use Closure;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Plugins\StockAvanzado\Model\MovimientoStock;
 
 /**
@@ -35,8 +35,8 @@ class TrabajoAT
         return function () {
             $movement = new MovimientoStock();
             $where = [
-                new DataBaseWhere('docid', $this->idtrabajo),
-                new DataBaseWhere('docmodel', 'TrabajoAT'),
+                Where::column('docid', $this->idtrabajo),
+                Where::column('docmodel', 'TrabajoAT'),
             ];
             if ($movement->loadWhere($where)) {
                 $movement->delete();
@@ -96,8 +96,8 @@ class TrabajoAT
             // buscamos el movimiento de stock
             $movement = new MovimientoStock();
             $where = [
-                new DataBaseWhere('docid', $this->idtrabajo),
-                new DataBaseWhere('docmodel', 'TrabajoAT'),
+                Where::column('docid', $this->idtrabajo),
+                Where::column('docmodel', 'TrabajoAT'),
             ];
             if (false === $movement->loadWhere($where)) {
                 // si no existe, lo creamos

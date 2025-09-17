@@ -20,10 +20,10 @@
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use FacturaScripts\Core\Base\Controller;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Cache;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\CodeModel;
 use FacturaScripts\Dinamic\Model\MaquinaAT;
@@ -77,10 +77,10 @@ class NewServicioAT extends Controller
 
         // consultamos la base de datos
         $cliente = new Cliente();
-        $where = [new DataBaseWhere('fechabaja', null, 'IS')];
+        $where = [Where::isNull('fechabaja')];
         if ($this->permissions->onlyOwnerData && !$showAll) {
-            $where[] = new DataBaseWhere('codagente', $this->user->codagente);
-            $where[] = new DataBaseWhere('codagente', null, 'IS NOT');
+            $where[] = Where::column('codagente', $this->user->codagente);
+            $where[] = Where::isNotNull('codagente');
         }
         $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC']);
 
@@ -227,8 +227,8 @@ class NewServicioAT extends Controller
         }
         $where = [];
         if ($this->permissions->onlyOwnerData && !$showAll) {
-            $where[] = new DataBaseWhere('codagente', $this->user->codagente);
-            $where[] = new DataBaseWhere('codagente', null, 'IS NOT');
+            $where[] = Where::column('codagente', $this->user->codagente);
+            $where[] = Where::isNotNull('codagente');
         }
 
         $list = [];
@@ -260,8 +260,8 @@ class NewServicioAT extends Controller
             ];
         }
 
-        $whereCustomer = [new DataBaseWhere('codcliente', $customer->codcliente)];
-        $customerMachines = MaquinaAT::all($whereCustomer, $orderBy, 0, 0);
+        $whereCustomer = [Where::column('codcliente', $customer->codcliente)];
+        $customerMachines = MaquinaAT::all($whereCustomer, $orderBy);
         foreach ($customerMachines as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
                 . '<td>' . $machine->nombre . '</td>'
@@ -270,16 +270,16 @@ class NewServicioAT extends Controller
                 . '</tr>';
         }
 
-        $whereAnonymous = [new DataBaseWhere('codcliente', null)];
-        $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy, 0, 0);
+        $whereAnonymous = [Where::column('codcliente', null)];
+        $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy);
         if (false === empty($anonymousMachines)) {
             $html .= '<tr class="table-info"><td class="text-center" colspan="3">'
                 . Tools::lang()->trans('anonymous-machines')
                 . '</td></tr>';
         }
 
-        $whereAnonymous = [new DataBaseWhere('codcliente', null)];
-        foreach (MaquinaAT::all($whereAnonymous, $orderBy, 0, 0) as $machine) {
+        $whereAnonymous = [Where::column('codcliente', null)];
+        foreach (MaquinaAT::all($whereAnonymous, $orderBy) as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
                 . '<td>' . $machine->nombre . '</td>'
                 . '<td>' . $machine->numserie . '</td>'

@@ -4,7 +4,7 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
-use FacturaScripts\Plugins\Servicios\Model\ServicioCheckAT;
+use FacturaScripts\Dinamic\Model\ServicioCheckAT;
 
 final class ServicioCheckAtTest extends TestCase
 {

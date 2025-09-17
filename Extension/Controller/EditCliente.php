@@ -20,9 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Tools;
-
+use FacturaScripts\Core\Where;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 
 /**
@@ -96,7 +94,7 @@ class EditCliente
                 case 'ListMaquinaAT':
                 case 'ListServicioAT':
                     $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
-                    $where = [new DataBaseWhere('codcliente', $codcliente)];
+                    $where = [Where::column('codcliente', $codcliente)];
                     $view->loadData('', $where);
                     break;
             }
@@ -107,7 +105,7 @@ class EditCliente
     {
         return function (string $viewName) {
             // asignamos colores
-            foreach (EstadoAT::all([], [], 0, 0) as $estado) {
+            foreach (EstadoAT::all() as $estado) {
                 if (empty($estado->color)) {
                     continue;
                 }

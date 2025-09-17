@@ -2,10 +2,8 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Plugins\Servicios\Model\CategoriaAT;
-use FacturaScripts\Plugins\Servicios\Model\CheckAT;
-use FacturaScripts\Plugins\Servicios\Model\ServicioCategoriaAT;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\CheckAT;
+use FacturaScripts\Dinamic\Model\ServicioCategoriaAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 

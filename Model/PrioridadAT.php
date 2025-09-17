@@ -19,11 +19,10 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Model\Base;
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
+use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 
 /**
  * Description of PrioridadAT
@@ -76,10 +75,10 @@ class PrioridadAT extends ModelClass
 
         if ($this->predeterminado) {
             $where = [
-                new DataBaseWhere('predeterminado', true),
-                new DataBaseWhere('id', $this->id, '!=')
+                Where::column('predeterminado', true),
+                Where::column('id', $this->id, '!=')
             ];
-            foreach ($this->all($where, [], 0, 0) as $priority) {
+            foreach ($this->all($where) as $priority) {
                 $priority->predeterminado = false;
                 $priority->save();
             }

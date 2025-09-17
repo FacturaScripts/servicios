@@ -19,12 +19,11 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Model\Base;
-use FacturaScripts\Core\Tools;
-use FacturaScripts\Dinamic\Model\User;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
+use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\User;
 
 /**
  * Description of EstadoAT
@@ -84,7 +83,7 @@ class EstadoAT extends ModelClass
 
         if ($this->predeterminado) {
             // ponemos otro estado como predeterminado
-            $where = [new DataBaseWhere('editable', true)];
+            $where = [Where::column('editable', true)];
             foreach ($this->all($where) as $item) {
                 $item->predeterminado = true;
                 if ($item->save()) {
@@ -111,10 +110,10 @@ class EstadoAT extends ModelClass
 
         if ($this->predeterminado) {
             $where = [
-                new DataBaseWhere('predeterminado', true),
-                new DataBaseWhere('id', $this->id, '!=')
+                Where::column('predeterminado', true),
+                Where::column('id', $this->id, '!=')
             ];
-            foreach ($this->all($where, [], 0, 0) as $status) {
+            foreach ($this->all($where) as $status) {
                 $status->predeterminado = false;
                 $status->save();
             }

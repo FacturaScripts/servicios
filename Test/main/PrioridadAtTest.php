@@ -19,9 +19,9 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\PrioridadAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -89,7 +89,7 @@ final class PrioridadAtTest extends TestCase
         $this->assertTrue($priority2->delete());
 
         // comprobamos que queda alguna prioridad predeterminada
-        $whereDefault = [new DataBaseWhere('predeterminado', true)];
+        $whereDefault = [Where::column('predeterminado', true)];
         $priorities = PrioridadAT::all($whereDefault);
         $this->assertNotEmpty($priorities, 'Error checking predeterminado PrioridadAT');
     }

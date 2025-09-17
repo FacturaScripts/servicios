@@ -19,8 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\CategoriaAT;
+use FacturaScripts\Dinamic\Model\CategoriaAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 

@@ -19,9 +19,9 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\EstadoAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -101,7 +101,7 @@ final class EstadoAtTest extends TestCase
         $this->assertTrue($status2->delete());
 
         // comprobamos que queda alguno predeterminado
-        $whereDefault = [new DataBaseWhere('predeterminado', true)];
+        $whereDefault = [Where::column('predeterminado', true)];
         $default = EstadoAT::all($whereDefault);
         $this->assertNotEmpty($default, 'Error: No hay estados predeterminados');
     }

@@ -18,10 +18,8 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
-use FacturaScripts\Core\Tools;
-
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\ExtendedController\EditController;
 
 /**
@@ -78,7 +76,7 @@ class EditCategoriaAT extends EditController
             case self::VIEW_CHECKS:
                 $mnv = $this->getMainViewName();
                 $idcategory = $this->getViewModelValue($mnv, 'id');
-                $where = [ new DataBaseWhere('idcategory', $idcategory) ];
+                $where = [ Where::column('idcategory', $idcategory) ];
                 $view->loadData('', $where, ['priority' => 'DESC']);
                 break;
 

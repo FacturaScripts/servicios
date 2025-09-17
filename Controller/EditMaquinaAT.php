@@ -19,10 +19,9 @@
 
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
-use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 
 
 /**
@@ -78,10 +77,10 @@ class EditMaquinaAT extends EditController
             case 'ListServicioAT':
                 $idmaquina = $this->getViewModelValue($mainViewName, 'idmaquina');
                 $where = [
-                    new DataBaseWhere('idmaquina', $idmaquina),
-                    new DataBaseWhere('idmaquina2', $idmaquina, '=', 'OR'),
-                    new DataBaseWhere('idmaquina3', $idmaquina, '=', 'OR'),
-                    new DataBaseWhere('idmaquina4', $idmaquina, '=', 'OR')
+                    Where::column('idmaquina', $idmaquina),
+                    Where::or('idmaquina2', $idmaquina),
+                    Where::or('idmaquina3', $idmaquina),
+                    Where::or('idmaquina4', $idmaquina)
                 ];
                 $view->loadData('', $where);
                 break;

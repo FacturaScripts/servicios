@@ -19,11 +19,11 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Agente;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\Variante;
@@ -124,7 +124,7 @@ class TrabajoAT extends ModelClass
     public function getVariante(): Variante
     {
         $variante = new Variante();
-        $where = [new DataBaseWhere('referencia', $this->referencia)];
+        $where = [Where::column('referencia', $this->referencia)];
         $variante->loadWhere($where);
         return $variante;
     }
@@ -172,7 +172,7 @@ class TrabajoAT extends ModelClass
         return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
     }
 
-    protected function onChange($field): bool
+    protected function onChange(string $field): bool
     {
         switch ($field) {
             case 'cantidad':
@@ -276,8 +276,8 @@ class TrabajoAT extends ModelClass
 
         $stock = new Stock();
         $where = [
-            new DataBaseWhere('referencia', $referencia),
-            new DataBaseWhere('codalmacen', $this->getServicio()->codalmacen)
+            Where::column('referencia', $referencia),
+            Where::column('codalmacen', $this->getServicio()->codalmacen)
         ];
         if (false === $stock->loadWhere($where)) {
             // no hay registro de stock, lo creamos

@@ -20,7 +20,7 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
+use FacturaScripts\Dinamic\Model\MaquinaAT;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;

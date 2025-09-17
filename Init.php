@@ -20,13 +20,13 @@
 namespace FacturaScripts\Plugins\Servicios;
 
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Core\Plugins;
 use FacturaScripts\Core\Template\InitClass;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Controller\SendTicket;
 use FacturaScripts\Dinamic\Lib\ExportManager;
 use FacturaScripts\Dinamic\Lib\StockMovementManager;
@@ -126,8 +126,8 @@ final class Init extends InitClass
         foreach ($nameControllers as $nameController) {
             $roleAccess = new RoleAccess();
             $where = [
-                new DataBaseWhere('codrole', self::ROLE_NAME),
-                new DataBaseWhere('pagename', $nameController)
+                Where::column('codrole', self::ROLE_NAME),
+                Where::column('pagename', $nameController)
             ];
             if ($roleAccess->loadWhere($where)) {
                 // permission exists? Then skip

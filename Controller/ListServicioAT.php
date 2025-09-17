@@ -19,10 +19,10 @@
 
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Almacenes;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\EstadoAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
 
@@ -80,14 +80,14 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados editables
         $valuesWhere = [
-            ['label' => Tools::lang()->trans('only-active'), 'where' => [new DataBaseWhere('editable', true)]],
-            ['label' => '------', 'where' => [new DataBaseWhere('editable', true)]],
+            ['label' => Tools::lang()->trans('only-active'), 'where' => [Where::column('editable', true)]],
+            ['label' => '------', 'where' => [Where::column('editable', true)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
             if ($estado->editable) {
                 $valuesWhere[] = [
                     'label' => $estado->nombre,
-                    'where' => [new DataBaseWhere('idestado', $estado->id)]
+                    'where' => [Where::column('idestado', $estado->id)]
                 ];
             }
         }
@@ -123,14 +123,14 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados no editables
         $valuesWhere = [
-            ['label' => Tools::lang()->trans('only-closed'), 'where' => [new DataBaseWhere('editable', false)]],
-            ['label' => '------', 'where' => [new DataBaseWhere('editable', false)]],
+            ['label' => Tools::lang()->trans('only-closed'), 'where' => [Where::column('editable', false)]],
+            ['label' => '------', 'where' => [Where::column('editable', false)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
             if (false === $estado->editable) {
                 $valuesWhere[] = [
                     'label' => $estado->nombre,
-                    'where' => [new DataBaseWhere('idestado', $estado->id)]
+                    'where' => [Where::column('idestado', $estado->id)]
                 ];
             }
         }
@@ -192,8 +192,7 @@ class ListServicioAT extends ListController
     protected function getServiceStatus(): array
     {
         if (empty($this->serviceStatus)) {
-            $estadoModel = new EstadoAT();
-            $this->serviceStatus = $estadoModel->all([], [], 0, 0);
+            $this->serviceStatus = EstadoAT::all();
         }
 
         return $this->serviceStatus;

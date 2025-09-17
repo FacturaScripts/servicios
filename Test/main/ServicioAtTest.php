@@ -20,10 +20,10 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
-use FacturaScripts\Plugins\Servicios\Model\PrioridadAT;
-use FacturaScripts\Plugins\Servicios\Model\ServicioAT;
-use FacturaScripts\Plugins\Servicios\Model\TipoAT;
+use FacturaScripts\Dinamic\Model\EstadoAT;
+use FacturaScripts\Dinamic\Model\PrioridadAT;
+use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;

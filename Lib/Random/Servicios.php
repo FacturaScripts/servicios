@@ -18,9 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Servicios\Lib\Random;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Tools;
-
+use FacturaScripts\Core\Where;
 use FacturaScripts\Plugins\Randomizer\Lib\Random\NewItems;
 use FacturaScripts\Plugins\Servicios\Model\EstadoAT;
 use FacturaScripts\Plugins\Servicios\Model\MaquinaAT;
@@ -231,7 +229,7 @@ class Servicios extends NewItems
     protected static function setMachines(&$faker, &$service)
     {
         $model = new MaquinaAT();
-        $where = [new DataBaseWhere('codcliente', $service->codcliente)];
+        $where = [Where::column('codcliente', $service->codcliente)];
         $machines = $model->all($where);
         if (empty($machines)) {
             static::createMachinesForCustomer($faker, $machines, $service->codcliente);
