@@ -76,12 +76,7 @@ class EditMaquinaAT extends EditController
         switch ($viewName) {
             case 'ListServicioAT':
                 $idmaquina = $this->getViewModelValue($mainViewName, 'idmaquina');
-                $where = [
-                    Where::column('idmaquina', $idmaquina),
-                    Where::or('idmaquina2', $idmaquina),
-                    Where::or('idmaquina3', $idmaquina),
-                    Where::or('idmaquina4', $idmaquina)
-                ];
+                $where = [Where::eq('idmaquina|idmaquina2|idmaquina3|idmaquina4', $idmaquina)];
                 $view->loadData('', $where);
                 break;
 

@@ -20,6 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
 
 use Closure;
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
@@ -42,18 +43,13 @@ class EditProducto
                 return;
             }
 
-            $variants = [];
             $references = [];
             $mvn = $this->getMainViewName();
             foreach ($this->views[$mvn]->model->getVariants() as $variant) {
                 $references[] = $variant->referencia;
-                $variants[] = [
-                    'code' => $variant->referencia,
-                    'description' => $variant->referencia,
-                ];
             }
 
-            $where = [Where::in('serviciosat_trabajos', implode(',', $references))];
+            $where = [new DataBaseWhere('serviciosat_trabajos.referencia', implode(',', $references), 'IN')];
             $view->loadData('', $where);
         };
     }
