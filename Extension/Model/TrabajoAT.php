@@ -104,7 +104,7 @@ class TrabajoAT
                 $movement->referencia = $this->referencia;
                 $movement->docid = $this->idtrabajo;
                 $movement->docmodel = 'TrabajoAT';
-                $movement->documento = Tools::lang()->trans('service') . ' #' . $this->idservicio;
+                $movement->documento = Tools::trans('service') . ' #' . $this->idservicio;
                 $movement->idproducto = $this->getVariante()->idproducto;
             }
 

@@ -63,7 +63,7 @@ class PlantillasPDFserviciosExport extends PDFExport
             return;
         }
 
-        $headers = [Tools::lang()->trans('description')];
+        $headers = [Tools::trans('description')];
         $rows = [[nl2br($model->descripcion)]];
         $this->addTablePage($headers, $rows, [], '');
     }
@@ -80,9 +80,9 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $headers = [
-            Tools::lang()->trans('name'),
-            Tools::lang()->trans('serial-number'),
-            Tools::lang()->trans('description'),
+            Tools::trans('name'),
+            Tools::trans('serial-number'),
+            Tools::trans('description'),
         ];
 
         $rows = [];
@@ -94,7 +94,7 @@ class PlantillasPDFserviciosExport extends PDFExport
             ];
         }
 
-        $this->addTablePage($headers, $rows, [], Tools::lang()->trans('machines'));
+        $this->addTablePage($headers, $rows, [], Tools::trans('machines'));
     }
 
     protected function materialData(ServicioAT $model): void
@@ -103,7 +103,7 @@ class PlantillasPDFserviciosExport extends PDFExport
             return;
         }
 
-        $headers = [Tools::lang()->trans('material')];
+        $headers = [Tools::trans('material')];
         $rows = [[nl2br($model->material)]];
         $this->addTablePage($headers, $rows, [], '');
     }
@@ -115,7 +115,7 @@ class PlantillasPDFserviciosExport extends PDFExport
             return;
         }
 
-        $headers = [Tools::lang()->trans('observations')];
+        $headers = [Tools::trans('observations')];
         $rows = [[nl2br($model->observaciones)]];
         $this->addTablePage($headers, $rows, [], '');
     }
@@ -140,14 +140,14 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $subject = $model->getSubject();
-        $tipoidfiscal = empty($subject->tipoidfiscal) ? Tools::lang()->trans('cifnif') : $subject->tipoidfiscal;
+        $tipoidfiscal = empty($subject->tipoidfiscal) ? Tools::trans('cifnif') : $subject->tipoidfiscal;
         $dataModel[$tipoidfiscal] = [
             'title' => $tipoidfiscal,
             'value' => $subject->cifnif,
         ];
 
         $dataModel['address'] = [
-            'title' => Tools::lang()->trans('address'),
+            'title' => Tools::trans('address'),
             'value' => $subject->getDefaultAddress()->direccion,
         ];
 
@@ -160,7 +160,7 @@ class PlantillasPDFserviciosExport extends PDFExport
             return;
         }
 
-        $headers = [Tools::lang()->trans('solution')];
+        $headers = [Tools::trans('solution')];
         $rows = [[nl2br($model->solucion)]];
         $this->addTablePage($headers, $rows, [], '');
     }
@@ -172,27 +172,27 @@ class PlantillasPDFserviciosExport extends PDFExport
         }
 
         $headers = [
-            Tools::lang()->trans('from-date'),
-            Tools::lang()->trans('from-hour'),
-            Tools::lang()->trans('until-date'),
-            Tools::lang()->trans('until-hour'),
-            Tools::lang()->trans('observations'),
+            Tools::trans('from-date'),
+            Tools::trans('from-hour'),
+            Tools::trans('until-date'),
+            Tools::trans('until-hour'),
+            Tools::trans('observations'),
         ];
 
         if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
-            $headers[] = Tools::lang()->trans('reference');
+            $headers[] = Tools::trans('reference');
         }
 
         if (Tools::settings('servicios', 'print_pdf_work_description', false)) {
-            $headers[] = Tools::lang()->trans('description');
+            $headers[] = Tools::trans('description');
         }
 
         if (Tools::settings('servicios', 'print_pdf_work_quantity', false)) {
-            $headers[] = Tools::lang()->trans('quantity');
+            $headers[] = Tools::trans('quantity');
         }
 
         if (Tools::settings('servicios', 'print_pdf_work_price', false)) {
-            $headers[] = Tools::lang()->trans('price');
+            $headers[] = Tools::trans('price');
         }
 
         $rows = [];
@@ -224,6 +224,6 @@ class PlantillasPDFserviciosExport extends PDFExport
             $rows[] = $dataWork;
         }
 
-        $this->addTablePage($headers, $rows, [], Tools::lang()->trans('works'));
+        $this->addTablePage($headers, $rows, [], Tools::trans('works'));
     }
 }

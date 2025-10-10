@@ -36,7 +36,7 @@ class CopyModel
     {
         return function($model) {
             if ($this->modelClass === 'ServicioAT') {
-                $this->title = Tools::lang()->trans('copy') . ' ' . Tools::lang()->trans('service') . ' ' . $model->primaryDescription();
+                $this->title = Tools::trans('copy') . ' ' . Tools::trans('service') . ' ' . $model->primaryDescription();
                 $this->setTemplate('CopyServicioAT');
             }
         };

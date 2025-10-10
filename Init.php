@@ -94,8 +94,9 @@ final class Init extends InitClass
         new Model\PrioridadAT();
         new Model\TipoAT();
         new Model\CheckAT();
-        new Model\ServicioAT();
         new Model\ServicioCheckAT();
+        new Model\ServicioAT();
+        new Model\TrabajoAT();
         new PresupuestoCliente();
         new AlbaranCliente();
         new FacturaCliente();
@@ -126,8 +127,8 @@ final class Init extends InitClass
         foreach ($nameControllers as $nameController) {
             $roleAccess = new RoleAccess();
             $where = [
-                Where::column('codrole', self::ROLE_NAME),
-                Where::column('pagename', $nameController)
+                Where::eq('codrole', self::ROLE_NAME),
+                Where::eq('pagename', $nameController)
             ];
             if ($roleAccess->loadWhere($where)) {
                 // permission exists? Then skip
@@ -207,8 +208,8 @@ final class Init extends InitClass
             }
 
             $notificationModel->name = $key;
-            $notificationModel->body = Tools::lang()->trans($key . '-body');
-            $notificationModel->subject = Tools::lang()->trans($key);
+            $notificationModel->body = Tools::trans($key . '-body');
+            $notificationModel->subject = Tools::trans($key);
             $notificationModel->enabled = false;
             $notificationModel->save();
         }

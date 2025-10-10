@@ -80,7 +80,7 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados editables
         $valuesWhere = [
-            ['label' => Tools::lang()->trans('only-active'), 'where' => [Where::column('editable', true)]],
+            ['label' => Tools::trans('only-active'), 'where' => [Where::column('editable', true)]],
             ['label' => '------', 'where' => [Where::column('editable', true)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
@@ -123,7 +123,7 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados no editables
         $valuesWhere = [
-            ['label' => Tools::lang()->trans('only-closed'), 'where' => [Where::column('editable', false)]],
+            ['label' => Tools::trans('only-closed'), 'where' => [Where::column('editable', false)]],
             ['label' => '------', 'where' => [Where::column('editable', false)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {

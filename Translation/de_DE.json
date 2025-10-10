@@ -28,7 +28,7 @@
     "duplicate-customer-name-or-cif": "Es gibt einen Kunden mit dem gleichen Namen oder CIF\/NIF",
     "from-hour": "Startzeit",
     "generate-document": "Dokument generieren",
-    "generate-document-desc": "Fügen Sie eine Zeile am Anfang des Dokuments mit den ausgewählten Informationen hinzu.",
+    "generate-document-desc": "Fügen Sie am Anfang des Dokuments eine Zeile mit den ausgewählten Informationen hinzu.",
     "generated-services": "%quantity% generierte Dienste",
     "make-delivery-note": "m",
     "make-estimation": "Kostenvoranschlag machen",

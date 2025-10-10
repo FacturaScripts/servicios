@@ -274,7 +274,7 @@ class NewServicioAT extends Controller
         $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy);
         if (false === empty($anonymousMachines)) {
             $html .= '<tr class="table-info"><td class="text-center" colspan="3">'
-                . Tools::lang()->trans('anonymous-machines')
+                . Tools::trans('anonymous-machines')
                 . '</td></tr>';
         }
 
@@ -289,7 +289,7 @@ class NewServicioAT extends Controller
 
         if (empty($html)) {
             $html = '<tr class="table-warning"><td colspan="3">'
-                . Tools::lang()->trans('no-data')
+                . Tools::trans('no-data')
                 . '</td></tr>';
         }
 

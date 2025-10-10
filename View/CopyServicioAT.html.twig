@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col">
                 <h1 class="h3">
-                    <i class="fa-solid fa-cut"></i> {{ fsc.title }}
+                    <i class="fa-solid fa-cut me-1"></i> {{ fsc.title }}
                 </h1>
                 <p>{{ trans('copy-p') }}</p>
                 <form method="post" onsubmit="animateSpinner('add')">
@@ -17,24 +17,21 @@
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-12 border-bottom pb-2 h4">
-                                    {{ trans('service') }}
-                                </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6 col-md-3 col-lg-2">
                                     {{ trans('date') }}
                                     <div class="mb-3">
                                         <input type="date" name="fecha" value="{{ "now" | date('Y-m-d') }}"
                                                class="form-control" required/>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6 col-md-3 col-lg-2">
                                     {{ trans('hour') }}
                                     <div class="mb-3">
                                         <input type="time" name="hora" value="{{ "now" | date('H:i:s') }}"
                                                class="form-control" required/>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 d-flex align-items-center">
+                                <div class="col-sm d-flex align-items-center">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="copy-attachments"
                                                id="copyAttachments">

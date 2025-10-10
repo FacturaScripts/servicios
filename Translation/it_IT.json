@@ -67,7 +67,7 @@
     "print-machine-info": "Stampa informazioni sulla macchina",
     "print-observations": "stampa-osservazioni",
     "print-pdf": "Stampa PDF",
-    "print-pdf-desc": "Questa impostazione si applicherà solo ai PDF di servizio. Puoi utilizzare il PDF del core o il plugin TemplatePDF.",
+    "print-pdf-desc": "Questa impostazione si applicherà solo ai PDF di servizio. Puoi usare il PDF del core o il plugin PlantillasPDF.",
     "print-reference": "Stampa riferimento",
     "print-services": "Stampa servizi",
     "print-ticket-desc": "Questa impostazione si applicherà solo ai ticket di servizio. È necessario avere il plugin dei ticket installato.",

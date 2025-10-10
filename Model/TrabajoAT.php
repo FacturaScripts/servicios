@@ -111,13 +111,13 @@ class TrabajoAT extends ModelClass
     public static function getAvailableStatus(): array
     {
         return [
-            self::STATUS_NONE => Tools::lang()->trans('do-nothing'),
-            self::STATUS_MAKE_INVOICE => Tools::lang()->trans('make-invoice'),
-            self::STATUS_INVOICED => Tools::lang()->trans('invoiced'),
-            self::STATUS_MAKE_DELIVERY_NOTE => Tools::lang()->trans('make-delivery-note'),
-            self::STATUS_DELIVERY_NOTE => Tools::lang()->trans('delivery-note'),
-            self::STATUS_MAKE_ESTIMATION => Tools::lang()->trans('make-estimation'),
-            self::STATUS_ESTIMATION => Tools::lang()->trans('estimation'),
+            self::STATUS_NONE => Tools::trans('do-nothing'),
+            self::STATUS_MAKE_INVOICE => Tools::trans('make-invoice'),
+            self::STATUS_INVOICED => Tools::trans('invoiced'),
+            self::STATUS_MAKE_DELIVERY_NOTE => Tools::trans('make-delivery-note'),
+            self::STATUS_DELIVERY_NOTE => Tools::trans('delivery-note'),
+            self::STATUS_MAKE_ESTIMATION => Tools::trans('make-estimation'),
+            self::STATUS_ESTIMATION => Tools::trans('estimation'),
         ];
     }
 
@@ -189,7 +189,7 @@ class TrabajoAT extends ModelClass
     protected function onChangeCantidad(): void
     {
         // añadimos el cambio al log
-        $this->messageLog = Tools::lang()->trans('changed-quantity-work-to', [
+        $this->messageLog = Tools::trans('changed-quantity-work-to', [
             '%reference%' => $this->referencia,
             '%oldQuantity%' => $this->getOriginal('cantidad'),
             '%newQuantity%' => $this->cantidad,
@@ -200,7 +200,7 @@ class TrabajoAT extends ModelClass
     protected function onChangeReferencia(): void
     {
         // añadimos el cambio al log
-        $this->messageLog = Tools::lang()->trans('changed-referencia-work-to', [
+        $this->messageLog = Tools::trans('changed-referencia-work-to', [
             '%oldReference%' => $this->getOriginal('referencia'),
             '%newReference%' => $this->referencia,
             '%work%' => $this->idtrabajo
@@ -223,7 +223,7 @@ class TrabajoAT extends ModelClass
 
         $log = new ServicioATLog();
         $log->idservicio = $this->idservicio;
-        $log->message = Tools::lang()->trans('new-work-created', [
+        $log->message = Tools::trans('new-work-created', [
             '%key%' => $this->id(),
             '%service-key%' => $service->idservicio
         ]);
