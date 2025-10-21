@@ -200,7 +200,8 @@ final class Init extends InitClass
         $notificationModel = new EmailNotification();
         $keys = [
             'new-service-assignee', 'new-service-agent', 'new-service-customer',
-            'new-service-status', 'new-service-user', 'new-start-service'
+            'new-service-status', 'new-service-user', 'new-start-service',
+            'sendmail-ServicioAT'
         ];
         foreach ($keys as $key) {
             if ($notificationModel->load($key)) {
