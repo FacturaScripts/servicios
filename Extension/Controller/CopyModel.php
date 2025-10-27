@@ -71,7 +71,7 @@ class CopyModel
             $serviceDestiny = new ServicioAT();
 
             $fieldsService = array_keys((new ServicioAT())->getModelFields());
-            $fieldsServiceExclude = ['codigo', 'editable', 'fecha', 'hora', 'idestado', 'idservicio', 'description'];
+            $fieldsServiceExclude = ['codigo', 'editable', 'fecha', 'hora', 'idestado', 'idservicio', 'descripcion', 'material', 'solucion', 'observaciones'];
 
             foreach ($fieldsService as $campo) {
                 if (false === in_array($campo, $fieldsServiceExclude)) {
@@ -82,6 +82,14 @@ class CopyModel
             $serviceDestiny->fecha = $this->request->request->get('fecha');
             $serviceDestiny->hora = $this->request->request->get('hora');
             $serviceDestiny->descripcion = $this->request->request->get('descripcion');
+            $serviceDestiny->material = $this->request->request->get('material');
+            $serviceDestiny->solucion = $this->request->request->get('solucion');
+            $serviceDestiny->observaciones = $this->request->request->get('observaciones');
+
+            // si se ha seleccionado un cliente diferente, lo actualizamos
+            if ($this->request->request->get('codcliente')) {
+                $serviceDestiny->codcliente = $this->request->request->get('codcliente');
+            }
 
             if (false === $serviceDestiny->save()) {
                 Tools::log()->warning('record-save-error');

@@ -17,6 +17,24 @@
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="row g-2">
+                                <div class="col-sm-12 col-md-6">
+                                    {{ trans('customer') }}
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fa-solid fa-search"></i>
+                                            </span>
+                                            <input type="hidden" id="codclienteAutocomplete" name="codcliente"
+                                                   value="{{ fsc.model.codcliente }}"/>
+                                            <input type="text" id="codcliente"
+                                                   value="{{ fsc.model.nombrecliente | raw }}"
+                                                   class="form-control autocomplete-dc"
+                                                   data-field="codcliente" data-source="Cliente"
+                                                   data-fieldcode="codcliente" data-fieldtitle="nombre"
+                                                   placeholder="{{ trans('customer') }}" autocomplete="off"/>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-sm-6 col-md-3 col-lg-2">
                                     {{ trans('date') }}
                                     <div class="mb-3">
@@ -40,11 +58,29 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     {{ trans('description') }}
                                     <div class="mb-3">
                                         <textarea name="descripcion" class="form-control" rows="3"
                                                   required>{{ fsc.model.descripcion }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ trans('material') }}
+                                    <div class="mb-3">
+                                        <textarea name="material" class="form-control" rows="3">{{ fsc.model.material }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ trans('solution') }}
+                                    <div class="mb-3">
+                                        <textarea name="solucion" class="form-control" rows="3">{{ fsc.model.solucion }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ trans('observations') }}
+                                    <div class="mb-3">
+                                        <textarea name="observaciones" class="form-control" rows="3">{{ fsc.model.observaciones }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -97,4 +133,76 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.css') }}"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
+    <script>
+        function businessDocViewAutocompleteGetData(formId, formData, term) {
+            let rawForm = $("form[id=" + formId + "]").serializeArray();
+            $.each(rawForm, function (i, input) {
+                formData[input.name] = input.value;
+            });
+            formData["action"] = "autocomplete";
+            formData["term"] = term;
+            return formData;
+        }
+
+        $(document).ready(function () {
+            $(".autocomplete-dc").each(function () {
+                let data = {
+                    field: $(this).attr("data-field"),
+                    fieldcode: $(this).attr("data-fieldcode"),
+                    fieldtitle: $(this).attr("data-fieldtitle"),
+                    source: $(this).attr("data-source")
+                };
+                let formName = $(this).closest("form").attr("name");
+                $(this).autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            method: "POST",
+                            url: "{{ fsc.url() }}",
+                            data: businessDocViewAutocompleteGetData(formName, data, request.term),
+                            dataType: "json",
+                            success: function (results) {
+                                let values = [];
+                                results.forEach(function (element) {
+                                    if (element.key === null || element.key === element.value) {
+                                        values.push(element);
+                                    } else {
+                                        values.push({key: element.key, value: element.key + " | " + element.value});
+                                    }
+                                });
+                                response(values);
+                            },
+                            error: function (msg) {
+                                alert(msg.status + " " + msg.responseText);
+                            }
+                        });
+                    },
+                    select: function (event, ui) {
+                        if (ui.item.key !== null) {
+                            $("#" + data.field + "Autocomplete").val(ui.item.key);
+                            let value = ui.item.value.split(" | ");
+                            if (value.length > 1) {
+                                ui.item.value = value[1];
+                            } else {
+                                ui.item.value = value[0];
+                            }
+                        }
+                    },
+                    open: function (event, ui) {
+                        $(this).autocomplete('widget').css('z-index', 1500);
+                        return false;
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
