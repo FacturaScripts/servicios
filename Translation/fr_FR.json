@@ -49,7 +49,7 @@
     "new-service-user": "Service {number} assigné",
     "new-service-user-body": "Bonjour {name}, le service {number} vous a été assigné pour le client {customer}. Vous pouvez voir plus de détails ici: {url}",
     "new-start-service": "Le service {number} commencera prochainement",
-    "new-start-service-body": "Bonjour {name}, le service {number} est prévu pour commencer dans les prochains jours. Vous pouvez voir plus de détails ici : {url}",
+    "new-start-service-body": "Bonjour {name}, le service {number} est programmé pour commencer dans les prochains jours. Vous pouvez voir plus de détails ici : {url}",
     "new-work-created": "Travail %key% créé dans le service %service-key%",
     "new-work-status": "Statut pour les nouveaux travaux",
     "no-machine": "Pas de machine",
