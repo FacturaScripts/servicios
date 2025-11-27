@@ -133,7 +133,7 @@ class Service extends BaseTicket
             static::$escpos->text(static::sanitize(Tools::trans('observations') . ': ' . $work->observaciones) . "\n");
 
             if (Tools::settings('servicios', 'print_ticket_work_reference', false)) {
-                static::$escpos->text(static::sanitize(Tools::trans('reference') . ': '. $work->referencia) . "\n");
+                static::$escpos->text(static::sanitize(Tools::trans('reference') . ': ' . $work->referencia) . "\n");
             }
 
             if (Tools::settings('servicios', 'print_ticket_work_description', false)) {
