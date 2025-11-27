@@ -211,6 +211,8 @@ class TrabajoAT extends ModelClass
     {
         parent::onDelete();
 
+        $service = $this->getServicio();
+        $service->calculatePriceNet();
         $this->updateStock($this->referencia, $this->cantidad, $this->estado);
     }
 

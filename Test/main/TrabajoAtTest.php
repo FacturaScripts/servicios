@@ -403,6 +403,44 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($customer->delete());
     }
 
+    public function testUpdateOnDelete(): void
+    {
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // creamos un trabajo
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->descripcion = 'Test work';
+        $work->cantidad = 1;
+        $work->precio = 10;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT');
+
+        // comprobamos que se ha actualizado el neto del servicio
+        $service->load($service->id());
+        $this->assertEquals(10, $service->neto);
+
+        // eliminamos el trabajo
+        $this->assertTrue($work->delete());
+
+        // comprobamos que se ha actualizado el neto del servicio
+        $service->load($service->id());
+        $this->assertEquals(0, $service->neto);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
     protected function tearDown(): void
     {
         $this->logErrors();
