@@ -5,6 +5,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Lib\Tickets;
 
+use FacturaScripts\Core\Template\ExtensionsTrait;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\Tickets\BaseTicket;
@@ -19,6 +20,8 @@ use FacturaScripts\Dinamic\Model\User;
  */
 class Service extends BaseTicket
 {
+    use ExtensionsTrait;
+
     public static function print(ModelClass $model, TicketPrinter $printer, User $user, ?Agente $agent = null): bool
     {
         static::init();
