@@ -56,5 +56,5 @@
     "print-reference": "Imprimir referência",
     "print-services": "Imprimir serviços",
     "print-ticket-desc": "Esta configuração só se aplicará aos bilhetes de serviço. É necessário ter o plugin Tickets instalado.",
-    "ticket-footer-text": "Texto do rodapé do bilhete"
+    "ticket-footer-text": "Texto do rodapé do talão"
 }
