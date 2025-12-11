@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -124,8 +124,7 @@ class TrabajoAT extends ModelClass
     public function getVariante(): Variante
     {
         $variante = new Variante();
-        $where = [Where::column('referencia', $this->referencia)];
-        $variante->loadWhere($where);
+        $variante->loadWhereEq('referencia', $this->referencia);
         return $variante;
     }
 
@@ -211,23 +210,22 @@ class TrabajoAT extends ModelClass
     {
         parent::onDelete();
 
-        $service = $this->getServicio();
-        $service->calculatePriceNet();
         $this->updateStock($this->referencia, $this->cantidad, $this->estado);
+
+        $this->getServicio()->calculatePriceNet();
     }
 
     protected function onInsert(): void
     {
         $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
 
-        $service = $this->getServicio();
-        $service->calculatePriceNet();
+        $this->getServicio()->calculatePriceNet();
 
         $log = new ServicioATLog();
         $log->idservicio = $this->idservicio;
         $log->message = Tools::trans('new-work-created', [
             '%key%' => $this->id(),
-            '%service-key%' => $service->idservicio
+            '%service-key%' => $this->idservicio
         ]);
         $log->context = $this;
         $log->save();
@@ -237,8 +235,7 @@ class TrabajoAT extends ModelClass
 
     protected function onUpdate(): void
     {
-        $service = $this->getServicio();
-        $service->calculatePriceNet();
+        $this->getServicio()->calculatePriceNet();
 
         if ($this->cantidad != $this->getOriginal('cantidad')) {
             $this->onChangeCantidad();
@@ -278,8 +275,8 @@ class TrabajoAT extends ModelClass
 
         $stock = new Stock();
         $where = [
-            Where::column('referencia', $referencia),
-            Where::column('codalmacen', $this->getServicio()->codalmacen)
+            Where::eq('referencia', $referencia),
+            Where::eq('codalmacen', $this->getServicio()->codalmacen)
         ];
         if (false === $stock->loadWhere($where)) {
             // no hay registro de stock, lo creamos
