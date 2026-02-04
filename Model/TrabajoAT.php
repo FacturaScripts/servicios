@@ -24,8 +24,10 @@ use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\GrupoClientes;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
+use FacturaScripts\Dinamic\Model\Tarifa;
 use FacturaScripts\Dinamic\Model\Variante;
 
 /**
@@ -158,9 +160,10 @@ class TrabajoAT extends ModelClass
         }
 
         if ($this->referencia) {
-            $variante = $this->getVariante();
-            $this->descripcion = empty($this->descripcion) ? $variante->description() : $this->descripcion;
-            $this->precio = empty($this->precio) ? $variante->precio : $this->precio;
+            $variant = $this->getVariante();
+            $product = $variant->getProducto();
+            $this->descripcion = empty($this->descripcion) ? $variant->description() : $this->descripcion;
+            $this->precio = empty($this->precio) ? $this->getRate()->applyTo($variant, $product) : $this->precio;
         }
 
         return parent::test();
@@ -169,6 +172,22 @@ class TrabajoAT extends ModelClass
     public function url(string $type = 'auto', string $list = 'ListServicioAT'): string
     {
         return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
+    }
+
+    protected function getRate(): Tarifa
+    {
+        $rate = new Tarifa();
+        $customer = $this->getServicio()->getCustomer();
+        if ($customer->codtarifa && $rate->load($customer->codtarifa)) {
+            return $rate;
+        }
+
+        $group = new GrupoClientes();
+        if ($customer->codgrupo && $group->load($customer->codgrupo) && $group->codtarifa) {
+            $rate->load($group->codtarifa);
+        }
+
+        return $rate;
     }
 
     protected function onChange(string $field): bool
