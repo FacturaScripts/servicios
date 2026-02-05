@@ -63,7 +63,7 @@ class PDFserviciosExport extends PDFExport
         return false;
     }
 
-    private function machinesData(&$model): array
+    protected function machinesData(&$model): array
     {
         $result = [];
         foreach ($model->getMachines() as $machine) {
@@ -108,7 +108,7 @@ class PDFserviciosExport extends PDFExport
         ];
     }
 
-    private function serviceData(ServicioAT $model): array
+    protected function serviceData(ServicioAT $model): array
     {
         $subject = $model->getSubject();
         $tipoidfiscal = empty($subject->tipoidfiscal) ? $this->i18n->trans('cifnif') : $subject->tipoidfiscal;
@@ -135,7 +135,7 @@ class PDFserviciosExport extends PDFExport
         return $data;
     }
 
-    private function worksData(ServicioAT &$model): array
+    protected function worksData(ServicioAT &$model): array
     {
         $result = [];
         foreach ($model->getTrabajos() as $work) {
