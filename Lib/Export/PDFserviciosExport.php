@@ -84,7 +84,7 @@ class PDFserviciosExport extends PDFExport
         $this->pdf->ezText('');
     }
 
-    protected function printTextSection(string $title, string $text, bool $addLine = true): void
+    protected function printTextSection(string $title, ?string $text, bool $addLine = true): void
     {
         if (empty($text)) {
             return;
