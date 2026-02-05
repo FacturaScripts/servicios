@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2019-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2019-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 
 namespace FacturaScripts\Plugins\Servicios\Lib\Tickets;
@@ -69,22 +69,22 @@ class Service extends BaseTicket
             static::$escpos->text(static::sanitize(Tools::trans('phone2') . ': ' . ($model->telefono2 ?? $customer->telefono2)));
         }
 
-        if ($model->descripcion) {
+        if ($model->descripcion && (bool)Tools::settings('servicios', 'print_ticket_description', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('description')));
             static::$escpos->text("\n" . static::sanitize($model->descripcion));
         }
 
-        if ($model->material) {
+        if ($model->material && (bool)Tools::settings('servicios', 'print_ticket_material', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('material')));
             static::$escpos->text("\n" . static::sanitize($model->material));
         }
 
-        if ($model->solucion) {
+        if ($model->solucion && (bool)Tools::settings('servicios', 'print_ticket_solution', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('solution')));
             static::$escpos->text("\n" . static::sanitize($model->solucion));
         }
 
-        if ($model->observaciones && Tools::settings('servicios', 'print_ticket_observations', false)) {
+        if ($model->observaciones && (bool)Tools::settings('servicios', 'print_ticket_observations', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('observations')));
             static::$escpos->text("\n" . static::sanitize($model->observaciones));
         }

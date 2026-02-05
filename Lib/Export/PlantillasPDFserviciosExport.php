@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -59,7 +59,8 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function descriptionData(ServicioAT $model): void
     {
-        if (empty($model->descripcion)) {
+        if (empty($model->descripcion)
+            || false === (bool)Tools::settings('servicios', 'print_pdf_description', false)) {
             return;
         }
 
@@ -75,7 +76,8 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function machineData(ServicioAT $model): void
     {
-        if (false === Tools::settings('servicios', 'print_pdf_machine_info', false)) {
+        $machines = $model->getMachines();
+        if (empty($machines) || false === Tools::settings('servicios', 'print_pdf_machine_info', false)) {
             return;
         }
 
@@ -86,7 +88,7 @@ class PlantillasPDFserviciosExport extends PDFExport
         ];
 
         $rows = [];
-        foreach ($model->getMachines() as $machine) {
+        foreach ($machines as $machine) {
             $rows[] = [
                 $machine->nombre,
                 $machine->numserie,
@@ -99,7 +101,8 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function materialData(ServicioAT $model): void
     {
-        if (empty($model->material)) {
+        if (empty($model->material)
+            || false === (bool)Tools::settings('servicios', 'print_pdf_material', false)) {
             return;
         }
 
@@ -111,7 +114,7 @@ class PlantillasPDFserviciosExport extends PDFExport
     protected function observationData(ServicioAT $model): void
     {
         if (empty($model->observaciones)
-            || false === Tools::settings('servicios', 'print_pdf_observations', false)) {
+            || false === (bool)Tools::settings('servicios', 'print_pdf_observations', false)) {
             return;
         }
 
@@ -156,7 +159,8 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function solutionData(ServicioAT $model): void
     {
-        if (empty($model->solucion)) {
+        if (empty($model->solucion)
+            || false === (bool)Tools::settings('servicios', 'print_pdf_solution', false)) {
             return;
         }
 

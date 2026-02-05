@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2021-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -44,11 +44,19 @@ class PDFserviciosExport extends PDFExport
             $this->printTableSection('machines', $machinesData);
         }
 
-        $this->printTextSection('description', $model->descripcion);
-        $this->printTextSection('material', $model->material);
-        $this->printTextSection('solution', $model->solucion);
+        if (!empty($model->descripcion) && (bool)Tools::settings('servicios', 'print_pdf_description', false)) {
+            $this->printTextSection('description', $model->descripcion);
+        }
 
-        if (Tools::settings('servicios', 'print_pdf_observations', false)) {
+        if (!empty($model->material) && (bool)Tools::settings('servicios', 'print_pdf_material', false)) {
+            $this->printTextSection('material', $model->material);
+        }
+
+        if (!empty($model->solucion) && (bool)Tools::settings('servicios', 'print_pdf_solution', false)) {
+            $this->printTextSection('solution', $model->solucion);
+        }
+
+        if (!empty($model->observaciones) && (bool)Tools::settings('servicios', 'print_pdf_observations', false)) {
             $this->printTextSection('observations', $model->observaciones);
         }
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -186,7 +186,13 @@ final class Init extends InitClass
             'print_pdf_footer_text' => '',
             'longnumero' => 6,
             'patron' => 'SER{ANYO}-{NUM}',
-            'workstatus' => 1
+            'workstatus' => 1,
+            'print_pdf_description' => 1,
+            'print_pdf_material' => 1,
+            'print_pdf_solution' => 1,
+            'print_ticket_description' => 1,
+            'print_ticket_material' => 1,
+            'print_ticket_solution' => 1,
         ];
 
         foreach ($defaults as $key => $value) {
