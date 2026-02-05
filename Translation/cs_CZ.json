@@ -54,7 +54,7 @@
     "print-pdf": "Tisknout PDF",
     "print-pdf-desc": "Toto nastavení se použije pouze na PDF služeb. Můžete použít PDF jádra nebo plugin PlantillasPDF.",
     "print-reference": "Tisknout referenci",
-    "print-services": "Tisknout služby",
+    "print-services": "Tisk služeb",
     "print-ticket-desc": "Toto nastavení se použije pouze na servisní lístky. Je nutné mít nainstalovaný plugin Tickets.",
     "ticket-footer-text": "Text patičky lístku"
 }

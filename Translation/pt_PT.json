@@ -52,7 +52,7 @@
     "print-machine-info": "Imprimir informação da máquina",
     "print-observations": "Imprimir observações",
     "print-pdf": "Imprimir PDF",
-    "print-pdf-desc": "Esta configuração só se aplicará aos PDFs de serviço. Pode usar o PDF do core ou o plugin PlantilhasPDF.",
+    "print-pdf-desc": "Esta configuração só se aplicará aos PDFs de serviço. Pode usar o PDF do core ou o plugin PlantillasPDF.",
     "print-reference": "Imprimir referência",
     "print-services": "Imprimir serviços",
     "print-ticket-desc": "Esta configuração só se aplicará aos bilhetes de serviço. É necessário ter o plugin Tickets instalado.",

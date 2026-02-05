@@ -53,7 +53,7 @@
     "print-observations": "Drukuj uwagi",
     "print-pdf": "Drukuj PDF",
     "print-pdf-desc": "Ta konfiguracja będzie miała zastosowanie tylko do PDF-ów serwisowych. Możesz użyć PDF-a z rdzenia lub wtyczki PlantillasPDF.",
-    "print-reference": "Drukuj odniesienie",
+    "print-reference": "Drukuj referencję",
     "print-services": "Drukuj usługi",
     "print-ticket-desc": "Ta konfiguracja będzie miała zastosowanie tylko do biletów serwisowych. Należy zainstalować wtyczkę Tickets.",
     "ticket-footer-text": "Tekst stopki biletu"
