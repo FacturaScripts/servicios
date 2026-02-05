@@ -124,6 +124,7 @@ class ServicioAT extends ModelClass
         foreach ($this->getTrabajos() as $trabajo) {
             $this->neto += $trabajo->precio * $trabajo->cantidad;
         }
+        $this->pipe('calculatePriceNet');
         $this->save();
     }
 
