@@ -96,7 +96,7 @@ class TrabajoAT extends ModelClass
     {
         parent::clear();
         $this->cantidad = 1.0;
-        $this->estado = (int)Tools::settings('servicios', 'workstatus');
+        $this->estado = (int)Tools::settings('Servicios', 'workstatus');
         $this->fechainicio = Tools::date();
         $this->horainicio = Tools::hour();
         $this->precio = 0.0;
@@ -260,8 +260,8 @@ class TrabajoAT extends ModelClass
 
     protected function updateStock(?string $referencia, float $cantidad, int $estado): void
     {
-        // ¿El control de stock en servicios está desactivado?
-        if (Tools::settings('servicios', 'disablestockmanagement', false)) {
+        // ¿El control de stock en Servicios está desactivado?
+        if (Tools::settings('Servicios', 'disablestockmanagement', false)) {
             return;
         }
 

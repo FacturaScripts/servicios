@@ -60,7 +60,7 @@ class PlantillasPDFserviciosExport extends PDFExport
     protected function descriptionData(ServicioAT $model): void
     {
         if (empty($model->descripcion)
-            || false === (bool)Tools::settings('servicios', 'print_pdf_description', false)) {
+            || false === (bool)Tools::settings('Servicios', 'print_pdf_description', false)) {
             return;
         }
 
@@ -71,13 +71,13 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function footerData(ServicioAT $model): void
     {
-        $this->template->writeHTML(nl2br(Tools::settings('servicios', 'print_pdf_footer_text', '')));
+        $this->template->writeHTML(nl2br(Tools::settings('Servicios', 'print_pdf_footer_text', '')));
     }
 
     protected function machineData(ServicioAT $model): void
     {
         $machines = $model->getMachines();
-        if (empty($machines) || false === Tools::settings('servicios', 'print_pdf_machine_info', false)) {
+        if (empty($machines) || false === Tools::settings('Servicios', 'print_pdf_machine_info', false)) {
             return;
         }
 
@@ -102,7 +102,7 @@ class PlantillasPDFserviciosExport extends PDFExport
     protected function materialData(ServicioAT $model): void
     {
         if (empty($model->material)
-            || false === (bool)Tools::settings('servicios', 'print_pdf_material', false)) {
+            || false === (bool)Tools::settings('Servicios', 'print_pdf_material', false)) {
             return;
         }
 
@@ -114,7 +114,7 @@ class PlantillasPDFserviciosExport extends PDFExport
     protected function observationData(ServicioAT $model): void
     {
         if (empty($model->observaciones)
-            || false === (bool)Tools::settings('servicios', 'print_pdf_observations', false)) {
+            || false === (bool)Tools::settings('Servicios', 'print_pdf_observations', false)) {
             return;
         }
 
@@ -127,11 +127,11 @@ class PlantillasPDFserviciosExport extends PDFExport
     {
         $excludeFields = ['idmaquina', 'idtipo', 'neto', 'codalmacen', 'idprioridad', 'material', 'descripcion', 'solucion', 'observaciones'];
 
-        if (false === Tools::settings('servicios', 'print_pdf_agent', false)) {
+        if (false === Tools::settings('Servicios', 'print_pdf_agent', false)) {
             $excludeFields[] = 'codagente';
         }
 
-        if (false === Tools::settings('servicios', 'print_pdf_assigned', false)) {
+        if (false === Tools::settings('Servicios', 'print_pdf_assigned', false)) {
             $excludeFields[] = 'asignado';
         }
 
@@ -160,7 +160,7 @@ class PlantillasPDFserviciosExport extends PDFExport
     protected function solutionData(ServicioAT $model): void
     {
         if (empty($model->solucion)
-            || false === (bool)Tools::settings('servicios', 'print_pdf_solution', false)) {
+            || false === (bool)Tools::settings('Servicios', 'print_pdf_solution', false)) {
             return;
         }
 
@@ -171,7 +171,7 @@ class PlantillasPDFserviciosExport extends PDFExport
 
     protected function workData(ServicioAT $model): void
     {
-        if (false === Tools::settings('servicios', 'print_pdf_works', false)) {
+        if (false === Tools::settings('Servicios', 'print_pdf_works', false)) {
             return;
         }
 
@@ -183,19 +183,19 @@ class PlantillasPDFserviciosExport extends PDFExport
             Tools::trans('observations'),
         ];
 
-        if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
+        if (Tools::settings('Servicios', 'print_pdf_work_reference', false)) {
             $headers[] = Tools::trans('reference');
         }
 
-        if (Tools::settings('servicios', 'print_pdf_work_description', false)) {
+        if (Tools::settings('Servicios', 'print_pdf_work_description', false)) {
             $headers[] = Tools::trans('description');
         }
 
-        if (Tools::settings('servicios', 'print_pdf_work_quantity', false)) {
+        if (Tools::settings('Servicios', 'print_pdf_work_quantity', false)) {
             $headers[] = Tools::trans('quantity');
         }
 
-        if (Tools::settings('servicios', 'print_pdf_work_price', false)) {
+        if (Tools::settings('Servicios', 'print_pdf_work_price', false)) {
             $headers[] = Tools::trans('price');
         }
 
@@ -209,19 +209,19 @@ class PlantillasPDFserviciosExport extends PDFExport
                 nl2br($work->observaciones)
             ];
 
-            if (Tools::settings('servicios', 'print_pdf_work_reference', false)) {
+            if (Tools::settings('Servicios', 'print_pdf_work_reference', false)) {
                 $dataWork[] = $work->referencia;
             }
 
-            if (Tools::settings('servicios', 'print_pdf_work_description', false)) {
+            if (Tools::settings('Servicios', 'print_pdf_work_description', false)) {
                 $dataWork[] = $work->descripcion;
             }
 
-            if (Tools::settings('servicios', 'print_pdf_work_quantity', false)) {
+            if (Tools::settings('Servicios', 'print_pdf_work_quantity', false)) {
                 $dataWork[] = $work->cantidad;
             }
 
-            if (Tools::settings('servicios', 'print_pdf_work_price', false)) {
+            if (Tools::settings('Servicios', 'print_pdf_work_price', false)) {
                 $dataWork[] = Tools::money($work->precio);
             }
 

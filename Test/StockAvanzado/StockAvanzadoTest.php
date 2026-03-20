@@ -23,7 +23,7 @@ final class StockAvanzadoTest extends TestCase
     public function testUpdateStock(): void
     {
         // desactivamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+        Tools::settingsSet('Servicios', 'disablestockmanagement', true);
 
         // creamos un cliente
         $customer = $this->getRandomCustomer();
@@ -74,7 +74,7 @@ final class StockAvanzadoTest extends TestCase
         $this->assertTrue($movements1->loadWhere($where1), 'No stock movement found for TrabajoAT');
 
         // activamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+        Tools::settingsSet('Servicios', 'disablestockmanagement', false);
 
         // creamos otro trabajo
         $work2 = new TrabajoAT();
@@ -110,7 +110,7 @@ final class StockAvanzadoTest extends TestCase
         $this->assertEquals(10, $stock->cantidad);
 
         // desactivamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+        Tools::settingsSet('Servicios', 'disablestockmanagement', true);
 
         //eliminamos el trabajo 1
         $this->assertTrue($work1->delete(), 'Error deleting TrabajoAT with stock');

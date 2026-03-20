@@ -342,7 +342,7 @@ class ServicioAT extends ModelClass
     {
         if (empty($this->codigo)) {
             // obtenemos el patrón de la configuración
-            $pattern = Tools::settings('servicios', 'patron', 'SER-{NUM}');
+            $pattern = Tools::settings('Servicios', 'patron', 'SER-{NUM}');
 
             // si no tenemos id, asignamos uno nuevo
             if (empty($this->idservicio)) {
@@ -352,7 +352,7 @@ class ServicioAT extends ModelClass
             // generamos el código
             $this->codigo = CodePatterns::trans($pattern, $this, [
                 'numero' => 'idservicio',
-                'long' => Tools::settings('servicios', 'longnumero', 6)
+                'long' => Tools::settings('Servicios', 'longnumero', 6)
             ]);
         }
 

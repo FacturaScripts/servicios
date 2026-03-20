@@ -101,8 +101,8 @@ class AdminServicios extends PanelController
     {
         switch ($viewName) {
             case self::VIEW_CONFIG:
-                $view->loadData('servicios');
-                $view->model->name = 'servicios';
+                $view->loadData('Servicios');
+                $view->model->name = 'Servicios';
                 break;
 
             case self::VIEW_LIST_CATEGORIES:

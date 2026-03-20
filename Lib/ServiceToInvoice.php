@@ -249,7 +249,7 @@ class ServiceToInvoice
         $newLine->codimpuesto = null;
         $newLine->iva = 0;
 
-        if (Tools::settings('servicios', 'document_machine')) {
+        if (Tools::settings('Servicios', 'document_machine')) {
             foreach ($service->getMachines() as $machine) {
                 $newLine->descripcion .= "\n"
                     . Tools::trans('machine') . ': ' . $machine->nombre;
@@ -262,7 +262,7 @@ class ServiceToInvoice
             }
         }
 
-        if (Tools::settings('servicios', 'document_start_date')) {
+        if (Tools::settings('Servicios', 'document_start_date')) {
             $startDate = $service->fecha;
             foreach ($service->getTrabajos() as $work) {
                 if (strtotime($work->fechainicio) < strtotime($startDate)) {
@@ -276,7 +276,7 @@ class ServiceToInvoice
             $saveLine = true;
         }
 
-        if (Tools::settings('servicios', 'document_end_date')) {
+        if (Tools::settings('Servicios', 'document_end_date')) {
             $endDate = $service->fecha;
             foreach ($service->getTrabajos() as $work) {
                 if (strtotime($work->fechafin) > strtotime($endDate)) {
@@ -290,14 +290,14 @@ class ServiceToInvoice
             $saveLine = true;
         }
 
-        if (Tools::settings('servicios', 'document_description') && $service->descripcion) {
+        if (Tools::settings('Servicios', 'document_description') && $service->descripcion) {
             $newLine->descripcion .= "\n\n"
                 . Tools::trans('description') . "\n" . $service->descripcion;
 
             $saveLine = true;
         }
 
-        if (Tools::settings('servicios', 'document_material') && $service->material) {
+        if (Tools::settings('Servicios', 'document_material') && $service->material) {
             $newLine->descripcion .= "\n\n"
                 . Tools::trans('material')
                 . "\n" . $service->material;
@@ -305,7 +305,7 @@ class ServiceToInvoice
             $saveLine = true;
         }
 
-        if (Tools::settings('servicios', 'document_solution') && $service->solucion) {
+        if (Tools::settings('Servicios', 'document_solution') && $service->solucion) {
             $newLine->descripcion .= "\n\n"
                 . Tools::trans('solution')
                 . "\n" . $service->solucion;
@@ -313,7 +313,7 @@ class ServiceToInvoice
             $saveLine = true;
         }
 
-        if (Tools::settings('servicios', 'document_observations') && $service->observaciones) {
+        if (Tools::settings('Servicios', 'document_observations') && $service->observaciones) {
             $newLine->descripcion .= "\n\n"
                 . Tools::trans('observations')
                 . "\n" . $service->observaciones;

@@ -389,7 +389,7 @@
         function saveCustomer(code) {
             codcliente = code;
 
-            {% if settings('servicios', 'new_service_without_machine', false) %}
+            {% if settings('Servicios', 'new_service_without_machine', false) %}
             saveNewService();
             {% else %}
             let formData = new FormData();
@@ -467,9 +467,9 @@
             // si tenemos idmaquina en la url, se guarda el servicio
             {% if fsc.idmaquina > 0 %}
             saveMachine('{{ fsc.idmaquina }}');
-            {% elseif fsc.codcliente != '' and settings('servicios', 'new_service_without_machine', false) %}
+            {% elseif fsc.codcliente != '' and settings('Servicios', 'new_service_without_machine', false) %}
             // si ya tenemos codcliente en la url,
-            // y la configuración permite guardar servicios sin máquina, se guarda el servicio
+            // y la configuración permite guardar Servicios sin máquina, se guarda el servicio
             saveNewService();
             {% elseif fsc.codcliente != '' %}
             // si ya tenemos codcliente en la url, se guarda el cliente

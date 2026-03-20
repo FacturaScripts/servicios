@@ -52,11 +52,11 @@ class Service extends BaseTicket
 
         static::$escpos->text(static::sanitize(Tools::trans('date') . ': ' . $model->fecha . ' ' . $model->hora) . "\n");
 
-        if (Tools::settings('servicios', 'print_ticket_agent', false)) {
+        if (Tools::settings('Servicios', 'print_ticket_agent', false)) {
             static::$escpos->text(static::sanitize(Tools::trans('agent') . ': ' . $model->getAgent()->nombre) . "\n");
         }
 
-        if (Tools::settings('servicios', 'print_ticket_assigned', false)) {
+        if (Tools::settings('Servicios', 'print_ticket_assigned', false)) {
             static::$escpos->text(static::sanitize(Tools::trans('assigned') . ': ' . $model->getAsignado()->nick) . "\n");
         }
 
@@ -69,22 +69,22 @@ class Service extends BaseTicket
             static::$escpos->text(static::sanitize(Tools::trans('phone2') . ': ' . ($model->telefono2 ?? $customer->telefono2)));
         }
 
-        if ($model->descripcion && (bool)Tools::settings('servicios', 'print_ticket_description', false)) {
+        if ($model->descripcion && (bool)Tools::settings('Servicios', 'print_ticket_description', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('description')));
             static::$escpos->text("\n" . static::sanitize($model->descripcion));
         }
 
-        if ($model->material && (bool)Tools::settings('servicios', 'print_ticket_material', false)) {
+        if ($model->material && (bool)Tools::settings('Servicios', 'print_ticket_material', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('material')));
             static::$escpos->text("\n" . static::sanitize($model->material));
         }
 
-        if ($model->solucion && (bool)Tools::settings('servicios', 'print_ticket_solution', false)) {
+        if ($model->solucion && (bool)Tools::settings('Servicios', 'print_ticket_solution', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('solution')));
             static::$escpos->text("\n" . static::sanitize($model->solucion));
         }
 
-        if ($model->observaciones && (bool)Tools::settings('servicios', 'print_ticket_observations', false)) {
+        if ($model->observaciones && (bool)Tools::settings('Servicios', 'print_ticket_observations', false)) {
             static::$escpos->text("\n\n" . static::sanitize(Tools::trans('observations')));
             static::$escpos->text("\n" . static::sanitize($model->observaciones));
         }
@@ -96,7 +96,7 @@ class Service extends BaseTicket
     protected static function setMachines(ModelClass $model, TicketPrinter $printer): void
     {
         $machines = $model->getMachines();
-        if (empty($machines) || false === Tools::settings('servicios', 'print_ticket_machine_info', false)) {
+        if (empty($machines) || false === Tools::settings('Servicios', 'print_ticket_machine_info', false)) {
             return;
         }
 
@@ -111,15 +111,15 @@ class Service extends BaseTicket
         parent::setFooter($model, $printer);
 
         // si hay un texto personalizado de pie de ticket, lo añadimos
-        if (false === empty(Tools::settings('servicios', 'print_ticket_footer_text'))) {
-            static::$escpos->text("\n" . static::sanitize(Tools::settings('servicios', 'print_ticket_footer_text')) . "\n");
+        if (false === empty(Tools::settings('Servicios', 'print_ticket_footer_text'))) {
+            static::$escpos->text("\n" . static::sanitize(Tools::settings('Servicios', 'print_ticket_footer_text')) . "\n");
         }
     }
 
     protected static function setWorks(ModelClass $model, TicketPrinter $printer): void
     {
         $works = $model->getTrabajos();
-        if (empty($works) || false === Tools::settings('servicios', 'print_ticket_works', false)) {
+        if (empty($works) || false === Tools::settings('Servicios', 'print_ticket_works', false)) {
             return;
         }
 
@@ -132,19 +132,19 @@ class Service extends BaseTicket
             static::$escpos->text(static::sanitize(Tools::trans('until-hour') . ': ' . $work->horafin) . "\n");
             static::$escpos->text(static::sanitize(Tools::trans('observations') . ': ' . $work->observaciones) . "\n");
 
-            if (Tools::settings('servicios', 'print_ticket_work_reference', false)) {
+            if (Tools::settings('Servicios', 'print_ticket_work_reference', false)) {
                 static::$escpos->text(static::sanitize(Tools::trans('reference') . ': ' . $work->referencia) . "\n");
             }
 
-            if (Tools::settings('servicios', 'print_ticket_work_description', false)) {
+            if (Tools::settings('Servicios', 'print_ticket_work_description', false)) {
                 static::$escpos->text(static::sanitize(Tools::trans('description') . ': ' . $work->descripcion) . "\n");
             }
 
-            if (Tools::settings('servicios', 'print_ticket_work_quantity', false)) {
+            if (Tools::settings('Servicios', 'print_ticket_work_quantity', false)) {
                 static::$escpos->text(static::sanitize(Tools::trans('quantity') . ': ' . $work->cantidad) . "\n");
             }
 
-            if (Tools::settings('servicios', 'print_ticket_work_price', false)) {
+            if (Tools::settings('Servicios', 'print_ticket_work_price', false)) {
                 static::$escpos->text(static::sanitize(Tools::trans('price') . ': ' . Tools::money($work->precio)) . "\n");
             }
 

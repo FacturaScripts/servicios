@@ -32,7 +32,7 @@ class Randomizer
     protected function loadButtons(): Closure
     {
         return function () {
-            $this->addButton('plugins', 'servicios', 'generated-services', 'services', 'fa-solid fa-headset', 'Random\\Servicios', 'ServicioAT');
+            $this->addButton('plugins', 'Servicios', 'generated-services', 'services', 'fa-solid fa-headset', 'Random\\Servicios', 'ServicioAT');
         };
     }
 }

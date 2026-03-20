@@ -120,7 +120,7 @@ final class TrabajoAtTest extends TestCase
     public function testDefaultStatus(): void
     {
         // establecemos el estado por defecto para los trabajos
-        Tools::settingsSet('servicios', 'workstatus', TrabajoAT::STATUS_MAKE_ESTIMATION);
+        Tools::settingsSet('Servicios', 'workstatus', TrabajoAT::STATUS_MAKE_ESTIMATION);
 
         // creamos un cliente
         $customer = $this->getRandomCustomer();
@@ -144,7 +144,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertEquals(TrabajoAT::STATUS_MAKE_ESTIMATION, $work1->estado);
 
         // cambiamos el estado predefinido
-        Tools::settingsSet('servicios', 'workstatus', TrabajoAT::STATUS_NONE);
+        Tools::settingsSet('Servicios', 'workstatus', TrabajoAT::STATUS_NONE);
 
         // creamos otro trabajo
         $work2 = new TrabajoAT();
@@ -163,7 +163,7 @@ final class TrabajoAtTest extends TestCase
     public function testUpdateStock(): void
     {
         // desactivamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+        Tools::settingsSet('Servicios', 'disablestockmanagement', true);
 
         // creamos un cliente
         $customer = $this->getRandomCustomer();
@@ -204,7 +204,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertEquals(10, $stock->cantidad);
 
         // activamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+        Tools::settingsSet('Servicios', 'disablestockmanagement', false);
 
         // creamos otro trabajo
         $work2 = new TrabajoAT();
@@ -226,7 +226,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertEquals(10, $stock->cantidad);
 
         // desactivamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+        Tools::settingsSet('Servicios', 'disablestockmanagement', true);
 
         //eliminamos el trabajo 1
         $this->assertTrue($work1->delete(), 'Error deleting TrabajoAT with stock');

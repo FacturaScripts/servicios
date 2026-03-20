@@ -108,6 +108,9 @@ final class Init extends InitClass
 
     private function createRoleForPlugin(): void
     {
+        new Role();
+        new RoleAccess();
+
         $dataBase = new DataBase();
         $dataBase->beginTransaction();
 
@@ -196,7 +199,7 @@ final class Init extends InitClass
         ];
 
         foreach ($defaults as $key => $value) {
-            Tools::settings('servicios', $key, $value);
+            Tools::settings('Servicios', $key, $value);
         }
         Tools::settingsSave();
     }
