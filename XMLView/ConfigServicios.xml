@@ -39,25 +39,34 @@
             <column name="print-observations" order="120">
                 <widget type="checkbox" fieldname="print_pdf_observations"/>
             </column>
-            <column name="print-agent" order="130">
+            <column name="print-description" order="130">
+                <widget type="checkbox" fieldname="print_pdf_description"/>
+            </column>
+            <column name="print-materials" order="140">
+                <widget type="checkbox" fieldname="print_pdf_material"/>
+            </column>
+            <column name="print-solution" order="150">
+                <widget type="checkbox" fieldname="print_pdf_solution"/>
+            </column>
+            <column name="print-agent" order="160">
                 <widget type="checkbox" fieldname="print_pdf_agent"/>
             </column>
-            <column name="print-assigned" order="140">
+            <column name="print-assigned" order="170">
                 <widget type="checkbox" fieldname="print_pdf_assigned"/>
             </column>
-            <column name="print-works" order="150">
+            <column name="print-works" order="180">
                 <widget type="checkbox" fieldname="print_pdf_works"/>
             </column>
-            <column name="print-works-reference" order="160">
+            <column name="print-works-reference" order="190">
                 <widget type="checkbox" fieldname="print_pdf_work_reference"/>
             </column>
-            <column name="print-works-description" order="170">
+            <column name="print-works-description" order="200">
                 <widget type="checkbox" fieldname="print_pdf_work_description"/>
             </column>
-            <column name="print-works-quantity" order="180">
+            <column name="print-works-quantity" order="210">
                 <widget type="checkbox" fieldname="print_pdf_work_quantity"/>
             </column>
-            <column name="print-works-price" order="190">
+            <column name="print-works-price" order="220">
                 <widget type="checkbox" fieldname="print_pdf_work_price"/>
             </column>
         </group>
@@ -71,25 +80,34 @@
             <column name="print-observations" order="120">
                 <widget type="checkbox" fieldname="print_ticket_observations"/>
             </column>
-            <column name="print-agent" order="130">
+            <column name="print-description" order="130">
+                <widget type="checkbox" fieldname="print_ticket_description"/>
+            </column>
+            <column name="print-materials" order="140">
+                <widget type="checkbox" fieldname="print_ticket_material"/>
+            </column>
+            <column name="print-solution" order="150">
+                <widget type="checkbox" fieldname="print_ticket_solution"/>
+            </column>
+            <column name="print-agent" order="160">
                 <widget type="checkbox" fieldname="print_ticket_agent"/>
             </column>
-            <column name="print-assigned" order="140">
+            <column name="print-assigned" order="170">
                 <widget type="checkbox" fieldname="print_ticket_assigned"/>
             </column>
-            <column name="print-works" order="150">
+            <column name="print-works" order="180">
                 <widget type="checkbox" fieldname="print_ticket_works"/>
             </column>
-            <column name="print-works-reference" order="160">
+            <column name="print-works-reference" order="190">
                 <widget type="checkbox" fieldname="print_ticket_work_reference"/>
             </column>
-            <column name="print-works-description" order="170">
+            <column name="print-works-description" order="200">
                 <widget type="checkbox" fieldname="print_ticket_work_description"/>
             </column>
-            <column name="print-works-quantity" order="180">
+            <column name="print-works-quantity" order="210">
                 <widget type="checkbox" fieldname="print_ticket_work_quantity"/>
             </column>
-            <column name="print-works-price" order="190">
+            <column name="print-works-price" order="220">
                 <widget type="checkbox" fieldname="print_ticket_work_price"/>
             </column>
         </group>

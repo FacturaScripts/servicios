@@ -19,11 +19,12 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model;
 
-use FacturaScripts\Core\Model\Agente;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\Agente;
+use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 use FacturaScripts\Dinamic\Model\ServicioAT as DinServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\Variante;
@@ -158,9 +159,12 @@ class TrabajoAT extends ModelClass
         }
 
         if ($this->referencia) {
-            $variante = $this->getVariante();
-            $this->descripcion = empty($this->descripcion) ? $variante->description() : $this->descripcion;
-            $this->precio = empty($this->precio) ? $variante->precio : $this->precio;
+            // guardamos el precio que le asignaríamos si le hacemos un presupuesto al cliente
+            $doc = new PresupuestoCliente();
+            $doc->setSubject($this->getServicio()->getSubject());
+            $line = $doc->getNewProductLine($this->referencia);
+            $this->precio = empty($this->precio) ? $line->pvpunitario : $this->precio;
+            $this->descripcion = empty($this->descripcion) ? $line->descripcion : $this->descripcion;
         }
 
         return parent::test();

@@ -358,10 +358,13 @@ class EditServicioAT extends EditController
                         'icon' => 'fa-solid fa-calculator',
                         'label' => 'calculate-hours'
                     ]);
-                } elseif (false === $view->model->exists()) {
+                }
+
+                if (false === $view->model->exists()) {
                     $view->model->codagente = $this->getViewModelValue($mainViewName, 'codagente');
                     $view->model->nick = $this->getViewModelValue($mainViewName, 'nick');
                 }
+
                 break;
 
             case 'ListAlbaranCliente':
