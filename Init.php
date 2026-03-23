@@ -108,6 +108,9 @@ final class Init extends InitClass
 
     private function createRoleForPlugin(): void
     {
+        new Role();
+        new RoleAccess();
+
         $dataBase = new DataBase();
         $dataBase->beginTransaction();
 
