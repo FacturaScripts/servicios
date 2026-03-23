@@ -22,9 +22,19 @@ namespace FacturaScripts\Test\Plugins;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
+use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\ImpuestoZona;
+use FacturaScripts\Dinamic\Model\LineaAlbaranCliente;
+use FacturaScripts\Dinamic\Model\LineaFacturaCliente;
+use FacturaScripts\Dinamic\Model\LineaPedidoCliente;
+use FacturaScripts\Dinamic\Model\LineaPresupuestoCliente;
+use FacturaScripts\Dinamic\Model\PagoCliente;
+use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\PedidoCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
+use FacturaScripts\Dinamic\Model\ReciboCliente;
+use FacturaScripts\Dinamic\Model\SecuenciaDocumento;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -42,11 +52,21 @@ final class TrabajoAtTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        // instanciamos algunas clases para asegurarnos de que se comprueban sus tablas
+        // iniciamos algunas clases para asegurarnos de que se comprueban sus tablas
+        new SecuenciaDocumento();
+        new ImpuestoZona();
         new PresupuestoCliente();
+        new LineaPresupuestoCliente();
         new PedidoCliente();
+        new LineaPedidoCliente();
         new AlbaranCliente();
+        new LineaAlbaranCliente();
         new FacturaCliente();
+        new LineaFacturaCliente();
+        new ReciboCliente();
+        new PagoCliente();
+        new Asiento();
+        new Partida();
     }
 
     public function testCreate(): void
