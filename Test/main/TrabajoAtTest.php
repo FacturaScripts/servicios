@@ -21,6 +21,10 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
+use FacturaScripts\Dinamic\Model\AlbaranCliente;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\PedidoCliente;
+use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -35,6 +39,15 @@ final class TrabajoAtTest extends TestCase
 {
     use LogErrorsTrait;
     use RandomDataTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        // instanciamos algunas clases para asegurarnos de que se comprueban sus tablas
+        new PresupuestoCliente();
+        new PedidoCliente();
+        new AlbaranCliente();
+        new FacturaCliente();
+    }
 
     public function testCreate(): void
     {
