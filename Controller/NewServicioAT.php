@@ -77,10 +77,10 @@ class NewServicioAT extends Controller
 
         // consultamos la base de datos
         $cliente = new Cliente();
-        $where = [Where::eq('fechabaja', null)];
+        $where = [Where::isNull('fechabaja')];
         if ($this->permissions->onlyOwnerData && !$showAll) {
             $where[] = Where::eq('codagente', $this->user->codagente);
-            $where[] = Where::notEq('codagente', null);
+            $where[] = Where::isNotNull('codagente');
         }
         $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC'], 0, 50);
 
