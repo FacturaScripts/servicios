@@ -77,12 +77,12 @@ class NewServicioAT extends Controller
 
         // consultamos la base de datos
         $cliente = new Cliente();
-        $where = [Where::isNull('fechabaja')];
+        $where = [Where::eq('fechabaja', null)];
         if ($this->permissions->onlyOwnerData && !$showAll) {
-            $where[] = Where::column('codagente', $this->user->codagente);
-            $where[] = Where::isNotNull('codagente');
+            $where[] = Where::eq('codagente', $this->user->codagente);
+            $where[] = Where::notEq('codagente', null);
         }
-        $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC']);
+        $clientes = $cliente->all($where, ['LOWER(nombre)' => 'ASC'], 0, 50);
 
         // guardamos en caché
         Cache::set($cacheKey, $clientes);
