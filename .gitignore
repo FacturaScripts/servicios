@@ -25,3 +25,8 @@ package-lock.json
 .settings
 .buildpath
 /amortizaciones-master/nbproject/private/
+
+# IA
+CLAUDE.md
+/.claude
+.codex
