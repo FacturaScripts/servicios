@@ -24,7 +24,7 @@ use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Plugins\PlantillasPDF\Lib\Export\PDFExport;
 
 /**
- * @author Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <contacto@danielfg.es>
  */
 class PlantillasPDFserviciosExport extends PDFExport
 {

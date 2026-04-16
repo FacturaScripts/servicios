@@ -28,7 +28,7 @@ use FacturaScripts\Dinamic\Model\User;
 /**
  * Description of ServicioATLog
  *
- * @author Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <contacto@danielfg.es>
  */
 class ServicioATLog extends ModelClass
 {

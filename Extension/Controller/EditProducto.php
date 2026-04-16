@@ -25,7 +25,7 @@ use FacturaScripts\Core\Where;
 use FacturaScripts\Plugins\Servicios\Model\TrabajoAT;
 
 /**
- * @author Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <contacto@danielfg.es>
  */
 class EditProducto
 {
