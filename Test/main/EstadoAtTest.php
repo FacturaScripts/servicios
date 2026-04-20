@@ -101,7 +101,7 @@ final class EstadoAtTest extends TestCase
         $this->assertTrue($status2->delete());
 
         // comprobamos que queda alguno predeterminado
-        $whereDefault = [Where::column('predeterminado', true)];
+        $whereDefault = [Where::eq('predeterminado', true)];
         $default = EstadoAT::all($whereDefault);
         $this->assertNotEmpty($default, 'Error: No hay estados predeterminados');
     }

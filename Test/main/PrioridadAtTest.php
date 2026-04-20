@@ -89,7 +89,7 @@ final class PrioridadAtTest extends TestCase
         $this->assertTrue($priority2->delete());
 
         // comprobamos que queda alguna prioridad predeterminada
-        $whereDefault = [Where::column('predeterminado', true)];
+        $whereDefault = [Where::eq('predeterminado', true)];
         $priorities = PrioridadAT::all($whereDefault);
         $this->assertNotEmpty($priorities, 'Error checking predeterminado PrioridadAT');
     }

@@ -122,8 +122,8 @@ class ServicioCheckAT extends ModelClass
         }
 
         $where = [
-            Where::column('idservice', $this->idservice),
-            Where::column('idcategory', $check->idcategory)
+            Where::eq('idservice', $this->idservice),
+            Where::eq('idcategory', $check->idcategory)
         ];
         $serviceCategory = new ServicioCategoriaAT();
         if (false === $serviceCategory->loadWhere($where)) {

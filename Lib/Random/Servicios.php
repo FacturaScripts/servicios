@@ -184,6 +184,10 @@ class Servicios extends NewItems
             self::$status = $seviceStatus->all();
         }
 
+        if (empty(self::$status)) {
+            return null;
+        }
+
         \shuffle(self::$status);
         return self::$status[0]->id;
     }
@@ -198,6 +202,10 @@ class Servicios extends NewItems
         if (null === self::$priorities) {
             $priority = new PrioridadAT();
             self::$priorities = $priority->all();
+        }
+
+        if (empty(self::$priorities)) {
+            return null;
         }
 
         \shuffle(self::$priorities);
@@ -216,6 +224,10 @@ class Servicios extends NewItems
             self::$types = $type->all();
         }
 
+        if (empty(self::$types)) {
+            return null;
+        }
+
         \shuffle(self::$types);
         return self::$types[0]->id;
     }
@@ -229,7 +241,7 @@ class Servicios extends NewItems
     protected static function setMachines(&$faker, &$service)
     {
         $model = new MaquinaAT();
-        $where = [Where::column('codcliente', $service->codcliente)];
+        $where = [Where::eq('codcliente', $service->codcliente)];
         $machines = $model->all($where);
         if (empty($machines)) {
             static::createMachinesForCustomer($faker, $machines, $service->codcliente);

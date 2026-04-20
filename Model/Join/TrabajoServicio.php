@@ -19,9 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Model\Join;
 
-use FacturaScripts\Core\Model\Base\JoinModel;
-use FacturaScripts\Core\Tools;
-
+use FacturaScripts\Core\Template\JoinModel;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
 
@@ -30,7 +28,7 @@ use FacturaScripts\Dinamic\Model\TrabajoAT;
  */
 class TrabajoServicio extends JoinModel
 {
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
         $this->setMasterModel(new ServicioAT());

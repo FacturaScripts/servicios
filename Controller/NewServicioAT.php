@@ -227,7 +227,7 @@ class NewServicioAT extends Controller
         }
         $where = [];
         if ($this->permissions->onlyOwnerData && !$showAll) {
-            $where[] = Where::column('codagente', $this->user->codagente);
+            $where[] = Where::eq('codagente', $this->user->codagente);
             $where[] = Where::isNotNull('codagente');
         }
 
@@ -260,7 +260,7 @@ class NewServicioAT extends Controller
             ];
         }
 
-        $whereCustomer = [Where::column('codcliente', $customer->codcliente)];
+        $whereCustomer = [Where::eq('codcliente', $customer->codcliente)];
         $customerMachines = MaquinaAT::all($whereCustomer, $orderBy);
         foreach ($customerMachines as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
@@ -270,7 +270,7 @@ class NewServicioAT extends Controller
                 . '</tr>';
         }
 
-        $whereAnonymous = [Where::column('codcliente', null)];
+        $whereAnonymous = [Where::isNull('codcliente')];
         $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy);
         if (false === empty($anonymousMachines)) {
             $html .= '<tr class="table-info"><td class="text-center" colspan="3">'
@@ -278,7 +278,7 @@ class NewServicioAT extends Controller
                 . '</td></tr>';
         }
 
-        $whereAnonymous = [Where::column('codcliente', null)];
+        $whereAnonymous = [Where::isNull('codcliente')];
         foreach (MaquinaAT::all($whereAnonymous, $orderBy) as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
                 . '<td>' . $machine->nombre . '</td>'

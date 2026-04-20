@@ -66,10 +66,10 @@ final class StockAvanzadoTest extends TestCase
         // comprobamos que hay un movimiento del trabajo
         $movements1 = new MovimientoStock();
         $where1 = [
-            Where::column('referencia', $product->referencia),
-            Where::column('codalmacen', $service->codalmacen),
-            Where::column('docmodel', $work1->modelClassName()),
-            Where::column('docid', $work1->id())
+            Where::eq('referencia', $product->referencia),
+            Where::eq('codalmacen', $service->codalmacen),
+            Where::eq('docmodel', $work1->modelClassName()),
+            Where::eq('docid', $work1->id())
         ];
         $this->assertTrue($movements1->loadWhere($where1), 'No stock movement found for TrabajoAT');
 
@@ -91,10 +91,10 @@ final class StockAvanzadoTest extends TestCase
         // comprobamos que hay un movimiento del trabajo
         $movements2 = new MovimientoStock();
         $where2 = [
-            Where::column('referencia', $product->referencia),
-            Where::column('codalmacen', $service->codalmacen),
-            Where::column('docmodel', $work2->modelClassName()),
-            Where::column('docid', $work2->id())
+            Where::eq('referencia', $product->referencia),
+            Where::eq('codalmacen', $service->codalmacen),
+            Where::eq('docmodel', $work2->modelClassName()),
+            Where::eq('docid', $work2->id())
         ];
         $this->assertTrue($movements2->loadWhere($where2), 'No stock movement found for TrabajoAT');
 

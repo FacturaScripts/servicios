@@ -94,7 +94,7 @@ class EditCliente
                 case 'ListMaquinaAT':
                 case 'ListServicioAT':
                     $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
-                    $where = [Where::column('codcliente', $codcliente)];
+                    $where = [Where::eq('codcliente', $codcliente)];
                     $view->loadData('', $where);
                     break;
             }

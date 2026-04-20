@@ -93,9 +93,9 @@ class ServicioCategoriaAT extends ModelClass
         }
 
         $where = [
-            Where::column('id', $this->id, '!='),
-            Where::column('idcategory', $this->idcategory),
-            Where::column('idservice', $this->idservice),
+            Where::notEq('id', $this->id),
+            Where::eq('idcategory', $this->idcategory),
+            Where::eq('idservice', $this->idservice),
         ];
         $serviceCategory = new ServicioCategoriaAT();
         if ($serviceCategory->loadWhere($where)) {
@@ -126,11 +126,11 @@ class ServicioCategoriaAT extends ModelClass
         }
 
         $serviceCheck = new ServicioCheckAT();
-        $whereCheck = [Where::column('idcategory', $this->idcategory)];
+        $whereCheck = [Where::eq('idcategory', $this->idcategory)];
         foreach (CheckAT::all($whereCheck) as $check) {
             $where = [
-                Where::column('idcheck', $check->id),
-                Where::column('idservice', $this->idservice),
+                Where::eq('idcheck', $check->id),
+                Where::eq('idservice', $this->idservice),
             ];
 
             if ($serviceCheck->loadWhere($where)) {

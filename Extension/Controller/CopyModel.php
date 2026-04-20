@@ -132,8 +132,8 @@ class CopyModel
 
             if ((bool)$this->request->request->get('copy-attachments', false)) {
                 $where = [
-                    Where::column('model', $this->modelClass),
-                    Where::column('modelid|modelcode', $serviceOrigen->idservicio),
+                    Where::eq('model', $this->modelClass),
+                    Where::eq('modelid|modelcode', $serviceOrigen->idservicio),
                 ];
                 foreach (AttachedFileRelation::all($where) as $file) {
                     $newRelation = new AttachedFileRelation();

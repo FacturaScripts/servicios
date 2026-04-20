@@ -80,19 +80,19 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados editables
         $valuesWhere = [
-            ['label' => Tools::trans('only-active'), 'where' => [Where::column('editable', true)]],
-            ['label' => '------', 'where' => [Where::column('editable', true)]],
+            ['label' => Tools::trans('only-active'), 'where' => [Where::eq('editable', true)]],
+            ['label' => '------', 'where' => [Where::eq('editable', true)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
             if ($estado->editable) {
                 $valuesWhere[] = [
                     'label' => $estado->nombre,
-                    'where' => [Where::column('idestado', $estado->id)]
+                    'where' => [Where::eq('idestado', $estado->id)]
                 ];
             }
         }
 
-        $this->addView($viewName, 'ServicioAT', 'services', 'fa-solid fa-headset')
+        $this->addView($viewName, 'ServicioAT', 'open-services', 'fa-solid fa-lock-open')
             ->addOrderBy(['fecha', 'hora'], 'date', 2)
             ->addOrderBy(['idprioridad'], 'priority')
             ->addOrderBy(['idservicio'], 'code')
@@ -123,14 +123,14 @@ class ListServicioAT extends ListController
 
         // obtenemos los estados no editables
         $valuesWhere = [
-            ['label' => Tools::trans('only-closed'), 'where' => [Where::column('editable', false)]],
-            ['label' => '------', 'where' => [Where::column('editable', false)]],
+            ['label' => Tools::trans('only-closed'), 'where' => [Where::eq('editable', false)]],
+            ['label' => '------', 'where' => [Where::eq('editable', false)]],
         ];
         foreach ($this->getServiceStatus() as $estado) {
             if (false === $estado->editable) {
                 $valuesWhere[] = [
                     'label' => $estado->nombre,
-                    'where' => [Where::column('idestado', $estado->id)]
+                    'where' => [Where::eq('idestado', $estado->id)]
                 ];
             }
         }

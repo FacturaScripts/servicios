@@ -329,14 +329,14 @@ class EditServicioAT extends EditController
                 break;
 
             case 'ListServicioATLog':
-                $where = [Where::column('idservicio', $idservicio)];
+                $where = [Where::eq('idservicio', $idservicio)];
                 $orderBy = ['creationdate' => 'DESC'];
                 $view->loadData('', $where, $orderBy);
                 break;
 
             case 'EditServicioCategoriaAT':
             case 'EditServicioCheckAT':
-                $where = [Where::column('idservice', $idservicio)];
+                $where = [Where::eq('idservice', $idservicio)];
                 $view->loadData('', $where);
                 // Remove checks if the service has no categories and checks.
                 if ($viewName === 'EditServicioCheckAT'
@@ -348,7 +348,7 @@ class EditServicioAT extends EditController
                 break;
 
             case 'EditTrabajoAT':
-                $where = [Where::column('idservicio', $idservicio)];
+                $where = [Where::eq('idservicio', $idservicio)];
                 $orderBy = ['fechainicio' => 'DESC', 'horainicio' => 'DESC', 'idtrabajo' => 'DESC'];
                 $view->loadData('', $where, $orderBy);
                 $this->loadStatusWorkValues($viewName, $view);
@@ -370,7 +370,7 @@ class EditServicioAT extends EditController
             case 'ListAlbaranCliente':
             case 'ListFacturaCliente':
             case 'ListPresupuestoCliente':
-                $where = [Where::column('idservicio', $idservicio)];
+                $where = [Where::eq('idservicio', $idservicio)];
                 $view->loadData('', $where);
                 break;
         }

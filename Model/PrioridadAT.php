@@ -75,8 +75,8 @@ class PrioridadAT extends ModelClass
 
         if ($this->predeterminado) {
             $where = [
-                Where::column('predeterminado', true),
-                Where::column('id', $this->id, '!=')
+                Where::eq('predeterminado', true),
+                Where::notEq('id', $this->id)
             ];
             foreach ($this->all($where) as $priority) {
                 $priority->predeterminado = false;

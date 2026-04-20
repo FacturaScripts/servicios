@@ -31,7 +31,7 @@ class StockMovementMod implements StockMovementModInterface
     {
         // generamos un movimiento para cada trabajo con referencia
         $model = new TrabajoAT();
-        $where = [Where::column('referencia', '', '!=')];
+        $where = [Where::notEq('referencia', '')];
         $orderBy = ['idtrabajo' => 'ASC'];
         $limit = 1000;
         $offset = 0;

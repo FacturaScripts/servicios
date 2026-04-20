@@ -285,7 +285,7 @@ class ServicioAT extends ModelClass
      */
     public function getTrabajos(): array
     {
-        $where = [Where::column('idservicio', $this->idservicio)];
+        $where = [Where::eq('idservicio', $this->idservicio)];
         $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
         return DinTrabajoAT::all($where, $order);
     }

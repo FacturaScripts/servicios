@@ -83,7 +83,7 @@ class EstadoAT extends ModelClass
 
         if ($this->predeterminado) {
             // ponemos otro estado como predeterminado
-            $where = [Where::column('editable', true)];
+            $where = [Where::eq('editable', true)];
             foreach ($this->all($where) as $item) {
                 $item->predeterminado = true;
                 if ($item->save()) {
@@ -110,8 +110,8 @@ class EstadoAT extends ModelClass
 
         if ($this->predeterminado) {
             $where = [
-                Where::column('predeterminado', true),
-                Where::column('id', $this->id, '!=')
+                Where::eq('predeterminado', true),
+                Where::notEq('id', $this->id)
             ];
             foreach ($this->all($where) as $status) {
                 $status->predeterminado = false;

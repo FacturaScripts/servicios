@@ -56,8 +56,8 @@ class TipoAT extends ModelClass
 
         if ($this->default) {
             $where = [
-                Where::column('default', true),
-                Where::column('id', $this->id, '!=')
+                Where::eq('default', true),
+                Where::notEq('id', $this->id)
             ];
             foreach ($this->all($where) as $type) {
                 $type->default = false;

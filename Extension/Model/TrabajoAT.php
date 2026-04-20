@@ -35,8 +35,8 @@ class TrabajoAT
         return function () {
             $movement = new MovimientoStock();
             $where = [
-                Where::column('docid', $this->idtrabajo),
-                Where::column('docmodel', 'TrabajoAT'),
+                Where::eq('docid', $this->idtrabajo),
+                Where::eq('docmodel', 'TrabajoAT'),
             ];
             if ($movement->loadWhere($where)) {
                 $movement->delete();
@@ -96,8 +96,8 @@ class TrabajoAT
             // buscamos el movimiento de stock
             $movement = new MovimientoStock();
             $where = [
-                Where::column('docid', $this->idtrabajo),
-                Where::column('docmodel', 'TrabajoAT'),
+                Where::eq('docid', $this->idtrabajo),
+                Where::eq('docmodel', 'TrabajoAT'),
             ];
             if (false === $movement->loadWhere($where)) {
                 // si no existe, lo creamos
