@@ -57,19 +57,19 @@ jobs:
           coverage: none
 
       - name: Clonar FacturaScripts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           repository: 'NeoRazorX/facturascripts'
 
       - name: Clonar Plugin ${{ env.NOMBRE_PLUGIN }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           path: Plugins/${{ env.NOMBRE_PLUGIN }}
 
       - name: Cache de dependencias de Composer
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache/files
           key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}

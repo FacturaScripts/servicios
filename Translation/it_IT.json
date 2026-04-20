@@ -46,15 +46,19 @@
     "notify-assigned": "Notifica l'assegnato",
     "notify-customer": "Notificare il cliente",
     "notify-user": "Notifica utente",
+    "open-services": "Abiertos",
     "print-agent": "Stampa agente",
     "print-assigned": "Stampa assegnata",
     "print-description": "Stampa descrizione",
     "print-machine-info": "Stampa informazioni sulla macchina",
+    "print-materials": "Stampa materiali",
     "print-observations": "stampa-osservazioni",
     "print-pdf": "Stampa PDF",
     "print-pdf-desc": "Questa impostazione si applicherà solo ai PDF di servizio. Puoi usare il PDF del core o il plugin PlantillasPDF.",
     "print-reference": "Stampa riferimento",
     "print-services": "Stampa servizi",
+    "print-solution": "Stampa soluzione",
     "print-ticket-desc": "Questa impostazione si applicherà solo ai ticket di servizio. È necessario avere il plugin dei ticket installato.",
-    "ticket-footer-text": "Testo del piè di pagina del ticket"
+    "ticket-footer-text": "Testo del piè di pagina del ticket",
+    "verifications": "Verifiche"
 }

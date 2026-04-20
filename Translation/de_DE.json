@@ -46,15 +46,19 @@
     "notify-assigned": "Dem Zugewiesenen benachrichtigen",
     "notify-customer": "Kunden benachrichtigen",
     "notify-user": "Benutzer benachrichtigen",
+    "open-services": "Abiertos",
     "print-agent": "Agent drucken.",
     "print-assigned": "Zuordnung drucken",
     "print-description": "Beschreibung drucken",
     "print-machine-info": "Maschineninformation drucken",
+    "print-materials": "Druckmaterialien",
     "print-observations": "Bemerkungen drucken",
     "print-pdf": "PDF drucken",
     "print-pdf-desc": "Diese Einstellung gilt nur für Service-PDFs. Sie können das PDF des Core oder das Plugin VorlagenPDF verwenden.",
     "print-reference": "Referenz drucken",
     "print-services": "Dienste drucken.",
+    "print-solution": "Drucklösung",
     "print-ticket-desc": "Diese Einstellung gilt nur für Service-Tickets. Das Ticket-Plugin muss installiert sein.",
-    "ticket-footer-text": "Text der Fußzeile des Tickets"
+    "ticket-footer-text": "Text der Fußzeile des Tickets",
+    "verifications": "Überprüfungen"
 }

@@ -46,15 +46,19 @@
     "notify-assigned": "Notificar ao atribuído",
     "notify-customer": "Notificar o cliente",
     "notify-user": "Notificar usuário",
+    "open-services": "Abiertos",
     "print-agent": "Agente de impressão",
     "print-assigned": "Imprimir atribuído",
     "print-description": "Imprimir descrição",
     "print-machine-info": "Imprimir informação da máquina",
+    "print-materials": "Imprimir materiais",
     "print-observations": "Imprimir observações",
     "print-pdf": "Imprimir PDF",
     "print-pdf-desc": "Esta configuração só se aplicará aos PDFs de serviço. Você pode usar o PDF do core ou o plugin PlantillasPDF.",
     "print-reference": "Imprimir referência",
     "print-services": "Imprimir serviços",
+    "print-solution": "Imprimir solução",
     "print-ticket-desc": "Esta configuração só se aplicará aos bilhetes de serviço. É necessário ter o plugin Tickets instalado.",
-    "ticket-footer-text": "Texto do rodapé do bilhete"
+    "ticket-footer-text": "Texto do rodapé do bilhete",
+    "verifications": "Verificações"
 }

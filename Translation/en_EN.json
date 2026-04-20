@@ -46,15 +46,19 @@
     "notify-assigned": "Notify Assignee",
     "notify-customer": "Notify customer",
     "notify-user": "Notify user",
+    "open-services": "Abiertos",
     "print-agent": "Print agent",
     "print-assigned": "Print assigned",
     "print-description": "Print description",
     "print-machine-info": "Print machine info",
+    "print-materials": "Print materials",
     "print-observations": "Print observations",
     "print-pdf": "Printing PDF",
     "print-pdf-desc": "This setting will only apply to service PDFs. You can use the core PDF or the PlantillasPDF plugin.",
     "print-reference": "Print reference",
     "print-services": "Print services",
+    "print-solution": "Print solution",
     "print-ticket-desc": "This setting will only apply to service tickets. It is necessary to have the Tickets plugin installed.",
-    "ticket-footer-text": "Ticket footer text"
+    "ticket-footer-text": "Ticket footer text",
+    "verifications": "Verifications"
 }

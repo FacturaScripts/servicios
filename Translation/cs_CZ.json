@@ -46,15 +46,19 @@
     "notify-assigned": "Notificar al asignado",
     "notify-customer": "Notificar al cliente",
     "notify-user": "Notificar al usuario",
+    "open-services": "Abiertos",
     "print-agent": "Tisknout agenta",
     "print-assigned": "Tisknout přiřazené",
     "print-description": "Tisknout popis",
     "print-machine-info": "Imprimir información de la máquina",
+    "print-materials": "Tiskové materiály",
     "print-observations": "Imprimir observaciones",
     "print-pdf": "Tisknout PDF",
     "print-pdf-desc": "Toto nastavení se použije pouze na PDF služeb. Můžete použít PDF jádra nebo plugin PlantillasPDF.",
     "print-reference": "Tisknout referenci",
     "print-services": "Tisk služeb",
+    "print-solution": "Tiskové řešení",
     "print-ticket-desc": "Toto nastavení se použije pouze na servisní lístky. Je nutné mít nainstalovaný plugin Tickets.",
-    "ticket-footer-text": "Text patičky lístku"
+    "ticket-footer-text": "Text patičky lístku",
+    "verifications": "Ověření"
 }

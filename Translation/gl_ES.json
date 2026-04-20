@@ -46,15 +46,19 @@
     "notify-assigned": "Notificar ao asignado",
     "notify-customer": "Notificar ao cliente",
     "notify-user": "Notificar ao usuario",
+    "open-services": "Abiertos",
     "print-agent": "Imprimir axente",
     "print-assigned": "Imprimir asignado",
     "print-description": "Imprimir descrición",
     "print-machine-info": "Imprimir información da máquina",
+    "print-materials": "Imprimir materiais",
     "print-observations": "Imprimir observacións",
     "print-pdf": "Imprimir PDF",
     "print-pdf-desc": "Esta configuración só se aplicará aos PDF de servizo. Pódese usar o PDF do core ou o plugin PlantillasPDF.",
     "print-reference": "Imprimir referencia",
     "print-services": "Imprimir servizos",
+    "print-solution": "Imprimir solución",
     "print-ticket-desc": "Esta configuración só se aplicará aos tickets de servizo. É necesario ter o plugin Tickets instalado.",
-    "ticket-footer-text": "Texto do pé do ticket"
+    "ticket-footer-text": "Texto do pé do ticket",
+    "verifications": "Verificacións"
 }

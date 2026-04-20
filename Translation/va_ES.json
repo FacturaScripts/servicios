@@ -46,15 +46,19 @@
     "notify-assigned": "Notificar a l'assignat",
     "notify-customer": "Notificar al client",
     "notify-user": "Notificar a l'usuari",
+    "open-services": "Abiertos",
     "print-agent": "Imprimir agent",
     "print-assigned": "Imprimir assignat",
     "print-description": "Imprimir descripció",
     "print-machine-info": "print-machine-info",
+    "print-materials": "Imprimir materials",
     "print-observations": "print-observations",
     "print-pdf": "Imprimir PDF",
     "print-pdf-desc": "Aquesta configuració només s'aplicarà als PDF de servei. Podeu utilitzar el PDF del core o el plugin PlantillesPDF.",
     "print-reference": "Imprimir referència",
     "print-services": "Imprimir serveis",
+    "print-solution": "Imprimir solució",
     "print-ticket-desc": "Aquesta configuració només s'aplicarà als tiquets de servei. Ès necessari tenir el plugin Tiquets instal·lat.",
-    "ticket-footer-text": "Text del peu del tiquet"
+    "ticket-footer-text": "Text del peu del tiquet",
+    "verifications": "Verificaciones"
 }

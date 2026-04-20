@@ -46,15 +46,19 @@
     "notify-assigned": "Powiadom przypisanego",
     "notify-customer": "Powiadom klienta",
     "notify-user": "Powiadom użytkownika",
+    "open-services": "Abiertos",
     "print-agent": "Drukuj agenta",
     "print-assigned": "Drukuj przypisane",
     "print-description": "Drukuj opis",
     "print-machine-info": "Drukuj informacje o maszynie",
+    "print-materials": "Drukuj materiały",
     "print-observations": "Drukuj uwagi",
     "print-pdf": "Drukuj PDF",
     "print-pdf-desc": "Ta konfiguracja będzie miała zastosowanie tylko do PDF-ów serwisowych. Możesz użyć PDF-a z rdzenia lub wtyczki PlantillasPDF.",
     "print-reference": "Drukuj referencję",
     "print-services": "Drukuj usługi",
+    "print-solution": "Rozwiązanie do drukowania",
     "print-ticket-desc": "Ta konfiguracja będzie miała zastosowanie tylko do biletów serwisowych. Należy zainstalować wtyczkę Tickets.",
-    "ticket-footer-text": "Tekst stopki biletu"
+    "ticket-footer-text": "Tekst stopki paragonu",
+    "verifications": "Weryfikacje"
 }

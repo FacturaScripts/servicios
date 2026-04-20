@@ -97,6 +97,7 @@ final class Init extends InitClass
         new Model\ServicioCheckAT();
         new Model\ServicioAT();
         new Model\TrabajoAT();
+        new Model\ServicioATLog();
         new PresupuestoCliente();
         new AlbaranCliente();
         new FacturaCliente();
@@ -111,8 +112,8 @@ final class Init extends InitClass
         new Role();
         new RoleAccess();
 
-        $dataBase = new DataBase();
-        $dataBase->beginTransaction();
+        $db = new DataBase();
+        $db->beginTransaction();
 
         // creates the role if not exists
         $role = new Role();
@@ -120,7 +121,7 @@ final class Init extends InitClass
             $role->codrole = $role->descripcion = self::ROLE_NAME;
             if (false === $role->save()) {
                 // rollback and exit on fail
-                $dataBase->rollback();
+                $db->rollback();
                 return;
             }
         }
@@ -146,13 +147,13 @@ final class Init extends InitClass
             $roleAccess->onlyownerdata = false;
             if (false === $roleAccess->save()) {
                 // rollback and exit on fail
-                $dataBase->rollback();
+                $db->rollback();
                 return;
             }
         }
 
         // without problems = Commit
-        $dataBase->commit();
+        $db->commit();
     }
 
     private function fixMissingAgents(): void
