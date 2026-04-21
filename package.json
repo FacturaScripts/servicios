@@ -1,0 +1,12 @@
+{
+    "name": "servicios",
+    "description": "Plugin Servicios de FacturaScripts",
+    "repository": {
+        "url": "https://facturascripts.com/plugins/servicios"
+    },
+    "license": "LGPL-3.0-or-later",
+    "homepage": "https://facturascripts.com",
+    "dependencies": {
+        "apexcharts": "^5.3.6"
+    }
+}
