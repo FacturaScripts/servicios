@@ -62,9 +62,6 @@ class ReportServicioAT extends Controller
     /** @var int */
     public $totalServices;
 
-    /** @var float */
-    public $totalNeto = 0.0;
-
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -95,10 +92,9 @@ class ReportServicioAT extends Controller
 
     protected function loadTotalServices(): void
     {
-        $sql = 'SELECT COUNT(*) as total, COALESCE(SUM(neto), 0) as neto FROM serviciosat';
+        $sql = 'SELECT COUNT(*) as total FROM serviciosat';
         $result = $this->db()->select($sql);
         $this->totalServices = (int)($result[0]['total'] ?? 0);
-        $this->totalNeto = (float)($result[0]['neto'] ?? 0.0);
     }
 
     protected function loadServicesByNick(): void
