@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
+use DateTime;
 use FacturaScripts\Core\Base\Controller;
 
 /**
@@ -159,7 +160,7 @@ class ReportServicioAT extends Controller
     protected function loadServicesByMonth(): void
     {
         // genera los 12 meses completos con valor 0 para no dejar huecos en el gráfico
-        $now = new \DateTime();
+        $now = new DateTime();
         for ($i = 11; $i >= 0; $i--) {
             $date = clone $now;
             $date->modify("-$i months");
