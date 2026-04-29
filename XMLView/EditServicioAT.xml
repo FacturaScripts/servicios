@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -89,22 +89,22 @@
         <group name="more" numcolumns="12">
             <column name="user" order="100">
                 <widget type="select" fieldname="nick">
-                    <values source="users" fieldcode="nick" fieldtitle="nick"/>
+                    <values/>
                 </widget>
             </column>
             <column name="assigned" order="110">
                 <widget type="select" fieldname="asignado">
-                    <values source="users" fieldcode="nick" fieldtitle="nick"/>
+                    <values/>
                 </widget>
             </column>
             <column name="agent" titleurl="ListAgente" order="120">
                 <widget type="select" fieldname="codagente" onclick="EditAgente">
-                    <values source="agentes" fieldcode="codagente" fieldtitle="nombre"/>
+                    <values/>
                 </widget>
             </column>
             <column name="warehouse" titleurl="ListAlmacen" order="130">
                 <widget type="select" fieldname="codalmacen" onclick="EditAlmacen" required="true">
-                    <values source="almacenes" fieldcode="codalmacen" fieldtitle="nombre"/>
+                    <values/>
                 </widget>
             </column>
             <column name="company" display="none" order="140">

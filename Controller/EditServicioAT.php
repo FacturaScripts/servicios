@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Servicios plugin for FacturaScripts
  * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
@@ -26,10 +27,14 @@ use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
+use FacturaScripts\Dinamic\Model\Agente;
+use FacturaScripts\Dinamic\Model\Almacen;
 use FacturaScripts\Dinamic\Model\CategoriaAT;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
+use FacturaScripts\Dinamic\Model\User;
+use Google\Service\Connectors\Tool;
 
 /**
  * Description of EditServicioAT
@@ -203,7 +208,7 @@ class EditServicioAT extends EditController
             'label' => 'make-invoice'
         ]);
     }
-    
+
     public function createViewLogs(string $viewName = 'ListServicioATLog'): void
     {
         $this->addListView($viewName, 'ServicioATLog', 'history', 'fa-solid fa-history')
@@ -298,6 +303,11 @@ class EditServicioAT extends EditController
         switch ($viewName) {
             case $mainViewName:
                 parent::loadData($viewName, $view);
+                $this->loadUserValues($viewName, 'user');
+                $this->loadUserValues($viewName, 'assigned');
+                $this->loadAgentValues($viewName, 'agent');
+                $this->loadWarehouseValues($viewName);
+
                 if (false === $view->model->exists()) {
                     $view->model->codalmacen = $this->user->codalmacen;
                     $view->model->idempresa = $this->user->idempresa;
@@ -345,7 +355,8 @@ class EditServicioAT extends EditController
                 $where = [Where::eq('idservice', $idservicio)];
                 $view->loadData('', $where);
                 // Remove checks if the service has no categories and checks.
-                if ($viewName === 'EditServicioCheckAT'
+                if (
+                    $viewName === 'EditServicioCheckAT'
                     && isset($this->views['EditServicioCategoriaAT'])
                     && $this->views['EditServicioCategoriaAT']->count === 0
                     && $this->views['EditServicioCheckAT']->count === 0
@@ -359,6 +370,9 @@ class EditServicioAT extends EditController
                 $orderBy = ['fechainicio' => 'DESC', 'horainicio' => 'DESC', 'idtrabajo' => 'DESC'];
                 $view->loadData('', $where, $orderBy);
                 $this->loadStatusWorkValues($viewName, $view);
+                $this->loadUserValues($viewName, 'user');
+                $this->loadAgentValues($viewName, 'agent');
+                
                 if ($view->count > 0) {
                     $this->addButton('EditTrabajoAT', [
                         'action' => 'auto-quantity',
@@ -383,6 +397,25 @@ class EditServicioAT extends EditController
         }
     }
 
+    protected function loadAgentValues(string $viewName, string $columnName): void
+    {
+        $column = $this->tab($viewName)->columnForName($columnName);
+        if (empty($column) || $column->widget->getType() !== 'select') {
+            return;
+        }
+
+        $customValues = [];
+        foreach (Agente::all() as $agent) {
+            $customValues[] = [
+                'value' => $agent->codagente, 
+                'title' => $agent->nombre,
+                'group' => empty($agent->fechabaja) ? Tools::trans('enabled') : Tools::trans('disabled')
+            ];
+        }
+
+        $column->widget->setValuesFromArray($customValues, false, true, 'value', 'title', 'group');
+    }
+
     protected function loadStatusWorkValues(string $viewName, BaseView $view): void
     {
         $column = $this->views[$viewName]->columnForName('action');
@@ -394,6 +427,44 @@ class EditServicioAT extends EditController
 
             $column->widget->setValuesFromArray($statuses);
         }
+    }
+
+    protected function loadUserValues(string $viewName, string $columnName): void
+    {
+        $column = $this->tab($viewName)->columnForName($columnName);
+        if (empty($column) || $column->widget->getType() !== 'select') {
+            return;
+        }
+
+        $customValues = [];
+        foreach (User::all() as $user) {
+            $customValues[] = [
+                'value' => $user->nick, 
+                'title' => $user->nick,
+                'group' => $user->enabled ? Tools::trans('enabled') : Tools::trans('disabled')
+            ];
+        }
+
+        $column->widget->setValuesFromArray($customValues, false, true, 'value', 'title', 'group');
+    }
+
+    protected function loadWarehouseValues(string $viewName): void
+    {
+        $column = $this->tab($viewName)->columnForName('warehouse');
+        if (empty($column) || $column->widget->getType() !== 'select') {
+            return;
+        }
+
+        $customValues = [];
+        foreach (Almacen::all() as $warehouse) {
+            $customValues[] = [
+                'value' => $warehouse->codalmacen, 
+                'title' => $warehouse->nombre,
+                'group' => $warehouse->activo ? Tools::trans('enabled') : Tools::trans('disabled')
+            ];
+        }
+
+        $column->widget->setValuesFromArray($customValues, true, true, 'value', 'title', 'group');
     }
 
     protected function makeDeliveryNoteAction(): bool
