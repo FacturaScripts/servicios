@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,6 +26,7 @@ use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
+use FacturaScripts\Dinamic\Model\CategoriaAT;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -113,6 +114,11 @@ class EditServicioAT extends EditController
      */
     protected function createViewsCategories(string $viewName = 'EditServicioCategoriaAT'): void
     {
+        $category = new CategoriaAT();
+        if ($category->count() === 0) {
+            return;
+        }
+
         $this->addEditListView($viewName, 'ServicioCategoriaAT', 'categories', 'fa-solid fa-tags')
             ->setInLine(true);
     }
@@ -197,7 +203,7 @@ class EditServicioAT extends EditController
             'label' => 'make-invoice'
         ]);
     }
-
+    
     public function createViewLogs(string $viewName = 'ListServicioATLog'): void
     {
         $this->addListView($viewName, 'ServicioATLog', 'history', 'fa-solid fa-history')
@@ -340,6 +346,7 @@ class EditServicioAT extends EditController
                 $view->loadData('', $where);
                 // Remove checks if the service has no categories and checks.
                 if ($viewName === 'EditServicioCheckAT'
+                    && isset($this->views['EditServicioCategoriaAT'])
                     && $this->views['EditServicioCategoriaAT']->count === 0
                     && $this->views['EditServicioCheckAT']->count === 0
                 ) {
