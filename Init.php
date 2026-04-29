@@ -51,6 +51,10 @@ final class Init extends InitClass
         $this->loadExtension(new Extension\Controller\CopyModel());
         $this->loadExtension(new Extension\Controller\EditCliente());
         $this->loadExtension(new Extension\Controller\EditProducto());
+        $this->loadExtension(new Extension\Controller\ListAlbaranCliente());
+        $this->loadExtension(new Extension\Controller\ListFacturaCliente());
+        $this->loadExtension(new Extension\Controller\ListPedidoCliente());
+        $this->loadExtension(new Extension\Controller\ListPresupuestoCliente());
 
         // tickets
         if (Plugins::isEnabled('Tickets')) {

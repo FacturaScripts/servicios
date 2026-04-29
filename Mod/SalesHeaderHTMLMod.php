@@ -22,7 +22,7 @@ namespace FacturaScripts\Plugins\Servicios\Mod;
 use FacturaScripts\Core\Contract\SalesModInterface;
 use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Core\Tools;
-
+use FacturaScripts\Dinamic\Model\ServicioAT;
 
 class SalesHeaderHTMLMod implements SalesModInterface
 {
@@ -72,9 +72,14 @@ class SalesHeaderHTMLMod implements SalesModInterface
             return '';
         }
 
+        $service = new ServicioAT();
+        if (false === $service->load($model->{'idservicio'})) {
+            return '';
+        }
+
         return '<div class="col-sm-auto">'
             . '<div class="mb-2">'
-            . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '" class="btn btn-warning text-black">'
+            . '<a href="' . $service->url() . '" class="btn btn-warning text-black">'
             . '<i class="fa-solid fa-headset"></i> ' . Tools::trans('service')
             . '</a>'
             . '</div>'
@@ -83,11 +88,20 @@ class SalesHeaderHTMLMod implements SalesModInterface
 
     private static function servicio(SalesDocument $model): string
     {
-        return $model->hasColumn('idservicio') && false === empty($model->{'idservicio'}) ? '<div class="col-sm-6">'
+        if (false === $model->hasColumn('idservicio') || empty($model->{'idservicio'})) {
+            return '';
+        }
+
+        $service = new ServicioAT();
+        if (false === $service->load($model->{'idservicio'})) {
+            return '';
+        }
+
+        return '<div class="col-sm-6">'
             . '<div class="mb-3">'
-            . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '">' . Tools::trans('service') . '</a>'
-            . '<input type="text" value="' . $model->{'idservicio'} . '" class="form-control" disabled />'
+            . '<a href="' . $service->url() . '">' . Tools::trans('service') . '</a>'
+            . '<input type="text" value="' . $service->codigo . '" class="form-control" disabled />'
             . '</div>'
-            . '</div>' : '';
+            . '</div>';
     }
 }

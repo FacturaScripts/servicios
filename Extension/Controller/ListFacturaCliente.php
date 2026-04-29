@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?php
+/**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2025-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -15,17 +15,22 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
--->
-<view>
-    <columns>
-        <column name="code" numcolumns="3" order="100">
-            <widget type="text" fieldname="id" />
-        </column>
-        <column name="description" order="110">
-            <widget type="text" fieldname="name" />
-        </column>
-    </columns>
-</view>
+
+namespace FacturaScripts\Plugins\Servicios\Extension\Controller;
+
+use Closure;
+
+/**
+ * @author Daniel Fernandez Giménez <contacto@danielfg.es>
+ */
+class ListFacturaCliente
+{
+    public function createViews(): Closure
+    {
+        return function() {
+            $this->tab($this->getmainViewName())
+            ->addFilterAutocomplete('service', 'service', 'idservicio', 'serviciosat', 'idservicio', 'codigo');
+        };
+    }
+}
