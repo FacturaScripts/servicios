@@ -20,7 +20,7 @@
 namespace FacturaScripts\Plugins\Servicios\Controller;
 
 use DateTime;
-use FacturaScripts\Core\Base\Controller;
+use FacturaScripts\Core\Template\Controller;
 
 /**
  * Informe de servicios: abiertos totales, del último mes, del último año y desglose por estado.
@@ -62,6 +62,9 @@ class ReportServicioAT extends Controller
     /** @var int */
     public $totalServices;
 
+    /** @var float */
+    public $totalNeto = 0.0;
+
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -71,9 +74,9 @@ class ReportServicioAT extends Controller
         return $data;
     }
 
-    public function privateCore(&$response, $user, $permissions)
+    public function run(): void
     {
-        parent::privateCore($response, $user, $permissions);
+        parent::run();
 
         $this->loadTotalServices();
         $this->loadOpenServices();
@@ -86,13 +89,16 @@ class ReportServicioAT extends Controller
         $this->loadServicesByAgent();
         $this->loadServicesByAssigned();
         $this->loadServicesByClient();
+
+        $this->view('ReportServicioAT.html.twig');
     }
 
     protected function loadTotalServices(): void
     {
-        $sql = 'SELECT COUNT(*) as total FROM serviciosat';
-        $result = $this->dataBase->select($sql);
+        $sql = 'SELECT COUNT(*) as total, COALESCE(SUM(neto), 0) as neto FROM serviciosat';
+        $result = $this->db()->select($sql);
         $this->totalServices = (int)($result[0]['total'] ?? 0);
+        $this->totalNeto = (float)($result[0]['neto'] ?? 0.0);
     }
 
     protected function loadServicesByNick(): void
@@ -101,7 +107,7 @@ class ReportServicioAT extends Controller
             . ' FROM serviciosat'
             . ' GROUP BY nick'
             . ' ORDER BY total DESC';
-        $this->servicesByNick = $this->dataBase->select($sql);
+        $this->servicesByNick = $this->db()->select($sql);
     }
 
     protected function loadServicesByAgent(): void
@@ -111,7 +117,7 @@ class ReportServicioAT extends Controller
             . ' LEFT JOIN agentes a ON a.codagente = s.codagente'
             . ' GROUP BY s.codagente, a.nombre'
             . ' ORDER BY total DESC';
-        $this->servicesByAgent = $this->dataBase->select($sql);
+        $this->servicesByAgent = $this->db()->select($sql);
     }
 
     protected function loadServicesByAssigned(): void
@@ -120,7 +126,7 @@ class ReportServicioAT extends Controller
             . ' FROM serviciosat'
             . ' GROUP BY asignado'
             . ' ORDER BY total DESC';
-        $this->servicesByAssigned = $this->dataBase->select($sql);
+        $this->servicesByAssigned = $this->db()->select($sql);
     }
 
     protected function loadServicesByClient(): void
@@ -130,14 +136,14 @@ class ReportServicioAT extends Controller
             . ' LEFT JOIN clientes c ON c.codcliente = s.codcliente'
             . ' GROUP BY s.codcliente, c.nombre'
             . ' ORDER BY total DESC';
-        $this->servicesByClient = $this->dataBase->select($sql);
+        $this->servicesByClient = $this->db()->select($sql);
     }
 
     protected function loadOpenServices(): void
     {
         $sql = 'SELECT COUNT(*) as total FROM serviciosat'
-            . ' WHERE editable = ' . $this->dataBase->var2str(true);
-        $result = $this->dataBase->select($sql);
+            . ' WHERE editable = ' . $this->db()->var2str(true);
+        $result = $this->db()->select($sql);
         $this->openServices = (int)($result[0]['total'] ?? 0);
     }
 
@@ -145,7 +151,7 @@ class ReportServicioAT extends Controller
     {
         $since = date('Y-m-d', strtotime('-1 month'));
         $sql = "SELECT COUNT(*) as total FROM serviciosat WHERE fecha >= '" . $since . "'";
-        $result = $this->dataBase->select($sql);
+        $result = $this->db()->select($sql);
         $this->openServicesLastMonth = (int)($result[0]['total'] ?? 0);
     }
 
@@ -153,7 +159,7 @@ class ReportServicioAT extends Controller
     {
         $since = date('Y-m-d', strtotime('-1 year'));
         $sql = "SELECT COUNT(*) as total FROM serviciosat WHERE fecha >= '" . $since . "'";
-        $result = $this->dataBase->select($sql);
+        $result = $this->db()->select($sql);
         $this->openServicesLastYear = (int)($result[0]['total'] ?? 0);
     }
 
@@ -173,7 +179,7 @@ class ReportServicioAT extends Controller
             . " WHERE fecha >= '" . $since . "'"
             . " GROUP BY DATE_FORMAT(fecha, '%Y-%m')"
             . ' ORDER BY periodo ASC';
-        foreach ($this->dataBase->select($sql) as $row) {
+        foreach ($this->db()->select($sql) as $row) {
             if (isset($this->servicesByMonth[$row['periodo']])) {
                 $this->servicesByMonth[$row['periodo']] = (int)$row['total'];
             }
@@ -186,18 +192,19 @@ class ReportServicioAT extends Controller
             . ' FROM serviciosat'
             . ' GROUP BY YEAR(fecha)'
             . ' ORDER BY periodo ASC';
-        foreach ($this->dataBase->select($sql) as $row) {
+        foreach ($this->db()->select($sql) as $row) {
             $this->servicesByYear[(string)$row['periodo']] = (int)$row['total'];
         }
     }
 
     protected function loadServicesByStatus(): void
     {
-        $sql = 'SELECT e.id, e.nombre, e.color, e.editable, COUNT(s.idservicio) as total'
+        $sql = 'SELECT e.id, e.nombre, e.color, e.editable, COUNT(s.idservicio) as total,'
+            . ' COALESCE(SUM(s.neto), 0) as neto'
             . ' FROM serviciosat_estados e'
             . ' LEFT JOIN serviciosat s ON s.idestado = e.id'
             . ' GROUP BY e.id, e.nombre, e.color, e.editable'
             . ' ORDER BY total DESC';
-        $this->servicesByStatus = $this->dataBase->select($sql);
+        $this->servicesByStatus = $this->db()->select($sql);
     }
 }
