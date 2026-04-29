@@ -1,0 +1,169 @@
+name: Crear Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout completo del repositorio
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Actualizar traducciones
+        run: |
+          if [ -f "Translation/Updater.php" ]; then
+            echo "Ejecutando Updater.php..."
+            php Translation/Updater.php
+            if [ -n "$(git status --porcelain)" ]; then
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git add Translation/*.json
+              git commit -m "actualizadas traducciones"
+              git push
+              echo "Commit de traducciones creado y subido."
+            else
+              echo "Sin cambios en traducciones."
+            fi
+          else
+            echo "No existe Translation/Updater.php, se omite este paso."
+          fi
+
+      - name: Detectar versión actual y última release
+        id: versions
+        run: |
+          # Versión actual desde facturascripts.ini
+          CURRENT_VERSION=$(grep '^version' facturascripts.ini | sed 's/version = //' | tr -d ' ')
+          echo "Versión actual: $CURRENT_VERSION"
+          echo "current_version=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+
+          # Última release publicada en GitHub (tag y versión sin la 'v')
+          LAST_TAG=$(gh release list --limit 1 --json tagName \
+            --jq 'if length > 0 then .[0].tagName else "" end' 2>/dev/null || echo "")
+          LAST_VERSION=$(echo "$LAST_TAG" | sed 's/^v//')
+          echo "Última release: ${LAST_TAG:-"(ninguna)"}"
+          echo "last_tag=$LAST_TAG" >> "$GITHUB_OUTPUT"
+          echo "last_version=$LAST_VERSION" >> "$GITHUB_OUTPUT"
+
+          # Decidir si hay que crear release
+          if [ -n "$LAST_VERSION" ] && [ "$CURRENT_VERSION" = "$LAST_VERSION" ]; then
+            echo "⚠️  La versión actual ($CURRENT_VERSION) ya tiene release publicada. No se hace nada."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generar changelog
+        id: changelog
+        if: steps.versions.outputs.skip != 'true'
+        env:
+          CURRENT_VERSION: ${{ steps.versions.outputs.current_version }}
+          LAST_TAG: ${{ steps.versions.outputs.last_tag }}
+          LAST_VERSION: ${{ steps.versions.outputs.last_version }}
+        run: |
+          # Rango de commits: desde el tag de la última release o todos si es la primera
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"%s" "${LAST_TAG}..HEAD")
+          else
+            COMMITS=$(git log --pretty=format:"%s")
+          fi
+
+          NEW_FEATURES=""
+          FIXES=""
+
+          while IFS= read -r msg; do
+            # Ignorar commits de mantenimiento automático
+            if echo "$msg" | grep -qiE "^actualizadas? traducciones?$"; then continue; fi
+            if echo "$msg" | grep -qiE "^versi[oó]n [0-9]"; then continue; fi
+
+            # Clasificar
+            if echo "$msg" | grep -qiE "corregid|correcci[oó]n|fix|bug|error|arreglad|solucionad"; then
+              FIXES="${FIXES}\n- ${msg}"
+            else
+              NEW_FEATURES="${NEW_FEATURES}\n- ${msg}"
+            fi
+          done <<< "$COMMITS"
+
+          # Cabecera
+          if [ -n "$LAST_VERSION" ]; then
+            HEADER="## Versión ${CURRENT_VERSION} (desde ${LAST_VERSION})"
+          else
+            HEADER="## Versión ${CURRENT_VERSION}"
+          fi
+
+          BODY="${HEADER}\n"
+          [ -n "$NEW_FEATURES" ] && BODY="${BODY}\n### ✨ Funcionalidades nuevas\n${NEW_FEATURES}\n"
+          [ -n "$FIXES" ]        && BODY="${BODY}\n### 🐛 Correcciones\n${FIXES}\n"
+          [ -z "$NEW_FEATURES" ] && [ -z "$FIXES" ] && BODY="${BODY}\n_Sin cambios registrados._\n"
+
+          echo "Changelog generado:"
+          echo -e "$BODY"
+          { echo 'body<<CHANGELOG_EOF'; echo -e "$BODY"; echo 'CHANGELOG_EOF'; } >> "$GITHUB_OUTPUT"
+
+      - name: Instalar dependencias composer (si existe)
+        if: steps.versions.outputs.skip != 'true'
+        run: |
+          if [ -f "composer.json" ]; then
+            composer install --no-dev --optimize-autoloader
+          else
+            echo "No existe composer.json, se omite."
+          fi
+
+      - name: Compilar assets npm (si existe)
+        if: steps.versions.outputs.skip != 'true'
+        run: |
+          if [ -f "package.json" ]; then
+            npm ci && npm run build
+          else
+            echo "No existe package.json, se omite."
+          fi
+
+      - name: Crear ZIP del plugin
+        id: zip
+        if: steps.versions.outputs.skip != 'true'
+        env:
+          CURRENT_VERSION: ${{ steps.versions.outputs.current_version }}
+        run: |
+          PLUGIN_NAME=$(grep '^name' facturascripts.ini | sed "s/name = '//;s/'.*//")
+          ZIP_NAME="${PLUGIN_NAME}_${CURRENT_VERSION}.zip"
+          echo "Creando ${ZIP_NAME}..."
+
+          # Copiar a directorio temporal con el nombre del plugin (estructura requerida por FacturaScripts)
+          mkdir -p /tmp/zip_build
+          cp -r . /tmp/zip_build/${PLUGIN_NAME}
+          rm -rf /tmp/zip_build/${PLUGIN_NAME}/.git
+          rm -rf /tmp/zip_build/${PLUGIN_NAME}/.github
+          rm -rf /tmp/zip_build/${PLUGIN_NAME}/Test
+          rm -f /tmp/zip_build/${PLUGIN_NAME}/Translation/Updater.php
+
+          cd /tmp/zip_build
+          zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}" "${PLUGIN_NAME}/"
+
+          echo "ZIP creado: ${ZIP_NAME}"
+          echo "zip_path=${ZIP_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Crear Release en GitHub
+        if: steps.versions.outputs.skip != 'true'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: "v${{ steps.versions.outputs.current_version }}"
+          name: "Versión ${{ steps.versions.outputs.current_version }}"
+          body: ${{ steps.changelog.outputs.body }}
+          files: ${{ steps.zip.outputs.zip_path }}
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
