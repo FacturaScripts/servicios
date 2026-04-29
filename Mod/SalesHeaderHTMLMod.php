@@ -42,7 +42,7 @@ class SalesHeaderHTMLMod implements SalesModInterface
 
     public function newBtnFields(): array
     {
-        return [];
+        return ['servicio_btn'];
     }
 
     public function newFields(): array
@@ -61,7 +61,26 @@ class SalesHeaderHTMLMod implements SalesModInterface
             return $this->servicio($model);
         }
 
+        if ($field == 'servicio_btn') {
+            return $this->servicioBtn($model);
+        }
+
         return null;
+    }
+
+    private static function servicioBtn(SalesDocument $model): string
+    {
+        if (false === $model->hasColumn('idservicio') || empty($model->{'idservicio'})) {
+            return '';
+        }
+
+        return '<div class="col-sm-auto">'
+            . '<div class="mb-2">'
+            . '<a href="EditServicioAT?code=' . $model->{'idservicio'} . '" class="btn btn-warning text-black">'
+            . '<i class="fa-solid fa-headset"></i> ' . Tools::trans('service')
+            . '</a>'
+            . '</div>'
+            . '</div>';
     }
 
     private static function servicio(SalesDocument $model): string
