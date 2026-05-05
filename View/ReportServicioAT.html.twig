@@ -9,19 +9,35 @@
     <div class="container-fluid">
 
         {# Encabezado #}
-        <div class="row mt-3 mb-4">
-            <div class="col-12 text-center">
+        <div class="row mt-3 mb-4 align-items-center">
+            <div class="col-md-8">
                 <h1 class="h3 mb-0">
                     <i class="fa-solid fa-headset me-2"></i>
                     {{ trans('services') | capitalize }} — {{ trans('report') | capitalize }}
                 </h1>
+            </div>
+            <div class="col-md-4">
+                <form method="get" action="ReportServicioAT" class="d-flex justify-content-md-end mt-3 mt-md-0">
+                    <div class="input-group input-group-sm" style="max-width:320px;">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-building"></i>
+                        </span>
+                        <select name="idempresa" class="form-select" onchange="this.form.submit();">
+                            {% for empresa in fsc.empresas %}
+                                <option value="{{ empresa.idempresa }}" {% if empresa.idempresa == fsc.idempresa %}selected{% endif %}>
+                                    {{ empresa.nombrecorto }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
             </div>
         </div>
 
         {# KPI Cards #}
         <div class="row justify-content-center">
             <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card border-left-warning shadow-sm h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
@@ -39,7 +55,7 @@
             </div>
 
             <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card border-left-primary shadow-sm h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
@@ -57,7 +73,7 @@
             </div>
 
             <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
+                <div class="card border-left-info shadow-sm h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
@@ -75,7 +91,7 @@
             </div>
 
             <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
+                <div class="card border-left-success shadow-sm h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
@@ -96,7 +112,7 @@
         {# Gráficos por mes y por año #}
         <div class="row">
             <div class="col-12 col-lg-8 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-chart-bar me-2"></i>
@@ -111,7 +127,7 @@
                 </div>
             </div>
             <div class="col-12 col-lg-4 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-chart-bar me-2"></i>
@@ -127,10 +143,44 @@
             </div>
         </div>
 
+        {# Importes por mes y por año #}
+        <div class="row">
+            <div class="col-12 col-lg-8 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fa-solid fa-euro-sign me-2"></i>
+                            {{ trans('amount') | capitalize }} — {{ trans('services-by-month') }}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div style="position:relative;height:300px;">
+                            <canvas id="chartAmountByMonth"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fa-solid fa-euro-sign me-2"></i>
+                            {{ trans('amount') | capitalize }} — {{ trans('services-by-year') }}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div style="position:relative;height:300px;">
+                            <canvas id="chartAmountByYear"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {# Tabla por estado #}
         <div class="row">
             <div class="col-12 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-chart-pie me-2"></i>
@@ -183,7 +233,7 @@
         {# Tablas por usuario creador, agente, asignado y cliente #}
         <div class="row">
             <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-user me-2"></i>
@@ -235,7 +285,7 @@
             </div>
 
             <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-user-tie me-2"></i>
@@ -287,7 +337,7 @@
             </div>
 
             <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-user-check me-2"></i>
@@ -339,7 +389,7 @@
             </div>
 
             <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow">
+                <div class="card shadow-sm">
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary">
                             <i class="fa-solid fa-building me-2"></i>
@@ -400,6 +450,8 @@
     <script>
         var monthData    = {{ fsc.servicesByMonth    | json_encode | raw }};
         var yearData     = {{ fsc.servicesByYear     | json_encode | raw }};
+        var amountMonth  = {{ fsc.amountsByMonth     | json_encode | raw }};
+        var amountYear   = {{ fsc.amountsByYear      | json_encode | raw }};
         var nickData     = {{ fsc.servicesByNick     | json_encode | raw }};
         var agentData    = {{ fsc.servicesByAgent    | json_encode | raw }};
         var assignedData = {{ fsc.servicesByAssigned | json_encode | raw }};
@@ -475,6 +527,46 @@
                     maintainAspectRatio: false,
                     scales: {
                         yAxes: [{ticks: {beginAtZero: true, callback: function (v) { return Number.isInteger(v) ? v : ''; }}}]
+                    },
+                    legend: {display: false}
+                }
+            });
+
+            new Chart(document.getElementById('chartAmountByMonth').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: monthLabels,
+                    datasets: [{
+                        label: '{{ trans('amount') | capitalize }}',
+                        data: Object.values(amountMonth),
+                        backgroundColor: '#f6c23e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{ticks: {beginAtZero: true}}]
+                    },
+                    legend: {display: false}
+                }
+            });
+
+            new Chart(document.getElementById('chartAmountByYear').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(amountYear),
+                    datasets: [{
+                        label: '{{ trans('amount') | capitalize }}',
+                        data: Object.values(amountYear),
+                        backgroundColor: '#e74a3b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{ticks: {beginAtZero: true}}]
                     },
                     legend: {display: false}
                 }

@@ -66,11 +66,11 @@
     "services-by-assigned": "Por asignado",
     "services-by-client": "Por cliente",
     "services-by-month": "Servicios por mes (últimos 12 meses)",
-    "services-by-nick": "Por usuario creador",
+    "services-by-nick": "Per usuari creador",
     "services-by-status": "Por estado",
-    "services-by-year": "Servicios por año",
+    "services-by-year": "Serveis per any",
     "ticket-footer-text": "Text del peu del tiquet",
-    "total-net": "Neto total",
+    "total-net": "Total net",
     "total-services": "Total de servicios",
     "verifications": "Verificaciones"
 }
