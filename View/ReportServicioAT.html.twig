@@ -194,6 +194,7 @@
                                     <tr>
                                         <th>{{ trans('status') }}</th>
                                         <th class="text-end">{{ trans('quantity') }}</th>
+                                        <th class="text-end">{{ trans('percentage') }} %</th>
                                         <th class="text-end">{{ trans('net') }}</th>
                                     </tr>
                                 </thead>
@@ -213,11 +214,14 @@
                                                 </a>
                                             </td>
                                             <td class="text-end fw-bold">{{ row.total }}</td>
+                                            <td class="text-end text-muted">
+                                                {{ fsc.totalServices > 0 ? ((row.total / fsc.totalServices) * 100)|number_format(1) ~ ' %' : '0 %' }}
+                                            </td>
                                             <td class="text-end">{{ money(row.neto) }}</td>
                                         </tr>
                                     {% else %}
                                         <tr>
-                                            <td colspan="3" class="text-center text-muted py-3">
+                                            <td colspan="4" class="text-center text-muted py-3">
                                                 {{ trans('no-data') }}
                                             </td>
                                         </tr>
