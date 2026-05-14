@@ -48,7 +48,7 @@
     "notify-user": "Notificar o usuário",
     "open-services": "Abrir",
     "open-services-last-month": "Abertos no último mês",
-    "open-services-last-year": "Abiertos último año",
+    "open-services-last-year": "Abertos no último ano",
     "open-services-total": "Serviços abertos",
     "print-agent": "Agente de impressão",
     "print-assigned": "Imprimir atribuído",
@@ -71,6 +71,6 @@
     "services-by-year": "Serviços por ano",
     "ticket-footer-text": "Texto do rodapé do talão",
     "total-net": "Total líquido",
-    "total-services": "Total de servicios",
+    "total-services": "Total de serviços",
     "verifications": "Verificações"
 }
