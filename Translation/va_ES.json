@@ -36,7 +36,7 @@
     "new-service-user": "Servei {number} assignat",
     "new-service-user-body": "Hola {name}, t'han assignat el servei {number} per al client {cliente}. Pots veure més detalls des d'ací: {url}",
     "new-start-service": "El servici {number} començarà pròximament",
-    "new-start-service-body": "Hola {name}, el servei {number} està programat per començar en els pròxims dies. Pots veure més detalls ací: {url}",
+    "new-start-service-body": "Hola {name}, el servei {number} està programat per a començar en els pròxims dies. Pots vore més detalls ací: {url}",
     "new-work-created": "Treball %key% creat en el servei %service-key%",
     "new-work-status": "Estat per als nous treballs",
     "no-machine": "Cap màquina",
@@ -46,7 +46,7 @@
     "notify-assigned": "Notificar a l'assignat",
     "notify-customer": "Notificar al client",
     "notify-user": "Notificar a l'usuari",
-    "open-services": "Abiertos",
+    "open-services": "Oberts",
     "open-services-last-month": "Oberts últim mes",
     "open-services-last-year": "Oberts últim any",
     "open-services-total": "Servicios abiertos",
@@ -71,6 +71,6 @@
     "services-by-year": "Serveis per any",
     "ticket-footer-text": "Text del peu del tiquet",
     "total-net": "Total net",
-    "total-services": "Total de servicios",
+    "total-services": "Total de serveis",
     "verifications": "Verificaciones"
 }
