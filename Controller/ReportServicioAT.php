@@ -104,6 +104,7 @@ class ReportServicioAT extends Controller
         $this->loadServicesByAssigned();
         $this->loadServicesByClient();
 
+        $this->pipe('run');
         $this->view('ReportServicioAT.html.twig');
     }
 

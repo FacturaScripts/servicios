@@ -6,179 +6,164 @@
 {% extends "Master/MenuBgTemplate.html.twig" %}
 
 {% block body %}
-    <div class="container-fluid">
+	<div
+		class="container-fluid">
 
-        {# Encabezado #}
-        <div class="row mt-3 mb-4 align-items-center">
-            <div class="col-md-8">
-                <h1 class="h3 mb-0">
-                    <i class="fa-solid fa-headset me-2"></i>
-                    {{ trans('services') | capitalize }} — {{ trans('report') | capitalize }}
-                </h1>
-            </div>
-            <div class="col-md-4">
-                <form method="get" action="ReportServicioAT" class="d-flex justify-content-md-end mt-3 mt-md-0">
-                    <div class="input-group input-group-sm" style="max-width:320px;">
-                        <span class="input-group-text">
-                            <i class="fa-solid fa-building"></i>
-                        </span>
-                        <select name="idempresa" class="form-select" onchange="this.form.submit();">
-                            {% for empresa in fsc.empresas %}
-                                <option value="{{ empresa.idempresa }}" {% if empresa.idempresa == fsc.idempresa %}selected{% endif %}>
-                                    {{ empresa.nombrecorto }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </form>
-            </div>
-        </div>
+		{# Encabezado #}
+		<div class="row mt-3 mb-4 align-items-center">
+			<div class="col-md-8">
+				<h1 class="h3 mb-0">
+					<i class="fa-solid fa-headset me-2"></i>
+					{{ trans('services') | capitalize }}
+					—
+					{{ trans('report') | capitalize }}
+				</h1>
+			</div>
+			<div class="col-md-4">
+				<form method="get" action="ReportServicioAT" class="d-flex justify-content-md-end mt-3 mt-md-0">
+					<div class="input-group input-group-sm" style="max-width:320px;">
+						<span class="input-group-text">
+							<i class="fa-solid fa-building"></i>
+						</span>
+						<select name="idempresa" class="form-select" onchange="this.form.submit();">
+							{% for empresa in fsc.empresas %}
+								<option value="{{ empresa.idempresa }}" {% if empresa.idempresa == fsc.idempresa %} selected {% endif %}>
+									{{ empresa.nombrecorto }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
 
-        {# KPI Cards #}
-        <div class="row justify-content-center">
-            <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-warning shadow-sm h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    {{ trans('total-services') }}
-                                </div>
-                                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.totalServices }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fa-solid fa-headset fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {% for includeView in getIncludeViews('ReportServicioAT', 'startDoc') %}
+			{% include includeView['path'] %}
+		{% endfor %}
 
-            <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-primary shadow-sm h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    {{ trans('open-services-total') }}
-                                </div>
-                                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.openServices }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fa-solid fa-lock-open fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		{# KPI Cards #}
+		<div class="row justify-content-center">
+			<div class="col-xl col-md-6 mb-4">
+				<div class="card border-left-warning shadow-sm h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+									{{ trans('total-services') }}
+								</div>
+								<div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.totalServices }}</div>
+							</div>
+							<div class="col-auto">
+								<i class="fa-solid fa-headset fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-info shadow-sm h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    {{ trans('open-services-last-month') }}
-                                </div>
-                                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.openServicesLastMonth }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fa-solid fa-calendar-days fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			<div class="col-xl col-md-6 mb-4">
+				<div class="card border-left-primary shadow-sm h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+									{{ trans('open-services-total') }}
+								</div>
+								<div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.openServices }}</div>
+							</div>
+							<div class="col-auto">
+								<i class="fa-solid fa-lock-open fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-xl col-md-6 mb-4">
-                <div class="card border-left-success shadow-sm h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    {{ trans('open-services-last-year') }}
-                                </div>
-                                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.openServicesLastYear }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fa-solid fa-calendar fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="col-xl col-md-6 mb-4">
+				<div class="card border-left-info shadow-sm h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+									{{ trans('open-services-last-month') }}
+								</div>
+								<div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.openServicesLastMonth }}</div>
+							</div>
+							<div class="col-auto">
+								<i class="fa-solid fa-calendar-days fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        {# Gráficos por mes y por año #}
-        <div class="row">
-            <div class="col-12 col-lg-8 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-chart-bar me-2"></i>
-                            {{ trans('services-by-month') }}
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div style="position:relative;height:300px;">
-                            <canvas id="chartByMonth"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-lg-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-chart-bar me-2"></i>
-                            {{ trans('services-by-year') }}
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div style="position:relative;height:300px;">
-                            <canvas id="chartByYear"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="col-xl col-md-6 mb-4">
+				<div class="card border-left-success shadow-sm h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+									{{ trans('open-services-last-year') }}
+								</div>
+								<div class="h4 mb-0 font-weight-bold text-gray-800">{{ fsc.openServicesLastYear }}</div>
+							</div>
+							<div class="col-auto">
+								<i class="fa-solid fa-calendar fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        {# Importes por mes y por año #}
-        <div class="row">
-            <div class="col-12 col-lg-8 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-euro-sign me-2"></i>
-                            {{ trans('amount') | capitalize }} — {{ trans('services-by-month') }}
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div style="position:relative;height:300px;">
-                            <canvas id="chartAmountByMonth"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-lg-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-euro-sign me-2"></i>
-                            {{ trans('amount') | capitalize }} — {{ trans('services-by-year') }}
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div style="position:relative;height:300px;">
-                            <canvas id="chartAmountByYear"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% for includeView in getIncludeViews('ReportServicioAT', 'afterKpis') %}
+			{% include includeView['path'] %}
+		{% endfor %}
 
-        {# Tabla por estado #}
-        <div class="row">
+		{# Importes por mes y por año #}
+		<div class="row">
+			<div class="col-12 col-lg-8 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h6 class="m-0 font-weight-bold text-primary">
+							<i class="fa-solid fa-euro-sign me-2"></i>
+							{{ trans('amount') | capitalize }}
+							—
+							{{ trans('services-by-month') }}
+						</h6>
+					</div>
+					<div class="card-body">
+						<div style="position:relative;height:300px;">
+							<canvas id="chartAmountByMonth"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-lg-4 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h6 class="m-0 font-weight-bold text-primary">
+							<i class="fa-solid fa-euro-sign me-2"></i>
+							{{ trans('amount') | capitalize }}
+							—
+							{{ trans('services-by-year') }}
+						</h6>
+					</div>
+					<div class="card-body">
+						<div style="position:relative;height:300px;">
+							<canvas id="chartAmountByYear"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        {% for includeView in getIncludeViews('ReportServicioAT', 'afterGraphics') %}
+			{% include includeView['path'] %}
+		{% endfor %}
+
+		{# Tabla por estado #}
+		<div class="row">
             <div class="col-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header">
@@ -234,352 +219,443 @@
             </div>
         </div>
 
-        {# Tablas por usuario creador, agente, asignado y cliente #}
-        <div class="row">
-            <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-user me-2"></i>
-                            {{ trans('services-by-nick') }}
-                        </h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <canvas id="chartByNick" height="240"></canvas>
-                        </div>
-                        <div class="text-end px-3 py-1 border-top">
-                            <a class="small text-muted text-decoration-none" data-bs-toggle="collapse"
-                               href="#collapseNick" role="button" aria-expanded="false">
-                                <i class="fa-solid fa-list fa-xs me-1"></i> Ver detalle
-                            </a>
-                        </div>
-                        <div class="collapse" id="collapseNick">
-                            <div class="table-responsive" style="max-height:380px;overflow-y:auto;">
-                                <table class="table table-hover table-sm mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>{{ trans('user') }}</th>
-                                            <th class="text-end">{{ trans('quantity') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for row in fsc.servicesByNick %}
-                                            <tr>
-                                                <td>
-                                                    {% if row.nick %}
-                                                        <a href="EditUser?code={{ row.nick }}">{{ row.nick }}</a>
-                                                    {% else %}
-                                                        ---
-                                                    {% endif %}
-                                                </td>
-                                                <td class="text-end fw-bold">{{ row.total }}</td>
-                                            </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		{% for includeView in getIncludeViews('ReportServicioAT', 'afterStatus') %}
+			{% include includeView['path'] %}
+		{% endfor %}
 
-            <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-user-tie me-2"></i>
-                            {{ trans('services-by-agent') }}
-                        </h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <canvas id="chartByAgent" height="240"></canvas>
-                        </div>
-                        <div class="text-end px-3 py-1 border-top">
-                            <a class="small text-muted text-decoration-none" data-bs-toggle="collapse"
-                               href="#collapseAgent" role="button" aria-expanded="false">
-                                <i class="fa-solid fa-list fa-xs me-1"></i> Ver detalle
-                            </a>
-                        </div>
-                        <div class="collapse" id="collapseAgent">
-                            <div class="table-responsive" style="max-height:380px;overflow-y:auto;">
-                                <table class="table table-hover table-sm mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>{{ trans('agent') }}</th>
-                                            <th class="text-end">{{ trans('quantity') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for row in fsc.servicesByAgent %}
-                                            <tr>
-                                                <td>
-                                                    {% if row.codagente %}
-                                                        <a href="EditAgente?code={{ row.codagente }}">{{ row.nombre ?: row.codagente }}</a>
-                                                    {% else %}
-                                                        ---
-                                                    {% endif %}
-                                                </td>
-                                                <td class="text-end fw-bold">{{ row.total }}</td>
-                                            </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		{# Tablas por usuario creador, agente, asignado y cliente #}
+		<div class="row">
+			<div class="col-12 col-xl-3 col-lg-6 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h6 class="m-0 font-weight-bold text-primary">
+							<i class="fa-solid fa-user me-2"></i>
+							{{ trans('services-by-nick') }}
+						</h6>
+					</div>
+					<div class="card-body p-0">
+						<div class="p-3 pb-0">
+							<canvas id="chartByNick" height="240"></canvas>
+						</div>
+						<div class="text-end px-3 py-1 border-top">
+							<a class="small text-muted text-decoration-none" data-bs-toggle="collapse" href="#collapseNick" role="button" aria-expanded="false">
+								<i class="fa-solid fa-list fa-xs me-1"></i>
+								Ver detalle
+							</a>
+						</div>
+						<div class="collapse" id="collapseNick">
+							<div class="table-responsive" style="max-height:380px;overflow-y:auto;">
+								<table class="table table-hover table-sm mb-0">
+									<thead class="table-light">
+										<tr>
+											<th>{{ trans('user') }}</th>
+											<th class="text-end">{{ trans('quantity') }}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for row in fsc.servicesByNick %}
+											<tr>
+												<td>
+													{% if row.nick %}
+														<a href="EditUser?code={{ row.nick }}">{{ row.nick }}</a>
+													{% else %}
+														---
+													{% endif %}
+												</td>
+												<td class="text-end fw-bold">{{ row.total }}</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-user-check me-2"></i>
-                            {{ trans('services-by-assigned') }}
-                        </h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <canvas id="chartByAssigned" height="240"></canvas>
-                        </div>
-                        <div class="text-end px-3 py-1 border-top">
-                            <a class="small text-muted text-decoration-none" data-bs-toggle="collapse"
-                               href="#collapseAssigned" role="button" aria-expanded="false">
-                                <i class="fa-solid fa-list fa-xs me-1"></i> Ver detalle
-                            </a>
-                        </div>
-                        <div class="collapse" id="collapseAssigned">
-                            <div class="table-responsive" style="max-height:380px;overflow-y:auto;">
-                                <table class="table table-hover table-sm mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>{{ trans('assigned') }}</th>
-                                            <th class="text-end">{{ trans('quantity') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for row in fsc.servicesByAssigned %}
-                                            <tr>
-                                                <td>
-                                                    {% if row.asignado %}
-                                                        <a href="EditUser?code={{ row.asignado }}">{{ row.asignado }}</a>
-                                                    {% else %}
-                                                        ---
-                                                    {% endif %}
-                                                </td>
-                                                <td class="text-end fw-bold">{{ row.total }}</td>
-                                            </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			<div class="col-12 col-xl-3 col-lg-6 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h6 class="m-0 font-weight-bold text-primary">
+							<i class="fa-solid fa-user-tie me-2"></i>
+							{{ trans('services-by-agent') }}
+						</h6>
+					</div>
+					<div class="card-body p-0">
+						<div class="p-3 pb-0">
+							<canvas id="chartByAgent" height="240"></canvas>
+						</div>
+						<div class="text-end px-3 py-1 border-top">
+							<a class="small text-muted text-decoration-none" data-bs-toggle="collapse" href="#collapseAgent" role="button" aria-expanded="false">
+								<i class="fa-solid fa-list fa-xs me-1"></i>
+								Ver detalle
+							</a>
+						</div>
+						<div class="collapse" id="collapseAgent">
+							<div class="table-responsive" style="max-height:380px;overflow-y:auto;">
+								<table class="table table-hover table-sm mb-0">
+									<thead class="table-light">
+										<tr>
+											<th>{{ trans('agent') }}</th>
+											<th class="text-end">{{ trans('quantity') }}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for row in fsc.servicesByAgent %}
+											<tr>
+												<td>
+													{% if row.codagente %}
+														<a href="EditAgente?code={{ row.codagente }}">{{ row.nombre ?: row.codagente }}</a>
+													{% else %}
+														---
+													{% endif %}
+												</td>
+												<td class="text-end fw-bold">{{ row.total }}</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-12 col-xl-3 col-lg-6 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fa-solid fa-building me-2"></i>
-                            {{ trans('services-by-client') }}
-                        </h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <canvas id="chartByClient" height="240"></canvas>
-                        </div>
-                        <div class="text-end px-3 py-1 border-top">
-                            <a class="small text-muted text-decoration-none" data-bs-toggle="collapse"
-                               href="#collapseClient" role="button" aria-expanded="false">
-                                <i class="fa-solid fa-list fa-xs me-1"></i> Ver detalle
-                            </a>
-                        </div>
-                        <div class="collapse" id="collapseClient">
-                            <div class="table-responsive" style="max-height:380px;overflow-y:auto;">
-                                <table class="table table-hover table-sm mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>{{ trans('customer') }}</th>
-                                            <th class="text-end">{{ trans('quantity') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for row in fsc.servicesByClient %}
-                                            <tr>
-                                                <td>
-                                                    {% if row.codcliente %}
-                                                        <a href="EditCliente?code={{ row.codcliente }}">{{ row.nombre ?: row.codcliente }}</a>
-                                                    {% else %}
-                                                        ---
-                                                    {% endif %}
-                                                </td>
-                                                <td class="text-end fw-bold">{{ row.total }}</td>
-                                            </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="col-12 col-xl-3 col-lg-6 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h6 class="m-0 font-weight-bold text-primary">
+							<i class="fa-solid fa-user-check me-2"></i>
+							{{ trans('services-by-assigned') }}
+						</h6>
+					</div>
+					<div class="card-body p-0">
+						<div class="p-3 pb-0">
+							<canvas id="chartByAssigned" height="240"></canvas>
+						</div>
+						<div class="text-end px-3 py-1 border-top">
+							<a class="small text-muted text-decoration-none" data-bs-toggle="collapse" href="#collapseAssigned" role="button" aria-expanded="false">
+								<i class="fa-solid fa-list fa-xs me-1"></i>
+								Ver detalle
+							</a>
+						</div>
+						<div class="collapse" id="collapseAssigned">
+							<div class="table-responsive" style="max-height:380px;overflow-y:auto;">
+								<table class="table table-hover table-sm mb-0">
+									<thead class="table-light">
+										<tr>
+											<th>{{ trans('assigned') }}</th>
+											<th class="text-end">{{ trans('quantity') }}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for row in fsc.servicesByAssigned %}
+											<tr>
+												<td>
+													{% if row.asignado %}
+														<a href="EditUser?code={{ row.asignado }}">{{ row.asignado }}</a>
+													{% else %}
+														---
+													{% endif %}
+												</td>
+												<td class="text-end fw-bold">{{ row.total }}</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-    </div>
+			<div class="col-12 col-xl-3 col-lg-6 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h6 class="m-0 font-weight-bold text-primary">
+							<i class="fa-solid fa-building me-2"></i>
+							{{ trans('services-by-client') }}
+						</h6>
+					</div>
+					<div class="card-body p-0">
+						<div class="p-3 pb-0">
+							<canvas id="chartByClient" height="240"></canvas>
+						</div>
+						<div class="text-end px-3 py-1 border-top">
+							<a class="small text-muted text-decoration-none" data-bs-toggle="collapse" href="#collapseClient" role="button" aria-expanded="false">
+								<i class="fa-solid fa-list fa-xs me-1"></i>
+								Ver detalle
+							</a>
+						</div>
+						<div class="collapse" id="collapseClient">
+							<div class="table-responsive" style="max-height:380px;overflow-y:auto;">
+								<table class="table table-hover table-sm mb-0">
+									<thead class="table-light">
+										<tr>
+											<th>{{ trans('customer') }}</th>
+											<th class="text-end">{{ trans('quantity') }}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for row in fsc.servicesByClient %}
+											<tr>
+												<td>
+													{% if row.codcliente %}
+														<a href="EditCliente?code={{ row.codcliente }}">{{ row.nombre ?: row.codcliente }}</a>
+													{% else %}
+														---
+													{% endif %}
+												</td>
+												<td class="text-end fw-bold">{{ row.total }}</td>
+											</tr>
+										{% else %}
+											<tr>
+												<td colspan="2" class="text-center text-muted py-3">{{ trans('no-data') }}</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        {% for includeView in getIncludeViews('ReportServicioAT', 'endDoc') %}
+			{% include includeView['path'] %}
+		{% endfor %}
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('node_modules/chart.js/dist/Chart.min.js') }}"></script>
-    <script>
-        var monthData    = {{ fsc.servicesByMonth    | json_encode | raw }};
-        var yearData     = {{ fsc.servicesByYear     | json_encode | raw }};
-        var amountMonth  = {{ fsc.amountsByMonth     | json_encode | raw }};
-        var amountYear   = {{ fsc.amountsByYear      | json_encode | raw }};
-        var nickData     = {{ fsc.servicesByNick     | json_encode | raw }};
-        var agentData    = {{ fsc.servicesByAgent    | json_encode | raw }};
-        var assignedData = {{ fsc.servicesByAssigned | json_encode | raw }};
-        var clientData   = {{ fsc.servicesByClient   | json_encode | raw }};
+	{{ parent() }}
+	<script src="{{ asset('node_modules/chart.js/dist/Chart.min.js') }}"></script>
+	<script>
+		var monthData = {{ fsc.servicesByMonth    | json_encode | raw }};
+var yearData = {{ fsc.servicesByYear     | json_encode | raw }};
+var amountMonth = {{ fsc.amountsByMonth     | json_encode | raw }};
+var amountYear = {{ fsc.amountsByYear      | json_encode | raw }};
+var nickData = {{ fsc.servicesByNick     | json_encode | raw }};
+var agentData = {{ fsc.servicesByAgent    | json_encode | raw }};
+var assignedData = {{ fsc.servicesByAssigned | json_encode | raw }};
+var clientData = {{ fsc.servicesByClient   | json_encode | raw }};
 
-        var PALETTE = ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796'];
+var PALETTE = [
+'#4e73df',
+'#1cc88a',
+'#36b9cc',
+'#f6c23e',
+'#e74a3b',
+'#858796'
+];
 
-        function donutChart(canvasId, data, labelKey) {
-            if (!data.length) { return; }
-            var MAX = 5;
-            var labels, values;
-            if (data.length > MAX) {
-                labels = data.slice(0, MAX).map(function (r) { return r[labelKey] || '---'; });
-                values = data.slice(0, MAX).map(function (r) { return parseInt(r.total); });
-                var rest = data.slice(MAX).reduce(function (sum, r) { return sum + parseInt(r.total); }, 0);
-                labels.push('Otros');
-                values.push(rest);
-            } else {
-                labels = data.map(function (r) { return r[labelKey] || '---'; });
-                values = data.map(function (r) { return parseInt(r.total); });
-            }
-            var colors = labels.map(function (_, i) { return PALETTE[i % PALETTE.length]; });
-            new Chart(document.getElementById(canvasId).getContext('2d'), {
-                type: 'doughnut',
-                data: {labels: labels, datasets: [{data: values, backgroundColor: colors}]},
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: {position: 'bottom', labels: {fontSize: 12}},
-                    cutoutPercentage: 60
-                }
-            });
-        }
+function donutChart(canvasId, data, labelKey) {
+if (! data.length) {
+return;
+}
+var MAX = 5;
+var labels,
+values;
+if (data.length > MAX) {
+labels = data.slice(0, MAX).map(function (r) {
+return r[labelKey] || '---';
+});
+values = data.slice(0, MAX).map(function (r) {
+return parseInt(r.total);
+});
+var rest = data.slice(MAX).reduce(function (sum, r) {
+return sum + parseInt(r.total);
+}, 0);
+labels.push('Otros');
+values.push(rest);
+} else {
+labels = data.map(function (r) {
+return r[labelKey] || '---';
+});
+values = data.map(function (r) {
+return parseInt(r.total);
+});
+}
+var colors = labels.map(function (_, i) {
+return PALETTE[i % PALETTE.length];
+});
+new Chart(document.getElementById(canvasId).getContext('2d'), {
+type: 'doughnut',
+data: {
+labels: labels,
+datasets: [
+{
+data: values,
+backgroundColor: colors
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+legend: {
+position: 'bottom',
+labels: {
+fontSize: 12
+}
+},
+cutoutPercentage: 60
+}
+});
+}
 
-        $(document).ready(function () {
-            var monthLabels = Object.keys(monthData).map(function (k) {
-                var p = k.split('-');
-                return new Date(p[0], p[1] - 1).toLocaleDateString('es-ES', {month: 'short', year: '2-digit'});
-            });
+$(document).ready(function () {
+var monthLabels = Object.keys(monthData).map(function (k) {
+var p = k.split('-');
+return new Date(p[0], p[1] - 1).toLocaleDateString('es-ES', {
+month: 'short',
+year: '2-digit'
+});
+});
 
-            new Chart(document.getElementById('chartByMonth').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: monthLabels,
-                    datasets: [{
-                        label: '{{ trans('services') | capitalize }}',
-                        data: Object.values(monthData),
-                        backgroundColor: '#4e73df'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        yAxes: [{ticks: {beginAtZero: true, callback: function (v) { return Number.isInteger(v) ? v : ''; }}}]
-                    },
-                    legend: {display: false}
-                }
-            });
+new Chart(document.getElementById('chartByMonth').getContext('2d'), {
+type: 'bar',
+data: {
+labels: monthLabels,
+datasets: [
+{
+label: '{{ trans('services') | capitalize }}',
+data: Object.values(monthData),
+backgroundColor: '#4e73df'
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+scales: {
+yAxes: [
+{
+ticks: {
+beginAtZero: true,
+callback: function (v) {
+return Number.isInteger(v) ? v : '';
+}
+}
+}
+]
+},
+legend: {
+display: false
+}
+}
+});
 
-            new Chart(document.getElementById('chartByYear').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(yearData),
-                    datasets: [{
-                        label: '{{ trans('services') | capitalize }}',
-                        data: Object.values(yearData),
-                        backgroundColor: '#1cc88a'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        yAxes: [{ticks: {beginAtZero: true, callback: function (v) { return Number.isInteger(v) ? v : ''; }}}]
-                    },
-                    legend: {display: false}
-                }
-            });
+new Chart(document.getElementById('chartByYear').getContext('2d'), {
+type: 'bar',
+data: {
+labels: Object.keys(yearData),
+datasets: [
+{
+label: '{{ trans('services') | capitalize }}',
+data: Object.values(yearData),
+backgroundColor: '#1cc88a'
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+scales: {
+yAxes: [
+{
+ticks: {
+beginAtZero: true,
+callback: function (v) {
+return Number.isInteger(v) ? v : '';
+}
+}
+}
+]
+},
+legend: {
+display: false
+}
+}
+});
 
-            new Chart(document.getElementById('chartAmountByMonth').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: monthLabels,
-                    datasets: [{
-                        label: '{{ trans('amount') | capitalize }}',
-                        data: Object.values(amountMonth),
-                        backgroundColor: '#f6c23e'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        yAxes: [{ticks: {beginAtZero: true}}]
-                    },
-                    legend: {display: false}
-                }
-            });
+new Chart(document.getElementById('chartAmountByMonth').getContext('2d'), {
+type: 'bar',
+data: {
+labels: monthLabels,
+datasets: [
+{
+label: '{{ trans('amount') | capitalize }}',
+data: Object.values(amountMonth),
+backgroundColor: '#f6c23e'
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+scales: {
+yAxes: [
+{
+ticks: {
+beginAtZero: true
+}
+}
+]
+},
+legend: {
+display: false
+}
+}
+});
 
-            new Chart(document.getElementById('chartAmountByYear').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(amountYear),
-                    datasets: [{
-                        label: '{{ trans('amount') | capitalize }}',
-                        data: Object.values(amountYear),
-                        backgroundColor: '#e74a3b'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        yAxes: [{ticks: {beginAtZero: true}}]
-                    },
-                    legend: {display: false}
-                }
-            });
+new Chart(document.getElementById('chartAmountByYear').getContext('2d'), {
+type: 'bar',
+data: {
+labels: Object.keys(amountYear),
+datasets: [
+{
+label: '{{ trans('amount') | capitalize }}',
+data: Object.values(amountYear),
+backgroundColor: '#e74a3b'
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+scales: {
+yAxes: [
+{
+ticks: {
+beginAtZero: true
+}
+}
+]
+},
+legend: {
+display: false
+}
+}
+});
 
-            donutChart('chartByNick',     nickData,     'nick');
-            donutChart('chartByAgent',    agentData,    'nombre');
-            donutChart('chartByAssigned', assignedData, 'asignado');
-            donutChart('chartByClient',   clientData,   'nombre');
-        });
-    </script>
+donutChart('chartByNick', nickData, 'nick');
+donutChart('chartByAgent', agentData, 'nombre');
+donutChart('chartByAssigned', assignedData, 'asignado');
+donutChart('chartByClient', clientData, 'nombre');
+});
+	</script>
 {% endblock %}
