@@ -49,7 +49,7 @@
     "open-services": "Oberts",
     "open-services-last-month": "Oberts últim mes",
     "open-services-last-year": "Oberts últim any",
-    "open-services-total": "Servicios abiertos",
+    "open-services-total": "Serveis oberts",
     "print-agent": "Imprimir agent",
     "print-assigned": "Imprimir assignat",
     "print-description": "Imprimir descripció",
@@ -62,15 +62,15 @@
     "print-services": "Imprimir serveis",
     "print-solution": "Imprimir solució",
     "print-ticket-desc": "Aquesta configuració només s'aplicarà als tiquets de servei. Ès necessari tenir el plugin Tiquets instal·lat.",
-    "services-by-agent": "Por agente",
-    "services-by-assigned": "Por asignado",
+    "services-by-agent": "Per agent",
+    "services-by-assigned": "Per assignat",
     "services-by-client": "Por cliente",
-    "services-by-month": "Servicios por mes (últimos 12 meses)",
+    "services-by-month": "Serveis per mes (últims 12 mesos)",
     "services-by-nick": "Per usuari creador",
     "services-by-status": "Por estado",
     "services-by-year": "Serveis per any",
     "ticket-footer-text": "Text del peu del tiquet",
     "total-net": "Total net",
     "total-services": "Total de serveis",
-    "verifications": "Verificaciones"
+    "verifications": "Verificacions"
 }
