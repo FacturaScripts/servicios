@@ -64,7 +64,7 @@
     "print-ticket-desc": "Aquesta configuració només s'aplicarà als tiquets de servei. Ès necessari tenir el plugin Tiquets instal·lat.",
     "services-by-agent": "Per agent",
     "services-by-assigned": "Per assignat",
-    "services-by-client": "Por cliente",
+    "services-by-client": "Per client",
     "services-by-month": "Serveis per mes (últims 12 mesos)",
     "services-by-nick": "Per usuari creador",
     "services-by-status": "Por estado",
