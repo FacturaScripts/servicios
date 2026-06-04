@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -43,8 +43,8 @@ use FacturaScripts\Dinamic\Model\User;
  */
 class ServicioAT extends ModelClass
 {
-    use ModelTrait;
     use CompanyRelationTrait;
+    use ModelTrait;
 
     /** @var string */
     public $asignado;
@@ -89,22 +89,22 @@ class ServicioAT extends ModelClass
     public $idmaquina4;
 
     /** @var int */
-    public $idtipo;
-
-    /** @var int */
     public $idprioridad;
 
     /** @var int */
     public $idservicio;
 
+    /** @var int */
+    public $idtipo;
+
     /** @var string */
     public $material;
 
-    /** @var string */
-    public $nick;
-
     /** @var double */
     public $neto;
+
+    /** @var string */
+    public $nick;
 
     /** @var string */
     public $observaciones;
@@ -180,7 +180,9 @@ class ServicioAT extends ModelClass
 
         // añadimos el cambio al log
         $messageLog = Tools::trans('deleted-service');
-        $this->log($messageLog);
+        if (false === $this->log($messageLog)) {
+            Tools::log()->error('record-save-error', ['%modelo%' => 'ServicioATLog']);
+        }
 
         return true;
     }
@@ -208,19 +210,19 @@ class ServicioAT extends ModelClass
     }
 
     /**
-     * @return TipoAT[]
-     */
-    public function getAvailableTypes(): array
-    {
-        return TipoAT::all();
-    }
-
-    /**
      * @return EstadoAT[]
      */
     public function getAvailableStatus(): array
     {
         return EstadoAT::all();
+    }
+
+    /**
+     * @return TipoAT[]
+     */
+    public function getAvailableTypes(): array
+    {
+        return TipoAT::all();
     }
 
     public function getCustomer(?string $codcliente = null): Cliente
@@ -251,14 +253,6 @@ class ServicioAT extends ModelClass
         return $result;
     }
 
-    public function getStatus(?int $idestado = null): EstadoAT
-    {
-        $idestado = $idestado ?? $this->idestado;
-        $status = new EstadoAT();
-        $status->load($idestado);
-        return $status;
-    }
-
     public function getPriority(): PrioridadAT
     {
         $priority = new PrioridadAT();
@@ -266,11 +260,12 @@ class ServicioAT extends ModelClass
         return $priority;
     }
 
-    public function getType(): TipoAT
+    public function getStatus(?int $idestado = null): EstadoAT
     {
-        $type = new TipoAT();
-        $type->load($this->idtipo);
-        return $type;
+        $idestado = $idestado ?? $this->idestado;
+        $status = new EstadoAT();
+        $status->load($idestado);
+        return $status;
     }
 
     public function getSubject(): Cliente
@@ -288,6 +283,13 @@ class ServicioAT extends ModelClass
         $where = [Where::eq('idservicio', $this->idservicio)];
         $order = ['fechainicio' => 'ASC', 'horainicio' => 'ASC'];
         return DinTrabajoAT::all($where, $order);
+    }
+
+    public function getType(): TipoAT
+    {
+        $type = new TipoAT();
+        $type->load($this->idtipo);
+        return $type;
     }
 
     public function getUser(?string $nick = null): User
@@ -393,6 +395,78 @@ class ServicioAT extends ModelClass
         return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
     }
 
+    protected function notifyAgent(string $notification): void
+    {
+        $agent = new Agente();
+        if (false === $agent->load($this->codagente) || empty($agent->email)) {
+            return;
+        }
+
+        MailNotifier::send($notification, $agent->email, $agent->nombre, [
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
+            'date' => $this->fecha,
+            'customer' => $this->getSubject()->nombre,
+            'author' => $this->nick,
+            'status' => $this->getStatus()->nombre,
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
+    protected function notifyAssignedUser(string $notification): void
+    {
+        $assigned = new User();
+        if (false === $assigned->load($this->asignado)) {
+            return;
+        }
+
+        MailNotifier::send($notification, $assigned->email, $assigned->nick, [
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
+            'date' => $this->fecha,
+            'customer' => $this->getSubject()->nombre,
+            'author' => $this->nick,
+            'status' => $this->getStatus()->nombre,
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
+    protected function notifyCustomer(string $notification): void
+    {
+        $customer = $this->getSubject();
+        if (empty($customer) || empty($customer->email)) {
+            return;
+        }
+
+        MailNotifier::send($notification, $customer->email, $customer->nombre, [
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
+            'date' => $this->fecha,
+            'customer' => $customer->nombre,
+            'author' => $this->nick,
+            'status' => $this->getStatus()->nombre,
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
+    protected function notifyUser(string $notification): void
+    {
+        $user = new User();
+        if (false === $user->load($this->nick)) {
+            return;
+        }
+
+        MailNotifier::send($notification, $user->email, $user->nick, [
+            'number' => $this->idservicio,
+            'code' => $this->codigo,
+            'date' => $this->fecha,
+            'customer' => $this->getSubject()->nombre,
+            'author' => $this->nick,
+            'status' => $this->getStatus()->nombre,
+            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
+        ]);
+    }
+
     protected function onChange(string $field): bool
     {
         if ($field == 'idestado') {
@@ -411,7 +485,9 @@ class ServicioAT extends ModelClass
                 '%oldStatus%' => $this->getStatus($this->getOriginal('idestado'))->nombre,
                 '%newStatus%' => $newStatus->nombre
             ]);
-            $this->log($messageLog);
+            if (false === $this->log($messageLog)) {
+                return false;
+            }
         }
 
         return parent::onChange($field);
@@ -430,8 +506,13 @@ class ServicioAT extends ModelClass
             $this->notifyCustomer('new-service-customer');
         }
 
-        $message = Tools::trans('new-service-created', ['%number%' => $this->id()]);
-        $this->log($message);
+        $message = Tools::trans('new-service-created', [
+            '%number%' => $this->id(),
+            '%status%' => $this->getStatus()->nombre
+        ]);
+        if (false === $this->log($message)) {
+            Tools::log()->error('record-save-error', ['%modelo%' => 'ServicioATLog']);
+        }
 
         parent::onInsert();
     }
@@ -559,77 +640,5 @@ class ServicioAT extends ModelClass
         if ($this->nick) {
             $this->notifyUser('new-service-user');
         }
-    }
-
-    protected function notifyAgent(string $notification): void
-    {
-        $agent = new Agente();
-        if (false === $agent->load($this->codagente) || empty($agent->email)) {
-            return;
-        }
-
-        MailNotifier::send($notification, $agent->email, $agent->nombre, [
-            'number' => $this->idservicio,
-            'code' => $this->codigo,
-            'date' => $this->fecha,
-            'customer' => $this->getSubject()->nombre,
-            'author' => $this->nick,
-            'status' => $this->getStatus()->nombre,
-            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
-        ]);
-    }
-
-    protected function notifyAssignedUser(string $notification): void
-    {
-        $assigned = new User();
-        if (false === $assigned->load($this->asignado)) {
-            return;
-        }
-
-        MailNotifier::send($notification, $assigned->email, $assigned->nick, [
-            'number' => $this->idservicio,
-            'code' => $this->codigo,
-            'date' => $this->fecha,
-            'customer' => $this->getSubject()->nombre,
-            'author' => $this->nick,
-            'status' => $this->getStatus()->nombre,
-            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
-        ]);
-    }
-
-    protected function notifyCustomer(string $notification): void
-    {
-        $customer = $this->getSubject();
-        if (empty($customer) || empty($customer->email)) {
-            return;
-        }
-
-        MailNotifier::send($notification, $customer->email, $customer->nombre, [
-            'number' => $this->idservicio,
-            'code' => $this->codigo,
-            'date' => $this->fecha,
-            'customer' => $customer->nombre,
-            'author' => $this->nick,
-            'status' => $this->getStatus()->nombre,
-            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
-        ]);
-    }
-
-    protected function notifyUser(string $notification): void
-    {
-        $user = new User();
-        if (false === $user->load($this->nick)) {
-            return;
-        }
-
-        MailNotifier::send($notification, $user->email, $user->nick, [
-            'number' => $this->idservicio,
-            'code' => $this->codigo,
-            'date' => $this->fecha,
-            'customer' => $this->getSubject()->nombre,
-            'author' => $this->nick,
-            'status' => $this->getStatus()->nombre,
-            'url' => Tools::siteUrl() . '/EditServicioAT?code=' . $this->idservicio
-        ]);
     }
 }

@@ -27,7 +27,7 @@
     "new-service-agent-body": "Hola {name}, {author} te ha asignado el servicio {number} para el cliente {customer}. Puedes ver más detalles desde aquí: {url}",
     "new-service-assignee": "Servicio {number} asignado",
     "new-service-assignee-body": "Hola {name}, {author} te ha asignado el servicio {number} para el cliente {customer}. Puedes ver más detalles desde aquí: {url}",
-    "new-service-created": "Servicio creado",
+    "new-service-created": "Servicio creado con el estado %status%",
     "new-service-customer": "Servicio {number} registrado",
     "new-service-customer-body": "Hola {name}, hemos registrado el servicio {number} para atenderte.",
     "new-service-p": "Para crear un servicio primero debes seleccionar o crear un cliente y después una máquina (opcional)",
