@@ -49,7 +49,7 @@
     "open-services": "Otwarty",
     "open-services-last-month": "Otwarte w ostatnim miesiącu",
     "open-services-last-year": "Otwarte w ubiegłym roku",
-    "open-services-total": "Usługi otwarte",
+    "open-services-total": "Otwarte usługi",
     "print-agent": "Drukuj agenta",
     "print-assigned": "Drukuj przypisane",
     "print-description": "Drukuj opis",
@@ -70,7 +70,7 @@
     "services-by-status": "Według statusu",
     "services-by-year": "Usługi według roku",
     "ticket-footer-text": "Tekst stopki paragonu",
-    "total-net": "Wartość netto",
+    "total-net": "Suma netto",
     "total-services": "Suma usług",
     "verifications": "Weryfikacje"
 }

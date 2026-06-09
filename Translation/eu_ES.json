@@ -65,12 +65,12 @@
     "services-by-agent": "Agentearen arabera",
     "services-by-assigned": "Esleitutakoaren arabera",
     "services-by-client": "Bezeroaren arabera",
-    "services-by-month": "Servicios por mes (últimos 12 meses)",
+    "services-by-month": "Hilabeteko zerbitzuak (azken 12 hilabeteetan)",
     "services-by-nick": "Sortzailearen arabera",
     "services-by-status": "Egoeraren arabera",
     "services-by-year": "Urteko zerbitzuak",
     "ticket-footer-text": "Txartelaren oin-testua",
-    "total-net": "Neto total",
+    "total-net": "Guztizko netoa",
     "total-services": "Zerbitzuen guztira",
     "verifications": "Egiaztapenak"
 }
