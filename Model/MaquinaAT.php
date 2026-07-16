@@ -34,31 +34,31 @@ class MaquinaAT extends ModelClass
 {
     use ModelTrait;
 
-    /** @var string */
+    /** @var string Código del agente relacionado con la máquina. */
     public $codagente;
 
-    /** @var string */
+    /** @var string Código del cliente propietario de la máquina. */
     public $codcliente;
 
-    /** @var string */
+    /** @var string Código del fabricante de la máquina. */
     public $codfabricante;
 
-    /** @var string */
+    /** @var string Descripción de la máquina. */
     public $descripcion;
 
-    /** @var string */
+    /** @var string Fecha de alta de la máquina. */
     public $fecha;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador de la máquina. */
     public $idmaquina;
 
-    /** @var string */
+    /** @var string Nombre de la máquina. */
     public $nombre;
 
-    /** @var string */
+    /** @var string Número de serie de la máquina. */
     public $numserie;
 
-    /** @var string */
+    /** @var string Referencia del producto relacionado con la máquina. */
     public $referencia;
 
     public function clear(): void
