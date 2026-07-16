@@ -46,76 +46,76 @@ class ServicioAT extends ModelClass
     use CompanyRelationTrait;
     use ModelTrait;
 
-    /** @var string */
+    /** @var string Nick del usuario asignado para realizar el servicio. */
     public $asignado;
 
-    /** @var string */
+    /** @var string Código del agente relacionado con el servicio. */
     public $codagente;
 
-    /** @var string */
+    /** @var string Código del almacén donde se realiza el servicio. */
     public $codalmacen;
 
-    /** @var string */
+    /** @var string Código del cliente del servicio. */
     public $codcliente;
 
-    /** @var string */
+    /** @var string Código identificativo del servicio, generado según el patrón configurado. */
     public $codigo;
 
-    /** @var string */
+    /** @var string Descripción del problema o trabajo a realizar. */
     public $descripcion;
 
-    /** @var bool */
+    /** @var bool Indica si el servicio es modificable. Se sincroniza con su estado. */
     public $editable;
 
-    /** @var string */
+    /** @var string Fecha de creación del servicio. */
     public $fecha;
 
-    /** @var string */
+    /** @var string Hora de creación del servicio. */
     public $hora;
 
-    /** @var int */
+    /** @var int Identificador del estado del servicio. */
     public $idestado;
 
-    /** @var int */
+    /** @var int Identificador de la primera máquina del servicio. */
     public $idmaquina;
 
-    /** @var int */
+    /** @var int Identificador de la segunda máquina del servicio. */
     public $idmaquina2;
 
-    /** @var int */
+    /** @var int Identificador de la tercera máquina del servicio. */
     public $idmaquina3;
 
-    /** @var int */
+    /** @var int Identificador de la cuarta máquina del servicio. */
     public $idmaquina4;
 
-    /** @var int */
+    /** @var int Identificador de la prioridad del servicio. */
     public $idprioridad;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador del servicio. */
     public $idservicio;
 
-    /** @var int */
+    /** @var int Identificador del tipo de servicio. */
     public $idtipo;
 
-    /** @var string */
+    /** @var string Material entregado por el cliente junto con la máquina. */
     public $material;
 
-    /** @var double */
+    /** @var double Importe neto del servicio. Suma de precio por cantidad de sus trabajos. */
     public $neto;
 
-    /** @var string */
+    /** @var string Nick del usuario creador del servicio. */
     public $nick;
 
-    /** @var string */
+    /** @var string Observaciones internas del servicio. */
     public $observaciones;
 
-    /** @var string */
+    /** @var string Descripción de la solución aplicada. */
     public $solucion;
 
-    /** @var string */
+    /** @var string Teléfono de contacto principal. Si está vacío, se toma del cliente. */
     public $telefono1;
 
-    /** @var string */
+    /** @var string Teléfono de contacto secundario. Si está vacío, se toma del cliente. */
     public $telefono2;
 
     public function calculatePriceNet(): void
