@@ -33,13 +33,13 @@ class PrioridadAT extends ModelClass
 {
     use ModelTrait;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador de la prioridad. */
     public $id;
 
-    /** @var string */
+    /** @var string Nombre de la prioridad. */
     public $nombre;
 
-    /** @var bool */
+    /** @var bool Indica si es la prioridad predeterminada para nuevos servicios. */
     public $predeterminado;
 
     public function clear(): void
