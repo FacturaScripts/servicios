@@ -34,34 +34,34 @@ class EstadoAT extends ModelClass
 {
     use ModelTrait;
 
-    /** @var string */
+    /** @var string Nick del usuario que se asigna automáticamente al servicio con este estado. */
     public $asignado;
 
-    /** @var string */
+    /** @var string Color con el que se muestra el estado en los listados. */
     public $color;
 
-    /** @var bool */
+    /** @var bool Indica si los servicios con este estado son modificables. */
     public $editable;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador del estado. */
     public $id;
 
-    /** @var string */
+    /** @var string Nombre del estado. */
     public $nombre;
 
-    /** @var bool */
+    /** @var bool Indica si se notifica por email al agente al pasar a este estado. */
     public $notificaragente;
 
-    /** @var bool */
+    /** @var bool Indica si se notifica por email al usuario asignado al pasar a este estado. */
     public $notificarasignado;
 
-    /** @var bool */
+    /** @var bool Indica si se notifica por email al cliente al pasar a este estado. */
     public $notificarcliente;
 
-    /** @var bool */
+    /** @var bool Indica si se notifica por email al usuario creador al pasar a este estado. */
     public $notificarusuario;
 
-    /** @var bool */
+    /** @var bool Indica si es el estado predeterminado para nuevos servicios. */
     public $predeterminado;
 
     public function clear(): void

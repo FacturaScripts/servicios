@@ -47,49 +47,49 @@ class TrabajoAT extends ModelClass
     const STATUS_ESTIMATION = 6;
     const STATUS_SUBTRACT_STOCK = -1;
 
-    /** @var float */
+    /** @var float Cantidad del producto o de las unidades del trabajo. */
     public $cantidad;
 
-    /** @var string */
+    /** @var string Código del agente que realiza el trabajo. */
     public $codagente;
 
-    /** @var string */
+    /** @var string Descripción del trabajo realizado. */
     public $descripcion;
 
-    /** @var int */
+    /** @var int Estado de facturación del trabajo. Ver constantes STATUS_*. */
     public $estado;
 
-    /** @var string */
+    /** @var string Fecha de finalización del trabajo. */
     public $fechafin;
 
-    /** @var string */
+    /** @var string Fecha de inicio del trabajo. */
     public $fechainicio;
 
-    /** @var string */
+    /** @var string Hora de finalización del trabajo. */
     public $horafin;
 
-    /** @var string */
+    /** @var string Hora de inicio del trabajo. */
     public $horainicio;
 
-    /** @var int */
+    /** @var int Identificador del servicio al que pertenece el trabajo. */
     public $idservicio;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador del trabajo. */
     public $idtrabajo;
 
-    /** @var string */
+    /** @var string Nick del usuario que realiza el trabajo. */
     public $nick;
 
-    /** @var string */
+    /** @var string Observaciones internas del trabajo. */
     public $observaciones;
 
-    /** @var float */
+    /** @var float Precio unitario del trabajo o producto. */
     public $precio;
 
-    /** @var string */
+    /** @var string Referencia del producto utilizado en el trabajo. */
     public $referencia;
 
-    /** @var string */
+    /** @var string Mensaje para el log del servicio al actualizar el trabajo. */
     protected $messageLog = 'updated-model';
 
     public function clear(): void

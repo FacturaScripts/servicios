@@ -33,13 +33,13 @@ class TipoAT extends ModelClass
 {
     use ModelTrait;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador del tipo de servicio. */
     public $id;
 
-    /** @var bool */
+    /** @var bool Indica si es el tipo predeterminado para nuevos servicios. */
     public $default;
 
-    /** @var string */
+    /** @var string Nombre del tipo de servicio. */
     public $name;
 
     public function clear(): void

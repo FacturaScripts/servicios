@@ -34,25 +34,25 @@ class ServicioATLog extends ModelClass
 {
     use ModelTrait;
 
-    /** @var string */
+    /** @var string Copia del servicio en formato JSON en el momento del cambio. */
     public $context;
 
-    /** @var string */
+    /** @var string Fecha y hora de creación del registro. */
     public $creationdate;
 
-    /** @var int */
+    /** @var int Clave primaria. Identificador del registro. */
     public $id;
 
-    /** @var int */
+    /** @var int Identificador del servicio al que pertenece el registro. */
     public $idservicio;
 
-    /** @var string */
+    /** @var string Dirección IP desde la que se realizó el cambio. */
     public $ip;
 
-    /** @var string */
+    /** @var string Mensaje que describe el cambio realizado. */
     public $message;
 
-    /** @var string */
+    /** @var string Nick del usuario que realizó el cambio. */
     public $nick;
 
     public function clear(): void
