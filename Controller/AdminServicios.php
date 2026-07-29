@@ -106,7 +106,7 @@ class AdminServicios extends PanelController
                 break;
 
             case self::VIEW_LIST_CATEGORIES:
-                $view->loadData('', [], ['name' => 'ASC']);
+                $view->loadData();
                 break;
 
             case self::VIEW_LIST_PRIORITIES:
