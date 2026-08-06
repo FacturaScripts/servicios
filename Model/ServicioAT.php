@@ -363,6 +363,17 @@ class ServicioAT extends ModelClass
             $customer = $this->getSubject();
             $this->telefono1 = $customer->telefono1;
             $this->telefono2 = $customer->telefono2;
+        } elseif ($this->exists() && $this->codcliente != $this->getOriginal('codcliente')) {
+            // si cambiamos el cliente y los teléfonos no se han modificado manualmente,
+            // los actualizamos con los del nuevo cliente
+            $oldCustomer = $this->getCustomer($this->getOriginal('codcliente') ?? '');
+            $customer = $this->getSubject();
+            if ($this->telefono1 == $oldCustomer->telefono1) {
+                $this->telefono1 = $customer->telefono1;
+            }
+            if ($this->telefono2 == $oldCustomer->telefono2) {
+                $this->telefono2 = $customer->telefono2;
+            }
         }
 
         $fields = ['codigo', 'descripcion', 'material', 'observaciones', 'solucion', 'telefono1', 'telefono2'];
