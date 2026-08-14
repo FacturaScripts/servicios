@@ -54,6 +54,9 @@
                     <values source="agentes" fieldcode="codagente" fieldtitle="nombre" />
                 </widget>
             </column>
+            <column name="active" display="center" order="190">
+                <widget type="checkbox" fieldname="activo" />
+            </column>
         </group>
     </columns>
 </view>

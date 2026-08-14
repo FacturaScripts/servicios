@@ -203,6 +203,11 @@ class NewServicioAT extends Controller
             return false;
         }
 
+        // no permitimos crear servicios sobre máquinas desactivadas
+        if (false === (bool)$machine->activo) {
+            return false;
+        }
+
         // si no hay cliente, usamos el cliente de la máquina
         if (empty($this->codcliente)) {
             $this->codcliente = $machine->codcliente;
@@ -260,7 +265,7 @@ class NewServicioAT extends Controller
             ];
         }
 
-        $whereCustomer = [Where::eq('codcliente', $customer->codcliente)];
+        $whereCustomer = [Where::eq('codcliente', $customer->codcliente), Where::eq('activo', true)];
         $customerMachines = MaquinaAT::all($whereCustomer, $orderBy);
         foreach ($customerMachines as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
@@ -270,7 +275,7 @@ class NewServicioAT extends Controller
                 . '</tr>';
         }
 
-        $whereAnonymous = [Where::isNull('codcliente')];
+        $whereAnonymous = [Where::isNull('codcliente'), Where::eq('activo', true)];
         $anonymousMachines = MaquinaAT::all($whereAnonymous, $orderBy);
         if (false === empty($anonymousMachines)) {
             $html .= '<tr class="table-info"><td class="text-center" colspan="3">'
@@ -278,7 +283,7 @@ class NewServicioAT extends Controller
                 . '</td></tr>';
         }
 
-        $whereAnonymous = [Where::isNull('codcliente')];
+        $whereAnonymous = [Where::isNull('codcliente'), Where::eq('activo', true)];
         foreach (MaquinaAT::all($whereAnonymous, $orderBy) as $machine) {
             $html .= '<tr class="clickableRow" data-idmaquina="' . $machine->idmaquina . '">'
                 . '<td>' . $machine->nombre . '</td>'
@@ -349,6 +354,7 @@ class NewServicioAT extends Controller
         }
 
         $machine = new MaquinaAT();
+        $machine->activo = (bool)$this->request->get('active', true);
         $machine->codcliente = $this->request->get('codcliente');
         $machine->nombre = $this->request->get('name');
         $machine->numserie = $this->request->get('serial_number');
@@ -366,6 +372,12 @@ class NewServicioAT extends Controller
 
         if (false === $machine->save()) {
             Tools::log()->error('save-error');
+            return ['saveNewMachine' => false];
+        }
+
+        // una máquina desactivada no puede asignarse al servicio que se está creando
+        if (false === $machine->activo) {
+            Tools::log()->warning('inactive-machine-cant-be-selected');
             return ['saveNewMachine' => false];
         }
 

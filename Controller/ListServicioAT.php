@@ -58,6 +58,12 @@ class ListServicioAT extends ListController
         $manufacturers = $this->codeModel->all('fabricantes', 'codfabricante', 'nombre');
         $agents = $this->codeModel->all('agentes', 'codagente', 'nombre');
 
+        $valuesWhere = [
+            ['label' => Tools::trans('all'), 'where' => []],
+            ['label' => Tools::trans('only-active'), 'where' => [Where::eq('activo', true)]],
+            ['label' => Tools::trans('inactive'), 'where' => [Where::eq('activo', false)]],
+        ];
+
         $this->addView($viewName, 'MaquinaAT', 'machines', 'fa-solid fa-laptop-medical')
             ->addOrderBy(['idmaquina'], 'code', 2)
             ->addOrderBy(['fecha'], 'date')
@@ -65,6 +71,7 @@ class ListServicioAT extends ListController
             ->addOrderBy(['referencia'], 'reference')
             ->addSearchFields(['descripcion', 'idmaquina', 'nombre', 'numserie', 'referencia'])
             ->addFilterPeriod('fecha', 'date', 'fecha')
+            ->addFilterSelectWhere('activo', $valuesWhere)
             ->addFilterSelect('codfabricante', 'manufacturer', 'codfabricante', $manufacturers)
             ->addFilterAutocomplete('codcliente', 'customer', 'codcliente', 'clientes', 'codcliente', 'nombre')
             ->addFilterSelect('codagente', 'agent', 'codagente', $agents);

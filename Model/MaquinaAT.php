@@ -34,6 +34,9 @@ class MaquinaAT extends ModelClass
 {
     use ModelTrait;
 
+    /** @var bool Indica si la máquina está activa y puede seleccionarse en nuevos servicios. */
+    public $activo;
+
     /** @var string Código del agente relacionado con la máquina. */
     public $codagente;
 
@@ -64,6 +67,7 @@ class MaquinaAT extends ModelClass
     public function clear(): void
     {
         parent::clear();
+        $this->activo = true;
         $this->fecha = Tools::date();
     }
 

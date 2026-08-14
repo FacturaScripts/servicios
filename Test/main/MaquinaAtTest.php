@@ -50,6 +50,28 @@ final class MaquinaAtTest extends TestCase
         $this->assertTrue($customer->delete());
     }
 
+    public function testActive(): void
+    {
+        // una máquina nueva está activa por defecto
+        $machine = new MaquinaAT();
+        $this->assertTrue($machine->activo);
+
+        $machine->nombre = 'Test active machine';
+        $this->assertTrue($machine->save());
+
+        // la desactivamos
+        $machine->activo = false;
+        $this->assertTrue($machine->save());
+
+        // recargamos y comprobamos que sigue desactivada
+        $reloaded = new MaquinaAT();
+        $this->assertTrue($reloaded->load($machine->idmaquina));
+        $this->assertFalse((bool)$reloaded->activo);
+
+        // eliminamos
+        $this->assertTrue($machine->delete());
+    }
+
     public function testEscapeHtml(): void
     {
         $html = '<br/>';
