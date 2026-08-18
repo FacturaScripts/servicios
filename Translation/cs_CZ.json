@@ -18,6 +18,7 @@
     "customer-machines": "Zákaznické stroje",
     "deleted-service": "Služba smazána",
     "generated-services": "Vygenerováno %quantity% služeb.",
+    "inactive-machine-cant-be-selected": "La máquina se ha guardado como inactiva, por lo que no puede asignarse al servicio.",
     "make-delivery-note": "Hacer albarán",
     "make-estimation": "Hacer presupuesto",
     "material": "Material",

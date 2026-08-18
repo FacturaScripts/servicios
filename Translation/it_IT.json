@@ -18,6 +18,7 @@
     "customer-machines": "Macchine del cliente",
     "deleted-service": "Servizio eliminato",
     "generated-services": "%quantity% servizi generati.",
+    "inactive-machine-cant-be-selected": "La máquina se ha guardado como inactiva, por lo que no puede asignarse al servicio.",
     "make-delivery-note": "Fai nota di consegna",
     "make-estimation": "fare stima",
     "material": "Materiale",
