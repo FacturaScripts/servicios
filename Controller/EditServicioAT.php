@@ -60,6 +60,25 @@ class EditServicioAT extends EditController
         return $data;
     }
 
+    protected function autocompleteAction(): array
+    {
+        $data = $this->requestGet(['source', 'fieldcode', 'fieldtitle', 'term']);
+        if ($data['source'] !== 'serviciosat_maquinas') {
+            return parent::autocompleteAction();
+        }
+
+        $where = [Where::eq('activo', true)];
+
+        $result = [];
+        foreach ($this->codeModel->search($data['source'], $data['fieldcode'], $data['fieldtitle'], $data['term'], $where) as $value) {
+            $result[] = ['key' => Tools::fixHtml($value->code), 'value' => Tools::fixHtml($value->description)];
+        }
+
+        return empty($result)
+            ? [['key' => null, 'value' => Tools::trans('no-data')]]
+            : $result;
+    }
+
     /**
      * Calculate the number of hours worked.
      *

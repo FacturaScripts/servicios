@@ -314,6 +314,10 @@
                             {{ trans('description') }}
                             <textarea name="description" class="form-control" maxlength="100"></textarea>
                         </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" name="active" id="newMachineActive" class="form-check-input" checked/>
+                            <label class="form-check-label" for="newMachineActive">{{ trans('active') }}</label>
+                        </div>
                         {% for item in getIncludeViews('NewServicioAT', 'newMachineModal') %}
                             {% include item['path'] %}
                         {% endfor %}
@@ -429,9 +433,11 @@
             let formData = new FormData();
             formData.append('codcliente', codcliente);
 
-            $('#newMachineModal input').each(function () {
+            $('#newMachineModal input:not([type=checkbox])').each(function () {
                 formData.append($(this).attr('name'), $(this).val());
             });
+
+            formData.append('active', $('#newMachineActive').is(':checked') ? '1' : '0');
 
             $('#newMachineModal select').each(function () {
                 formData.append($(this).attr('name'), $(this).find('option:selected').val());
