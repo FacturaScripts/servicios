@@ -129,6 +129,7 @@ final class Init extends InitClass
         // portal cliente: identificador público de los servicios ya existentes
         if (Plugins::isEnabled('PortalCliente')) {
             $this->loadPortalRoutes();
+            $this->deployPortalRoutes();
             $this->assignMissingPortalUuids();
         }
     }
@@ -236,6 +237,12 @@ final class Init extends InitClass
         $db->commit();
     }
 
+    private function deployPortalRoutes(): void
+    {
+        Plugins::deploy(true, true);
+        Cache::clear();
+    }
+
     private function fixMissingAgents(): void
     {
         // si no existe la tabla, no hacemos nada
@@ -274,9 +281,6 @@ final class Init extends InitClass
         Kernel::addRoutes(function () {
             Kernel::addRoute('/PortalServicio/*', 'PortalServicio');
         });
-
-        Plugins::deploy(true, true);
-        Cache::clear();
     }
 
     private function setupSettings(): void
