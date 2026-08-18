@@ -6,6 +6,11 @@
 -->
 <table>
     <column>
+        <name>activo</name>
+        <type>boolean</type>
+        <default>true</default>
+    </column>
+    <column>
         <name>codagente</name>
         <type>character varying(10)</type>
     </column>

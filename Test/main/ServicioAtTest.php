@@ -283,6 +283,124 @@ final class ServicioAtTest extends TestCase
         $this->assertTrue($customer->delete());
     }
 
+    public function testUpdatePhoneOnCustomerChange(): void
+    {
+        // creamos dos clientes con teléfonos distintos
+        $customer1 = $this->getRandomCustomer();
+        $customer1->telefono1 = '111111111';
+        $customer1->telefono2 = '222222222';
+        $this->assertTrue($customer1->save());
+
+        $customer2 = $this->getRandomCustomer();
+        $customer2->telefono1 = '333333333';
+        $customer2->telefono2 = '444444444';
+        $this->assertTrue($customer2->save());
+
+        // creamos un servicio con el primer cliente
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer1->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // comprobamos que se ha rellenado con el teléfono del primer cliente
+        $this->assertEquals($customer1->telefono1, $service->telefono1);
+        $this->assertEquals($customer1->telefono2, $service->telefono2);
+
+        // cambiamos el cliente asignado
+        $service->codcliente = $customer2->codcliente;
+        $this->assertTrue($service->save());
+
+        // comprobamos que el teléfono se ha actualizado al del nuevo cliente
+        $this->assertEquals($customer2->telefono1, $service->telefono1);
+        $this->assertEquals($customer2->telefono2, $service->telefono2);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer1->delete());
+        $this->assertTrue($customer2->delete());
+    }
+
+    public function testKeepManualPhoneOnCustomerChange(): void
+    {
+        // creamos dos clientes con teléfonos distintos
+        $customer1 = $this->getRandomCustomer();
+        $customer1->telefono1 = '111111111';
+        $customer1->telefono2 = '222222222';
+        $this->assertTrue($customer1->save());
+
+        $customer2 = $this->getRandomCustomer();
+        $customer2->telefono1 = '333333333';
+        $customer2->telefono2 = '444444444';
+        $this->assertTrue($customer2->save());
+
+        // creamos un servicio con el primer cliente
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer1->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // modificamos el teléfono manualmente
+        $service->telefono1 = '999999999';
+        $service->telefono2 = '888888888';
+        $this->assertTrue($service->save());
+
+        // cambiamos el cliente asignado
+        $service->codcliente = $customer2->codcliente;
+        $this->assertTrue($service->save());
+
+        // comprobamos que el teléfono manual no se ha sobrescrito
+        $this->assertEquals('999999999', $service->telefono1);
+        $this->assertEquals('888888888', $service->telefono2);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer1->delete());
+        $this->assertTrue($customer2->delete());
+    }
+
+    public function testUpdateOnlyUnmodifiedPhoneOnCustomerChange(): void
+    {
+        // creamos dos clientes con teléfonos distintos
+        $customer1 = $this->getRandomCustomer();
+        $customer1->telefono1 = '111111111';
+        $customer1->telefono2 = '222222222';
+        $this->assertTrue($customer1->save());
+
+        $customer2 = $this->getRandomCustomer();
+        $customer2->telefono1 = '333333333';
+        $customer2->telefono2 = '444444444';
+        $this->assertTrue($customer2->save());
+
+        // creamos un servicio con el primer cliente
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer1->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // modificamos manualmente solo el teléfono 1
+        $service->telefono1 = '999999999';
+        $this->assertTrue($service->save());
+
+        // cambiamos el cliente asignado
+        $service->codcliente = $customer2->codcliente;
+        $this->assertTrue($service->save());
+
+        // el teléfono 1 modificado manualmente no cambia, el teléfono 2 se actualiza
+        $this->assertEquals('999999999', $service->telefono1);
+        $this->assertEquals($customer2->telefono2, $service->telefono2);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer1->delete());
+        $this->assertTrue($customer2->delete());
+    }
+
     protected function tearDown(): void
     {
         $this->logErrors();

@@ -18,6 +18,7 @@
     "customer-machines": "Bezeroaren makinak",
     "deleted-service": "Zerbitzua ezabatuta",
     "generated-services": "%quantity% zerbitzu sortuak.",
+    "inactive-machine-cant-be-selected": "La máquina se ha guardado como inactiva, por lo que no puede asignarse al servicio.",
     "make-delivery-note": "Albarana egin",
     "make-estimation": "Aurrekontua egin",
     "material": "Materiala",
