@@ -79,7 +79,7 @@ class MAILserviciosExport extends PDFserviciosExport
      */
     public function show(Response &$response)
     {
-        $fileName = $this->getFileName() . '_mail_' . time() . '.pdf';
+        $fileName = $this->getFileName() . '_mail_' . time() . '_' . uniqid('', true) . '.pdf';
         $filePath = FS_FOLDER . '/' . NewMail::ATTACHMENTS_TMP_PATH . $fileName;
         if (false === Tools::folderCheckOrCreate(FS_FOLDER . '/' . NewMail::ATTACHMENTS_TMP_PATH) ||
             false === file_put_contents($filePath, $this->getDoc())) {
