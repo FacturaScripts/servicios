@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : contactos.xml
+    Description:
+        Añade al contacto el permiso para ver sus servicios en el portal cliente.
+-->
+<table>
+    <column>
+        <name>pc_allow_show_service</name>
+        <type>boolean</type>
+        <default>true</default>
+    </column>
+</table>

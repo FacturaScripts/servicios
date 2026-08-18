@@ -1,0 +1,55 @@
+{#
+* This file is part of Servicios plugin for FacturaScripts
+* Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+*
+* Pestaña "Trabajos" de la ficha PortalServicio: los trabajos realizados en el servicio.
+#}
+
+{% set firstView = fsc.views | first %}
+{% set servicio = firstView.model %}
+
+<div class="card mb-3 pc-doc-lines-card">
+	<div class="table-responsive">
+		<table class="table pc-table mb-0">
+			<thead>
+				<tr>
+					<th>{{ trans('observations') }}</th>
+					<th class="text-end text-nowrap">{{ trans('start-date') }}</th>
+					<th class="text-end text-nowrap">{{ trans('end-date') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for trabajo in servicio.getTrabajos() %}
+					<tr>
+						<td>{{ trabajo.observaciones | raw | nl2br }}</td>
+						<td class="text-end text-nowrap">
+                            {{ trabajo.fechainicio }}
+                            {% if trabajo.horainicio %}
+                                {{ trabajo.horainicio }}
+                            {% endif %}
+                        </td>
+						<td class="text-end text-nowrap">
+							{% if trabajo.fechafin %}
+								{{ trabajo.fechafin }}
+                                {% if trabajo.horafin %}
+                                    {{ trabajo.horafin }}
+                                {% endif %}
+							{% else %}
+								<span class="text-muted">{{ trans('not-finished') }}</span>
+							{% endif %}
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="3">
+							<div class="pc-empty">
+								<i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
+								{{ trans('no-data') }}
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>

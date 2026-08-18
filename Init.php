@@ -20,6 +20,8 @@
 namespace FacturaScripts\Plugins\Servicios;
 
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Cache;
+use FacturaScripts\Core\Kernel;
 use FacturaScripts\Core\Lib\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
@@ -29,12 +31,16 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Controller\SendTicket;
 use FacturaScripts\Dinamic\Lib\ExportManager;
+use FacturaScripts\Dinamic\Lib\PortalMenu;
+use FacturaScripts\Dinamic\Lib\PortalSearch;
 use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Lib\Tickets\Service;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
+use FacturaScripts\Dinamic\Model\Contacto;
 use FacturaScripts\Dinamic\Model\EmailNotification;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
+use FacturaScripts\Dinamic\Model\ServicioAT;
 
 /**
  * Description of Init
@@ -82,6 +88,16 @@ final class Init extends InitClass
             StockMovementManager::addMod(new Mod\StockMovementMod());
             $this->loadExtension(new Extension\Model\TrabajoAT());
         }
+
+        // portal cliente: pestaña de servicios, menú, buscador global y ficha propia
+        if (Plugins::isEnabled('PortalCliente')) {
+            $this->loadExtension(new Extension\Controller\EditServicioAT());
+            $this->loadExtension(new Extension\Controller\PortalCliente());
+            $this->loadExtension(new Extension\Controller\SendMail());
+            $this->loadExtension(new Extension\Model\ServicioAT());
+            $this->addPortalMenuAndSearch();
+            $this->loadPortalRoutes();
+        }
     }
 
     public function uninstall(): void
@@ -109,6 +125,66 @@ final class Init extends InitClass
         $this->setupSettings();
         $this->createRoleForPlugin();
         $this->updateEmailNotifications();
+
+        // portal cliente: identificador público de los servicios ya existentes
+        if (Plugins::isEnabled('PortalCliente')) {
+            $this->loadPortalRoutes();
+            $this->assignMissingPortalUuids();
+        }
+    }
+
+    /**
+     * Añade la sección de servicios al menú lateral y al buscador global del portal
+     * cliente. Solo se llama cuando el plugin PortalCliente está activo.
+     *
+     * @return void
+     */
+    private function addPortalMenuAndSearch(): void
+    {
+        PortalMenu::add('ListPortalServicio', 'services', 'fa-solid fa-screwdriver-wrench', 145, function (Contacto $contact) {
+            return (bool)$contact->pc_allow_show_service;
+        });
+
+        PortalSearch::add('ListPortalServicio', [
+            'model' => 'ServicioAT',
+            'fields' => ['codigo', 'descripcion'],
+            'order_by' => ['fecha' => 'DESC', 'hora' => 'DESC'],
+            'filter' => function (Contacto $contact) {
+                // sin cliente asociado no hay servicios que mostrar
+                return empty($contact->codcliente) ?
+                    [] :
+                    [Where::eq('codcliente', $contact->codcliente)];
+            },
+            'map' => function (ServicioAT $servicio) {
+                return [
+                    'title' => $servicio->codigo,
+                    'subtitle' => Tools::date($servicio->fecha),
+                    'url' => $servicio->url('public'),
+                ];
+            },
+        ]);
+    }
+
+    /**
+     * Asigna un identificador público (pc_uuid) a los servicios que aún no lo tengan, para
+     * poder acceder a su ficha en el portal cliente por una url amigable. Solo se llama
+     * cuando el plugin PortalCliente está activo.
+     *
+     * @return void
+     */
+    private function assignMissingPortalUuids(): void
+    {
+        $db = new DataBase();
+        if (false === $db->tableExists('serviciosat')) {
+            return;
+        }
+
+        $sql = "SELECT idservicio FROM serviciosat WHERE pc_uuid IS NULL OR pc_uuid = '';";
+        foreach ($db->select($sql) as $row) {
+            $sql = 'UPDATE serviciosat SET pc_uuid = ' . $db->var2str(uniqid())
+                . ' WHERE idservicio = ' . (int)$row['idservicio'] . ';';
+            $db->exec($sql);
+        }
     }
 
     private function createRoleForPlugin(): void
@@ -185,6 +261,22 @@ final class Init extends InitClass
         $db = new DataBase();
         $sql = 'UPDATE serviciosat SET codcliente = NULL WHERE codcliente IS NOT NULL AND codcliente NOT IN (SELECT codcliente FROM clientes);';
         $db->exec($sql);
+    }
+
+    /**
+     * Registra la ruta amigable de la ficha del servicio en el portal cliente, del tipo
+     * /PortalServicio/{uuid}. Solo se llama cuando el plugin PortalCliente está activo.
+     *
+     * @return void
+     */
+    private function loadPortalRoutes(): void
+    {
+        Kernel::addRoutes(function () {
+            Kernel::addRoute('/PortalServicio/*', 'PortalServicio');
+        });
+
+        Plugins::deploy(true, true);
+        Cache::clear();
     }
 
     private function setupSettings(): void

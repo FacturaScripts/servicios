@@ -1,0 +1,121 @@
+{#
+* This file is part of Servicios plugin for FacturaScripts
+* Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+*
+* Pestaña "Servicio" de la ficha PortalServicio: resumen, descripción, cliente y solución.
+#}
+
+{% import 'Macro/PortalDoc.html.twig' as doc %}
+
+{% set firstView = fsc.views | first %}
+{% set servicio = firstView.model %}
+
+<div class="row g-3 mb-3">
+	<div class="col-lg-4">
+		<div class="card h-100">
+			<div class="card-body">
+				<div class="text-body-secondary small">{{ trans('code') }}</div>
+				<div class="pc-doc-total">{{ servicio.codigo }}</div>
+
+				<div class="mt-2 d-flex flex-wrap gap-2">
+					<span class="pc-badge-soft">{{ servicio.getStatus().nombre }}</span>
+				</div>
+
+				<hr/>
+
+				<div class="pc-doc-meta">
+					<div class="pc-doc-meta-row">
+						<span class="pc-doc-meta-label">{{ trans('date') }}</span>
+						<span class="pc-doc-meta-value">{{ servicio.fecha }}
+							{{ servicio.hora }}</span>
+					</div>
+					<div class="pc-doc-meta-row">
+						<span class="pc-doc-meta-label">{{ trans('priority') }}</span>
+						<span class="pc-doc-meta-value">{{ servicio.getPriority().nombre }}</span>
+					</div>
+					<div class="pc-doc-meta-row">
+						<span class="pc-doc-meta-label">{{ trans('type') }}</span>
+						<span class="pc-doc-meta-value">{{ servicio.getType().nombre }}</span>
+					</div>
+					{% if servicio.getMachines() is not empty %}
+						<div class="pc-doc-meta-row">
+							<span class="pc-doc-meta-label">{{ trans('machines') }}</span>
+							<span class="pc-doc-meta-value">
+								{% for machine in servicio.getMachines() %}
+									{{ machine.nombre }}
+									{% if not loop.last %},
+									{% endif %}
+								{% endfor %}
+							</span>
+						</div>
+					{% endif %}
+				</div>
+
+				<div class="mt-3">
+					{{ doc.actions(fsc, servicio) }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-4">
+		<div class="card h-100">
+			<div class="card-header d-flex align-items-center gap-2">
+				<span class="pc-card-icon">
+					<i class="fa-solid fa-comment-dots" aria-hidden="true"></i>
+				</span>
+				<h2 class="h6 mb-0">{{ trans('description') }}</h2>
+			</div>
+			<div class="card-body">
+				<p class="mb-0">{{ servicio.descripcion | raw | nl2br }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-4">
+		<div class="card h-100">
+			<div class="card-header d-flex align-items-center gap-2">
+				<span class="pc-card-icon">
+					<i class="fa-solid fa-user" aria-hidden="true"></i>
+				</span>
+				<h2 class="h6 mb-0">{{ trans('customer') }}</h2>
+			</div>
+			<div class="card-body">
+				<div class="pc-doc-meta">
+					{% if servicio.telefono1 %}
+						<div class="pc-doc-meta-row">
+							<span class="pc-doc-meta-label">{{ trans('phone') }}</span>
+							<span class="pc-doc-meta-value">{{ servicio.telefono1 }}</span>
+						</div>
+					{% endif %}
+					{% if servicio.telefono2 %}
+						<div class="pc-doc-meta-row">
+							<span class="pc-doc-meta-label">{{ trans('phone2') }}</span>
+							<span class="pc-doc-meta-value">{{ servicio.telefono2 }}</span>
+						</div>
+					{% endif %}
+					{% if servicio.material %}
+						<div class="pc-doc-meta-row">
+							<span class="pc-doc-meta-label">{{ trans('material') }}</span>
+							<span class="pc-doc-meta-value">{{ servicio.material | raw | nl2br }}</span>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% if servicio.solucion %}
+	<div class="card mb-3">
+		<div class="card-header d-flex align-items-center gap-2">
+			<span class="pc-card-icon">
+				<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+			</span>
+			<h2 class="h6 mb-0">{{ trans('solution') }}</h2>
+		</div>
+		<div class="card-body">
+			<p class="mb-0">{{ servicio.solucion | raw | nl2br }}</p>
+		</div>
+	</div>
+{% endif %}

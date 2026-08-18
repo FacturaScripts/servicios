@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios\Model;
 
 use FacturaScripts\Core\DataSrc\Agentes;
 use FacturaScripts\Core\Model\Base\CompanyRelationTrait;
+use FacturaScripts\Core\Plugins;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
@@ -30,6 +31,7 @@ use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Model\Agente;
 use FacturaScripts\Dinamic\Model\Almacen;
+use FacturaScripts\Dinamic\Model\AttachedFileRelation;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\PedidoCliente;
@@ -253,6 +255,22 @@ class ServicioAT extends ModelClass
         return $result;
     }
 
+    /**
+     * Devuelve los archivos adjuntos del servicio marcados para mostrarse en el portal
+     * cliente (columna pc_show, añadida por el plugin PortalCliente).
+     *
+     * @return AttachedFileRelation[]
+     */
+    public function getPortalFiles(): array
+    {
+        $where = [
+            Where::eq('model', 'ServicioAT'),
+            Where::eq('modelid|modelcode', $this->id()),
+            Where::eq('pc_show', true),
+        ];
+        return AttachedFileRelation::all($where, ['creationdate' => 'DESC']);
+    }
+
     public function getPriority(): PrioridadAT
     {
         $priority = new PrioridadAT();
@@ -387,12 +405,29 @@ class ServicioAT extends ModelClass
             }
         }
 
+        // identificador público del servicio, usado en su url del portal cliente
+        if (Plugins::isEnabled('PortalCliente') && empty($this->pc_uuid)) {
+            $this->pc_uuid = uniqid();
+        }
+
         return parent::test();
     }
 
     public function url(string $type = 'auto', string $list = 'List'): string
     {
-        return $type === 'new' ? 'NewServicioAT' : parent::url($type, $list);
+        if ($type === 'new') {
+            return 'NewServicioAT';
+        }
+
+        // si el plugin PortalCliente está activo, el servicio tiene una ficha propia en
+        // el portal del cliente, accesible por su identificador público (pc_uuid)
+        if ($type === 'public' && Plugins::isEnabled('PortalCliente')) {
+            return empty($this->pc_uuid)
+                ? 'PortalServicio?code=' . $this->id()
+                : 'PortalServicio/' . $this->pc_uuid;
+        }
+
+        return parent::url($type, $list);
     }
 
     protected function notifyAgent(string $notification): void

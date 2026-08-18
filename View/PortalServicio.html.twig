@@ -1,0 +1,17 @@
+{#
+* This file is part of Servicios plugin for FacturaScripts
+* Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+*
+* Cabecera de la ficha de un servicio en el portal cliente. El resto de la página
+* (pestañas y menú) lo aporta Master/PortalViewTemplate.html.twig, del plugin PortalCliente.
+#}
+
+{% set model = fsc.getCurrentView().model %}
+
+{% embed 'Master/Partial/PortalPageHeader.html.twig' with {
+    'pcTitle': trans('service') ~ ' ' ~ model.codigo,
+    'pcIcon': 'fa-solid fa-screwdriver-wrench',
+    'pcSubtitle': model.getSubject().nombre,
+    'pcBackUrl': fsc.contact.exists() ? 'PortalCliente?activetab=ListPortalServicio' : ''
+} %}
+{% endembed %}

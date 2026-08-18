@@ -7,6 +7,7 @@
     "add-solution": "Añadir solución",
     "add-start-date": "Añadir fecha de inicio",
     "allow-new-service-without-machine": "Permitir nuevo servicio sin máquina",
+    "allow-show-services": "Permitir ver servicios",
     "anonymous-machines": "Máquinas sin cliente",
     "calculate-hours": "Calcular horas",
     "change-machine": "Cambiar máquina",
@@ -72,5 +73,7 @@
     "ticket-footer-text": "Texto del pie del ticket",
     "total-net": "Neto total",
     "total-services": "Total de servicios",
-    "verifications": "Verificaciones"
+    "verifications": "Verificaciones",
+    "not-finished": "No finalizado",
+    "public-share-service-mail-body": "Puede ver el siguiente servicio online haciendo clic en el enlace de abajo. Si no puedes hacer clic, copia y pega la URL en tu navegador. Además, si se registra en el portal cliente, podrá ver todos sus servicios y acceder a más funcionalidades."
 }

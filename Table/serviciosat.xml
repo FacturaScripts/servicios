@@ -101,6 +101,10 @@
         <type>text</type>
     </column>
     <column>
+        <name>pc_uuid</name>
+        <type>character varying(50)</type>
+    </column>
+    <column>
         <name>solucion</name>
         <type>text</type>
     </column>
