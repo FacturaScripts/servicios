@@ -37,7 +37,7 @@ class SendMail
                 . "\n\n"
                 . Tools::trans('public-share-service-mail-body')
                 . "\n"
-                . Tools::siteUrl() . $model->url('public-share')
+                . Tools::siteUrl() . '/' . $model->url('public-share')
             );
         };
     }
