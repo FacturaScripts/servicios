@@ -63,7 +63,7 @@ final class StockAvanzadoTest extends TestCase
         $stock->load($stock->id());
         $this->assertEquals(10, $stock->cantidad);
 
-        // comprobamos que hay un movimiento del trabajo
+        // comprobamos que NO hay movimiento del trabajo, porque la gestión de stock está desactivada
         $movements1 = new MovimientoStock();
         $where1 = [
             Where::eq('referencia', $product->referencia),
@@ -71,7 +71,7 @@ final class StockAvanzadoTest extends TestCase
             Where::eq('docmodel', $work1->modelClassName()),
             Where::eq('docid', $work1->id())
         ];
-        $this->assertTrue($movements1->loadWhere($where1), 'No stock movement found for TrabajoAT');
+        $this->assertFalse($movements1->loadWhere($where1), 'Stock movement found for TrabajoAT with stock management disabled');
 
         // activamos la opción de restar stock
         Tools::settingsSet('servicios', 'disablestockmanagement', false);
@@ -115,8 +115,7 @@ final class StockAvanzadoTest extends TestCase
         //eliminamos el trabajo 1
         $this->assertTrue($work1->delete(), 'Error deleting TrabajoAT with stock');
 
-        // comprobamos que no existe el movimiento del trabajo 1
-        $movements1->reload();
+        // seguimos sin encontrar movimiento del trabajo 1 (nunca se llegó a crear)
         $this->assertFalse($movements1->loadWhere($where1), 'Stock movement for TrabajoAT still exists after deletion');
 
         // comprobamos que no se ha restado el stock

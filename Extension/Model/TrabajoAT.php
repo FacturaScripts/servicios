@@ -75,6 +75,11 @@ class TrabajoAT
     protected function setStockMovement(): Closure
     {
         return function () {
+            // si la gestión de stock en servicios está desactivada, no generamos movimientos
+            if (Tools::settings('servicios', 'disablestockmanagement', false)) {
+                return;
+            }
+
             // solamente algunos estados modifican el stock
             $estados = [
                 \FacturaScripts\Plugins\Servicios\Model\TrabajoAT::STATUS_NONE,
