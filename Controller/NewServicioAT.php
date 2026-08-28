@@ -29,6 +29,7 @@ use FacturaScripts\Dinamic\Model\CodeModel;
 use FacturaScripts\Dinamic\Model\MaquinaAT;
 use FacturaScripts\Dinamic\Model\RoleAccess;
 use FacturaScripts\Dinamic\Model\ServicioAT;
+use Throwable;
 
 /**
  * Description of NewServicioAT
@@ -123,10 +124,6 @@ class NewServicioAT extends Controller
             }
 
             switch ($action) {
-                case 'checkDuplicateCustomer':
-                    $data = $this->checkDuplicateCustomerAction();
-                    break;
-
                 case 'findCustomer':
                     $data = $this->findCustomerAction();
                     break;
@@ -162,34 +159,6 @@ class NewServicioAT extends Controller
             || false === $this->checkMachine()) {
             $this->redirect('ListServicioAT');
         }
-    }
-
-    protected function checkDuplicateCustomerAction(): array
-    {
-        $wheres = [];
-        $name = $this->request->get('name', '');
-        $cifnif = $this->request->get('cifnif', '');
-
-        if (false === empty($name)) {
-            $wheres[] = 'LOWER(nombre) = ' . $this->dataBase->var2str(strtolower($name));
-            $wheres[] = 'LOWER(razonsocial) = ' . $this->dataBase->var2str(strtolower($name));
-        }
-
-        if (false === empty($cifnif)) {
-            $wheres[] = 'LOWER(cifnif) = ' . $this->dataBase->var2str(strtolower($cifnif));
-        }
-
-        if (empty($wheres)) {
-            return ['checkDuplicateCustomer' => false];
-        }
-
-        $sql = 'SELECT codcliente'
-            . ' FROM clientes'
-            . ' WHERE ' . implode(' OR ', $wheres);
-
-        return count($this->dataBase->select($sql)) > 0
-            ? ['checkDuplicateCustomer' => true]
-            : ['checkDuplicateCustomer' => false];
     }
 
     protected function checkMachine(): bool
@@ -311,10 +280,33 @@ class NewServicioAT extends Controller
             return ['saveNewCustomer' => false];
         }
 
+        $name = trim($this->request->get('name', ''));
+        if ($name === '') {
+            Tools::log()->warning('invalid-request');
+            return ['saveNewCustomer' => false];
+        }
+
+        // si el cifnif ya existe en otro cliente avisamos, pero permitimos crearlo igualmente
+        $cifnif = trim($this->request->get('cifnif', ''));
+        $confirmed = $this->request->get('cifnif_confirmed', '0') === '1';
+        if ($cifnif !== '' && false === $confirmed) {
+            $duplicated = $this->findCustomersByCifnif($cifnif);
+            if (false === empty($duplicated)) {
+                return [
+                    'saveNewCustomer' => false,
+                    'duplicatedCifnif' => true,
+                    'duplicatedCifnifMessage' => Tools::trans('duplicated-cifnif-customer', [
+                        '%cifnif%' => $cifnif,
+                        '%customers%' => implode(', ', $duplicated)
+                    ]),
+                ];
+            }
+        }
+
         // creamos el cliente
         $customer = new Cliente();
-        $customer->nombre = $this->request->get('name');
-        $customer->cifnif = $this->request->get('cifnif', '');
+        $customer->nombre = $name;
+        $customer->cifnif = $cifnif;
         $customer->email = $this->request->get('email');
         $customer->telefono1 = $this->request->get('phone1');
         $customer->telefono2 = $this->request->get('phone2');
@@ -324,26 +316,52 @@ class NewServicioAT extends Controller
             $customer = $resultExtension;
         }
 
-        if (false === $customer->save()) {
-            Tools::log()->error('save-error');
-            return ['saveNewCustomer' => false];
-        }
+        $this->dataBase->beginTransaction();
+        try {
+            if (false === $customer->save()) {
+                $this->dataBase->rollback();
+                Tools::log()->error('save-error');
+                return ['saveNewCustomer' => false];
+            }
 
-        // modificamos la dirección
-        foreach ($customer->getAddresses() as $address) {
-            $address->direccion = $this->request->get('address');
-            $address->codpostal = $this->request->get('zip');
-            $address->ciudad = $this->request->get('city');
-            $address->provincia = $this->request->get('province');
-            $address->codpais = $this->request->get('country');
-            $address->save();
-            break;
+            // modificamos la dirección
+            foreach ($customer->getAddresses() as $address) {
+                $address->direccion = $this->request->get('address');
+                $address->codpostal = $this->request->get('zip');
+                $address->ciudad = $this->request->get('city');
+                $address->provincia = $this->request->get('province');
+                $address->codpais = $this->request->get('country');
+                if (false === $address->save()) {
+                    $this->dataBase->rollback();
+                    Tools::log()->error('save-error');
+                    return ['saveNewCustomer' => false];
+                }
+                break;
+            }
+
+            $this->dataBase->commit();
+        } catch (Throwable $e) {
+            $this->dataBase->rollback();
+            Tools::log()->error($e->getMessage());
+            return ['saveNewCustomer' => false];
         }
 
         return [
             'saveNewCustomer' => true,
             'codcliente' => $customer->codcliente,
         ];
+    }
+
+    /** Devuelve los clientes que ya tienen este cifnif, como 'código - nombre'. */
+    private function findCustomersByCifnif(string $cifnif): array
+    {
+        $names = [];
+        $where = [Where::eq('cifnif', $cifnif)];
+        foreach (Cliente::all($where, ['LOWER(nombre)' => 'ASC'], 0, 5) as $customer) {
+            $names[] = $customer->codcliente . ' - ' . $customer->nombre;
+        }
+
+        return $names;
     }
 
     protected function saveNewMachineAction(): array
