@@ -18,7 +18,7 @@
     "customer-machines": "Kundenmaschinen.",
     "deleted-service": "Dienst gelöscht",
     "generated-services": "%quantity% generierte Dienste",
-    "inactive-machine-cant-be-selected": "La máquina se ha guardado como inactiva, por lo que no puede asignarse al servicio.",
+    "inactive-machine-cant-be-selected": "Die Maschine wurde als inaktiv gespeichert und kann daher dem Dienst nicht zugewiesen werden.",
     "make-delivery-note": "m",
     "make-estimation": "Kostenvoranschlag machen",
     "material": "Material",
