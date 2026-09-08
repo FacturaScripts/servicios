@@ -7,7 +7,9 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\MovimientoStock;
+use FacturaScripts\Dinamic\Model\Producto;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
@@ -20,11 +22,90 @@ final class StockAvanzadoTest extends TestCase
     use LogErrorsTrait;
     use RandomDataTrait;
 
-    public function testUpdateStock(): void
+    public function testUpdateStockWhenStockManagementEnabled(): void
     {
-        // desactivamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+
+        [$customer, $service, $product, $stock] = $this->createServiceWithStock();
+
+        // creamos un trabajo
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product->referencia;
+        $work->cantidad = 3;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que se ha restado el stock
+        $stock->load($stock->id());
+        $this->assertEquals(7, $stock->cantidad);
+
+        // comprobamos que hay un movimiento del trabajo
+        $movement = new MovimientoStock();
+        $where = [
+            Where::eq('referencia', $product->referencia),
+            Where::eq('codalmacen', $service->codalmacen),
+            Where::eq('docmodel', $work->modelClassName()),
+            Where::eq('docid', $work->id())
+        ];
+        $this->assertTrue($movement->loadWhere($where), 'No stock movement found for TrabajoAT');
+
+        // eliminamos el trabajo
+        $this->assertTrue($work->delete(), 'Error deleting TrabajoAT with stock');
+
+        // comprobamos que ya no existe el movimiento del trabajo
+        $this->assertFalse($movement->loadWhere($where), 'Stock movement for TrabajoAT still exists after deletion');
+
+        // comprobamos que se ha devuelto el stock
+        $stock->load($stock->id());
+        $this->assertEquals(10, $stock->cantidad);
+
+        $this->cleanUp($customer, $service, $product, $stock);
+    }
+
+    public function testUpdateStockWhenStockManagementDisabled(): void
+    {
         Tools::settingsSet('servicios', 'disablestockmanagement', true);
 
+        [$customer, $service, $product, $stock] = $this->createServiceWithStock();
+
+        // creamos un trabajo
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product->referencia;
+        $work->cantidad = 2;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que NO se ha restado el stock
+        $stock->load($stock->id());
+        $this->assertEquals(10, $stock->cantidad);
+
+        // comprobamos que NO hay movimiento del trabajo, porque la gestión de stock está desactivada
+        $movement = new MovimientoStock();
+        $where = [
+            Where::eq('referencia', $product->referencia),
+            Where::eq('codalmacen', $service->codalmacen),
+            Where::eq('docmodel', $work->modelClassName()),
+            Where::eq('docid', $work->id())
+        ];
+        $this->assertFalse($movement->loadWhere($where), 'Stock movement found for TrabajoAT with stock management disabled');
+
+        // eliminamos el trabajo
+        $this->assertTrue($work->delete(), 'Error deleting TrabajoAT with stock');
+
+        // seguimos sin encontrar movimiento del trabajo (nunca se llegó a crear)
+        $this->assertFalse($movement->loadWhere($where), 'Stock movement for TrabajoAT still exists after deletion');
+
+        // comprobamos que el stock sigue igual
+        $stock->load($stock->id());
+        $this->assertEquals(10, $stock->cantidad);
+
+        $this->cleanUp($customer, $service, $product, $stock);
+    }
+
+    protected function createServiceWithStock(): array
+    {
         // creamos un cliente
         $customer = $this->getRandomCustomer();
         $this->assertTrue($customer->save());
@@ -51,81 +132,19 @@ final class StockAvanzadoTest extends TestCase
         $stock->cantidad = 10;
         $this->assertTrue($stock->save(), 'Error creating Stock');
 
-        // creamos un trabajo
-        $work1 = new TrabajoAT();
-        $work1->idservicio = $service->idservicio;
-        $work1->referencia = $product->referencia;
-        $work1->cantidad = 2;
-        $work1->estado = TrabajoAT::STATUS_MAKE_INVOICE;
-        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with stock');
+        return [$customer, $service, $product, $stock];
+    }
 
-        // comprobamos que no se ha restado el stock
-        $stock->load($stock->id());
-        $this->assertEquals(10, $stock->cantidad);
-
-        // comprobamos que hay un movimiento del trabajo
-        $movements1 = new MovimientoStock();
-        $where1 = [
-            Where::eq('referencia', $product->referencia),
-            Where::eq('codalmacen', $service->codalmacen),
-            Where::eq('docmodel', $work1->modelClassName()),
-            Where::eq('docid', $work1->id())
-        ];
-        $this->assertTrue($movements1->loadWhere($where1), 'No stock movement found for TrabajoAT');
-
-        // activamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', false);
-
-        // creamos otro trabajo
-        $work2 = new TrabajoAT();
-        $work2->idservicio = $service->idservicio;
-        $work2->referencia = $product->referencia;
-        $work2->cantidad = 3;
-        $work2->estado = TrabajoAT::STATUS_MAKE_INVOICE;
-        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with stock');
-
-        // comprobamos que se ha restado el stock
-        $stock->load($stock->id());
-        $this->assertEquals(7, $stock->cantidad);
-
-        // comprobamos que hay un movimiento del trabajo
-        $movements2 = new MovimientoStock();
-        $where2 = [
-            Where::eq('referencia', $product->referencia),
-            Where::eq('codalmacen', $service->codalmacen),
-            Where::eq('docmodel', $work2->modelClassName()),
-            Where::eq('docid', $work2->id())
-        ];
-        $this->assertTrue($movements2->loadWhere($where2), 'No stock movement found for TrabajoAT');
-
-        // eliminamos el trabajo 2
-        $this->assertTrue($work2->delete(), 'Error deleting TrabajoAT with stock');
-
-        // comprobamos que no existe el movimiento del trabajo 2
-        $movements2->reload();
-        $this->assertFalse($movements2->loadWhere($where2), 'Stock movement for TrabajoAT still exists after deletion');
-
-        // comprobamos que se ha sumado el stock
-        $stock->load($stock->id());
-        $this->assertEquals(10, $stock->cantidad);
-
-        // desactivamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', true);
-
-        //eliminamos el trabajo 1
-        $this->assertTrue($work1->delete(), 'Error deleting TrabajoAT with stock');
-
-        // comprobamos que no existe el movimiento del trabajo 1
-        $movements1->reload();
-        $this->assertFalse($movements1->loadWhere($where1), 'Stock movement for TrabajoAT still exists after deletion');
-
-        // comprobamos que no se ha restado el stock
-        $stock->load($stock->id());
-        $this->assertEquals(10, $stock->cantidad);
-
-        // eliminamos
+    protected function cleanUp(Cliente $customer, ServicioAT $service, Producto $product, Stock $stock): void
+    {
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
+
+        $stock->reload();
+        if ($stock->exists()) {
+            $this->assertTrue($stock->delete());
+        }
+
         $this->assertTrue($product->delete());
     }
 
