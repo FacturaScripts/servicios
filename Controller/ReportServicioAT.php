@@ -171,6 +171,7 @@ class ReportServicioAT extends Controller
     {
         $since = date('Y-m-d', strtotime('-1 month'));
         $sql = "SELECT COUNT(*) as total FROM serviciosat WHERE fecha >= '" . $since . "'"
+            . ' AND editable = ' . $this->db()->var2str(true)
             . ' AND idempresa = ' . $this->db()->var2str($this->idempresa);
         $result = $this->db()->select($sql);
         $this->openServicesLastMonth = (int)($result[0]['total'] ?? 0);
@@ -180,6 +181,7 @@ class ReportServicioAT extends Controller
     {
         $since = date('Y-m-d', strtotime('-1 year'));
         $sql = "SELECT COUNT(*) as total FROM serviciosat WHERE fecha >= '" . $since . "'"
+            . ' AND editable = ' . $this->db()->var2str(true)
             . ' AND idempresa = ' . $this->db()->var2str($this->idempresa);
         $result = $this->db()->select($sql);
         $this->openServicesLastYear = (int)($result[0]['total'] ?? 0);
