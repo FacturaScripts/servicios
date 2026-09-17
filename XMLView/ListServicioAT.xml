@@ -63,12 +63,12 @@
             </widget>
         </column>
         <column name="machine3" title="machine" display="none" order="140">
-            <widget type="autocomplete" fieldname="idmaquina2">
+            <widget type="autocomplete" fieldname="idmaquina3">
                 <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
             </widget>
         </column>
         <column name="machine4" title="machine" display="none" order="145">
-            <widget type="autocomplete" fieldname="idmaquina2">
+            <widget type="autocomplete" fieldname="idmaquina4">
                 <values source="serviciosat_maquinas" fieldcode="idmaquina" fieldtitle="nombre"/>
             </widget>
         </column>
