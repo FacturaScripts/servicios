@@ -74,10 +74,15 @@ class PlantillasPDFserviciosExport extends PDFExport
         $this->template->writeHTML(nl2br(Tools::settings('servicios', 'print_pdf_footer_text', '')));
     }
 
+    /**
+     * Añade la tabla con la información de las máquinas del servicio, si la opción está activada.
+     *
+     * @param ServicioAT $model
+     */
     protected function machineData(ServicioAT $model): void
     {
         $machines = $model->getMachines();
-        if (empty($machines) || false === Tools::settings('servicios', 'print_pdf_machine_info', false)) {
+        if (empty($machines) || false === (bool)Tools::settings('servicios', 'print_pdf_machine_info', false)) {
             return;
         }
 
@@ -123,15 +128,21 @@ class PlantillasPDFserviciosExport extends PDFExport
         $this->addTablePage($headers, $rows, [], '');
     }
 
+    /**
+     * Añade la tabla con los datos generales del servicio, excluyendo los campos desactivados en la configuración.
+     *
+     * @param ServicioAT $model
+     * @param array $columns
+     */
     protected function serviceData(ServicioAT $model, array $columns): void
     {
         $excludeFields = ['idmaquina', 'idtipo', 'neto', 'codalmacen', 'idprioridad', 'material', 'descripcion', 'solucion', 'observaciones'];
 
-        if (false === Tools::settings('servicios', 'print_pdf_agent', false)) {
+        if (false === (bool)Tools::settings('servicios', 'print_pdf_agent', false)) {
             $excludeFields[] = 'codagente';
         }
 
-        if (false === Tools::settings('servicios', 'print_pdf_assigned', false)) {
+        if (false === (bool)Tools::settings('servicios', 'print_pdf_assigned', false)) {
             $excludeFields[] = 'asignado';
         }
 
@@ -169,9 +180,14 @@ class PlantillasPDFserviciosExport extends PDFExport
         $this->addTablePage($headers, $rows, [], '');
     }
 
+    /**
+     * Añade la tabla con los trabajos del servicio, si la opción está activada.
+     *
+     * @param ServicioAT $model
+     */
     protected function workData(ServicioAT $model): void
     {
-        if (false === Tools::settings('servicios', 'print_pdf_works', false)) {
+        if (false === (bool)Tools::settings('servicios', 'print_pdf_works', false)) {
             return;
         }
 
