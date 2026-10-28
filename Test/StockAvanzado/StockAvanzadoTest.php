@@ -13,14 +13,30 @@ use FacturaScripts\Dinamic\Model\Producto;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Comprueba que los trabajos de un servicio restan stock y generan sus movimientos
+ * solo cuando la gestión de stock de Servicios está activa.
+ */
 final class StockAvanzadoTest extends TestCase
 {
+    use DefaultSettingsTrait;
     use LogErrorsTrait;
     use RandomDataTrait;
+
+    /**
+     * Prepara la configuración por defecto (empresa, almacén...) y los modelos del core,
+     * que el test necesita para crear el servicio y el stock en una instalación nueva.
+     */
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::loadCoreModels();
+    }
 
     public function testUpdateStockWhenStockManagementEnabled(): void
     {
