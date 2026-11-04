@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\AlbaranCliente;
@@ -272,6 +273,160 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
         $this->assertTrue($product->delete());
+    }
+
+    public function testUpdateStockWithNullValues(): void
+    {
+        // activamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un producto
+        $product = $this->getRandomProduct();
+        $product->precio = 17;
+        $product->nostock = false;
+        $product->ventasinstock = false;
+        $this->assertTrue($product->save(), 'Error creating Producto');
+
+        // añadimos stock
+        $stock = new Stock();
+        $stock->referencia = $product->referencia;
+        $stock->codalmacen = Tools::settings('default', 'codalmacen');
+        $stock->cantidad = 10;
+        $this->assertTrue($stock->save(), 'Error creating Stock');
+
+        // creamos un trabajo que resta stock
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product->referencia;
+        $work->cantidad = 2;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que se ha restado el stock
+        $stock->load($stock->id());
+        $this->assertEquals(8, $stock->cantidad);
+
+        // ponemos la cantidad y el estado a null directamente en la base de datos, como en los trabajos antiguos
+        $db = new DataBase();
+        $this->assertTrue($db->exec('UPDATE ' . TrabajoAT::tableName()
+            . ' SET cantidad = NULL, estado = NULL WHERE idtrabajo = ' . $db->var2str($work->idtrabajo) . ';'));
+
+        // recargamos el trabajo y comprobamos que tiene los valores a null
+        $this->assertTrue($work->load($work->id()));
+        $this->assertNull($work->cantidad);
+        $this->assertNull($work->estado);
+
+        // cambiamos la cantidad y el estado y guardamos
+        $work->cantidad = 3;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work->save(), 'Error saving TrabajoAT with null values');
+
+        // comprobamos que solo se ha restado la nueva cantidad, sin devolver la que era null
+        $stock->load($stock->id());
+        $this->assertEquals(5, $stock->cantidad);
+
+        // dejamos la cantidad vacía, como al borrarla en el formulario
+        $work->cantidad = null;
+        $this->assertTrue($work->save(), 'Error saving TrabajoAT with empty quantity');
+        $this->assertEquals(0, $work->cantidad);
+
+        // comprobamos que se ha devuelto al stock la cantidad anterior
+        $stock->load($stock->id());
+        $this->assertEquals(8, $stock->cantidad);
+
+        // volvemos a cargar el trabajo, cambiamos la cantidad y guardamos sin error
+        $this->assertTrue($work->load($work->id()));
+        $work->cantidad = 1;
+        $this->assertTrue($work->save(), 'Error saving TrabajoAT after empty quantity');
+
+        // comprobamos que se ha restado la nueva cantidad
+        $stock->load($stock->id());
+        $this->assertEquals(7, $stock->cantidad);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+        $this->assertTrue($product->delete());
+    }
+
+    public function testUpdateStockChangeReference(): void
+    {
+        // activamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un producto que controla stock
+        $product1 = $this->getRandomProduct();
+        $product1->precio = 17;
+        $product1->nostock = false;
+        $product1->ventasinstock = false;
+        $this->assertTrue($product1->save(), 'Error creating Producto 1');
+
+        // creamos un producto que no controla stock
+        $product2 = $this->getRandomProduct();
+        $product2->precio = 5;
+        $product2->nostock = true;
+        $this->assertTrue($product2->save(), 'Error creating Producto 2');
+
+        // añadimos stock al primer producto
+        $stock = new Stock();
+        $stock->referencia = $product1->referencia;
+        $stock->codalmacen = Tools::settings('default', 'codalmacen');
+        $stock->cantidad = 10;
+        $this->assertTrue($stock->save(), 'Error creating Stock');
+
+        // creamos un trabajo con el primer producto
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product1->referencia;
+        $work->cantidad = 2;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que se ha restado el stock
+        $stock->load($stock->id());
+        $this->assertEquals(8, $stock->cantidad);
+
+        // cambiamos al producto que no controla stock
+        $work->referencia = $product2->referencia;
+        $this->assertTrue($work->save(), 'Error changing TrabajoAT reference');
+
+        // comprobamos que se ha devuelto el stock del primer producto
+        $stock->load($stock->id());
+        $this->assertEquals(10, $stock->cantidad);
+
+        // comprobamos que no se ha creado stock del segundo producto
+        $stock2 = new Stock();
+        $this->assertFalse($stock2->loadWhereEq('referencia', $product2->referencia));
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+        $this->assertTrue($product1->delete());
+        $this->assertTrue($product2->delete());
     }
 
     public function testCreateEstimation(): void

@@ -158,6 +158,11 @@ class TrabajoAT extends ModelClass
             $this->horafin = null;
         }
 
+        // si se deja la cantidad vacía en el formulario, guardamos 0 en lugar de null
+        if (empty($this->cantidad)) {
+            $this->cantidad = 0.0;
+        }
+
         if ($this->referencia) {
             // guardamos el precio que le asignaríamos si le hacemos un presupuesto al cliente
             $doc = new PresupuestoCliente();
@@ -173,20 +178,6 @@ class TrabajoAT extends ModelClass
     public function url(string $type = 'auto', string $list = 'ListServicioAT'): string
     {
         return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
-    }
-
-    protected function onChange(string $field): bool
-    {
-        switch ($field) {
-            case 'cantidad':
-            case 'estado':
-            case 'referencia':
-                $this->updateStock($this->getOriginal('referencia'), $this->getOriginal('cantidad'), $this->getOriginal('estado'));
-                $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
-                break;
-        }
-
-        return parent::onChange($field);
     }
 
     protected function onChangeCantidad(): void
@@ -258,7 +249,37 @@ class TrabajoAT extends ModelClass
         parent::onUpdate();
     }
 
-    protected function updateStock(?string $referencia, float $cantidad, int $estado): void
+    /**
+     * Actualiza el stock antes de guardar los cambios de un trabajo existente.
+     *
+     * Se hace aquí y no en onChange() porque onChange() se llama una vez por cada campo modificado,
+     * y si cambian a la vez la cantidad, el estado o la referencia el stock se movería varias veces.
+     *
+     * @return bool
+     */
+    protected function saveUpdate(): bool
+    {
+        if ($this->isDirty('cantidad') || $this->isDirty('estado') || $this->isDirty('referencia')) {
+            // devolvemos el stock de los valores anteriores y restamos el de los nuevos
+            $this->updateStock($this->getOriginal('referencia'), $this->getOriginal('cantidad'), $this->getOriginal('estado'));
+            $this->updateStock($this->referencia, 0 - $this->cantidad, $this->estado);
+        }
+
+        return parent::saveUpdate();
+    }
+
+    /**
+     * Suma la cantidad indicada al stock de la referencia en el almacén del servicio,
+     * si el estado del trabajo es uno de los que descuentan stock.
+     *
+     * La cantidad y el estado pueden ser null en los trabajos antiguos o importados:
+     * en ese caso no se mueve el stock, porque nunca se llegó a descontar.
+     *
+     * @param string|null $referencia referencia del producto.
+     * @param float|null $cantidad cantidad a sumar (negativa para restar).
+     * @param int|null $estado estado del trabajo. Ver constantes STATUS_*.
+     */
+    protected function updateStock(?string $referencia, ?float $cantidad, ?int $estado): void
     {
         // ¿El control de stock en servicios está desactivado?
         if (Tools::settings('servicios', 'disablestockmanagement', false)) {
@@ -271,9 +292,9 @@ class TrabajoAT extends ModelClass
             return;
         }
 
-        // ¿El producto controla stock?
-        $producto = $this->getVariante()->getProducto();
-        if ($producto->nostock) {
+        // ¿El producto controla stock? Usamos la referencia recibida, que puede ser la anterior del trabajo
+        $variante = new Variante();
+        if (false === $variante->loadWhereEq('referencia', $referencia) || $variante->getProducto()->nostock) {
             return;
         }
 
