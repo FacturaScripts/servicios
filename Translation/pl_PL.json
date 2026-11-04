@@ -28,7 +28,7 @@
     "new-service-agent-body": "Cześć {name}, {author} przypisał Ci usługę {number} dla klienta {customer}. Możesz zobaczyć więcej szczegółów tutaj: {url}",
     "new-service-assignee": "Usługa {number} przypisana",
     "new-service-assignee-body": "Cześć {name}, {author} przypisał ci usługę {number} dla klienta {customer}. Możesz zobaczyć więcej szczegółów tutaj: {url}",
-    "new-service-created": "Usługa utworzona",
+    "new-service-created": "Usługa utworzona ze statusem %status%",
     "new-service-customer": "Nowa usługa {number} zarejestrowana",
     "new-service-customer-body": "Witaj {name}, zarejestrowaliśmy usługę {number} dla Ciebie.",
     "new-service-p": "Aby utworzyć usługę, najpierw musisz wybrać lub utworzyć klienta, a następnie maszynę (opcjonalnie)",

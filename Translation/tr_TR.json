@@ -28,7 +28,7 @@
     "new-service-agent-body": "Merhaba {name}, {author} sana {customer} müşterisi için {number} numaralı hizmeti atadı. Daha fazla ayrıntıyı buradan görebilirsin: {url}",
     "new-service-assignee": "Hizmet {number} atandı",
     "new-service-assignee-body": "Merhaba {name}, {author} sana {customer} müşterisi için {number} numaralı hizmeti atadı. Daha fazla detayı buradan görebilirsin: {url}",
-    "new-service-created": "Hizmet oluşturuldu",
+    "new-service-created": "Hizmet %status% durumu ile oluşturuldu",
     "new-service-customer": "{number} numaralı hizmet kaydedildi",
     "new-service-customer-body": "Merhaba {name}, sizinle ilgilenmek için {number} numaralı hizmeti kaydettik.",
     "new-service-p": "Servis oluşturmak için önce bir müşteri seçmeli veya oluşturmalı ve ardından bir makine (isteğe bağlı) seçmelisiniz",
