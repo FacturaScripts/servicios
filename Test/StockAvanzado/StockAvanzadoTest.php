@@ -1,12 +1,14 @@
 <?php
 /**
- * Copyright (C) 2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2025-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Model\WorkEvent;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
+use FacturaScripts\Core\WorkQueue;
 use FacturaScripts\Dinamic\Lib\StockMovementManager;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\MovimientoStock;
@@ -14,6 +16,7 @@ use FacturaScripts\Dinamic\Model\Producto;
 use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
+use FacturaScripts\Plugins\Servicios\Migration\RebuildDuplicatedWorkMovements;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -39,44 +42,128 @@ final class StockAvanzadoTest extends TestCase
         self::loadCoreModels();
     }
 
-    public function testUpdateStockWhenStockManagementEnabled(): void
+    /**
+     * La migración encola la reconstrucción solo de los productos con movimientos duplicados de un trabajo,
+     * y al procesar la cola cada trabajo queda con un único movimiento.
+     */
+    public function testMigrationRebuildsOnlyProductsWithDuplicatedMovements(): void
     {
         Tools::settingsSet('servicios', 'disablestockmanagement', false);
 
         [$customer, $service, $product, $stock] = $this->createServiceWithStock();
 
-        // creamos un trabajo
+        // creamos un trabajo del producto y otro de un segundo producto
         $work = new TrabajoAT();
         $work->idservicio = $service->idservicio;
         $work->referencia = $product->referencia;
-        $work->cantidad = 3;
-        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $work->cantidad = 1;
+        $work->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
         $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
 
-        // comprobamos que se ha restado el stock
-        $stock->load($stock->id());
-        $this->assertEquals(7, $stock->cantidad);
+        $other = $this->getRandomProduct();
+        $other->nostock = false;
+        $this->assertTrue($other->save(), 'Error creating other Producto');
 
-        // comprobamos que hay un movimiento del trabajo
+        $otherWork = new TrabajoAT();
+        $otherWork->idservicio = $service->idservicio;
+        $otherWork->referencia = $other->referencia;
+        $otherWork->cantidad = 1;
+        $otherWork->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
+        $this->assertTrue($otherWork->save(), 'Error creating other TrabajoAT');
+        $this->assertEquals(1, $this->countWorkMovements($otherWork));
+
+        // duplicamos el movimiento del primer trabajo, como hacía el mod antes de la corrección
         $movement = new MovimientoStock();
-        $where = [
-            Where::eq('referencia', $product->referencia),
-            Where::eq('codalmacen', $service->codalmacen),
-            Where::eq('docmodel', $work->modelClassName()),
-            Where::eq('docid', $work->id())
-        ];
-        $this->assertTrue($movement->loadWhere($where), 'No stock movement found for TrabajoAT');
+        $this->assertTrue($movement->loadWhere([
+            Where::eq('docmodel', 'TrabajoAT'),
+            Where::eq('docid', $work->idtrabajo)
+        ]));
+        $duplicate = new MovimientoStock();
+        $duplicate->loadFromData($movement->toArray(), ['id']);
+        $this->assertTrue($duplicate->save(), 'Error duplicating MovimientoStock');
+        $this->assertEquals(2, $this->countWorkMovements($work));
 
-        // eliminamos el trabajo
-        $this->assertTrue($work->delete(), 'Error deleting TrabajoAT with stock');
+        // descartamos las reconstrucciones que hayan encolado los guardados anteriores
+        foreach ([$product, $other] as $item) {
+            foreach (WorkEvent::all($this->rebuildEventsWhere($item), [], 0, 0) as $event) {
+                $this->assertTrue($event->delete());
+            }
+        }
 
-        // comprobamos que ya no existe el movimiento del trabajo
-        $this->assertFalse($movement->loadWhere($where), 'Stock movement for TrabajoAT still exists after deletion');
+        // la migración solo encola el producto con el movimiento duplicado
+        (new RebuildDuplicatedWorkMovements())->run();
+        $this->assertEquals(1, WorkEvent::count($this->rebuildEventsWhere($product)));
+        $this->assertEquals(0, WorkEvent::count($this->rebuildEventsWhere($other)));
 
-        // comprobamos que se ha devuelto el stock
-        $stock->load($stock->id());
-        $this->assertEquals(10, $stock->cantidad);
+        // al procesar la cola, el trabajo queda con un solo movimiento
+        while (WorkQueue::run()) {
+        }
+        $this->assertEquals(1, $this->countWorkMovements($work));
+        $this->assertEquals(1, $this->countWorkMovements($otherWork));
 
+        $this->assertTrue($otherWork->delete());
+        $this->cleanUp($customer, $service, $product, $stock);
+        $this->assertTrue($other->delete());
+    }
+
+    /**
+     * Con la gestión de stock de Servicios desactivada, reconstruir el stock no genera movimientos de trabajos.
+     */
+    public function testRebuildDoesNotGenerateMovementsWhenStockManagementDisabled(): void
+    {
+        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+
+        [$customer, $service, $product, $stock] = $this->createServiceWithStock();
+
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product->referencia;
+        $work->cantidad = 1;
+        $work->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+
+        // reconstruimos el stock del producto del trabajo y el de otro producto
+        $other = $this->getRandomProduct();
+        $this->assertTrue($other->save(), 'Error creating other Producto');
+        StockMovementManager::rebuild($product->idproducto);
+        StockMovementManager::rebuild($other->idproducto);
+        $this->assertEquals(0, $this->countWorkMovements($work), 'Movement generated with stock management disabled');
+
+        $this->assertTrue($other->delete());
+        $this->cleanUp($customer, $service, $product, $stock);
+    }
+
+    /**
+     * Reconstruir el stock de un producto no debe duplicar los movimientos de los trabajos
+     * de otros productos, y los del propio producto se regeneran una sola vez.
+     */
+    public function testRebuildOtherProductDoesNotDuplicateMovements(): void
+    {
+        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+
+        [$customer, $service, $product, $stock] = $this->createServiceWithStock();
+
+        // creamos un trabajo pendiente de albarán
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product->referencia;
+        $work->cantidad = 1;
+        $work->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+        $this->assertEquals(1, $this->countWorkMovements($work));
+
+        // reconstruimos el stock de otro producto, dos veces
+        $other = $this->getRandomProduct();
+        $this->assertTrue($other->save(), 'Error creating other Producto');
+        StockMovementManager::rebuild($other->idproducto);
+        StockMovementManager::rebuild($other->idproducto);
+        $this->assertEquals(1, $this->countWorkMovements($work), 'Movement duplicated by rebuilding another product');
+
+        // reconstruimos el stock del propio producto: se regenera un solo movimiento
+        StockMovementManager::rebuild($product->idproducto);
+        $this->assertEquals(1, $this->countWorkMovements($work), 'Movement not regenerated once by own rebuild');
+
+        $this->assertTrue($other->delete());
         $this->cleanUp($customer, $service, $product, $stock);
     }
 
@@ -121,65 +208,58 @@ final class StockAvanzadoTest extends TestCase
         $this->cleanUp($customer, $service, $product, $stock);
     }
 
-    /**
-     * Reconstruir el stock de un producto no debe duplicar los movimientos de los trabajos
-     * de otros productos, y los del propio producto se regeneran una sola vez.
-     */
-    public function testRebuildOtherProductDoesNotDuplicateMovements(): void
+    public function testUpdateStockWhenStockManagementEnabled(): void
     {
         Tools::settingsSet('servicios', 'disablestockmanagement', false);
 
         [$customer, $service, $product, $stock] = $this->createServiceWithStock();
 
-        // creamos un trabajo pendiente de albarán
+        // creamos un trabajo
         $work = new TrabajoAT();
         $work->idservicio = $service->idservicio;
         $work->referencia = $product->referencia;
-        $work->cantidad = 1;
-        $work->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
+        $work->cantidad = 3;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
         $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
-        $this->assertEquals(1, $this->countWorkMovements($work));
 
-        // reconstruimos el stock de otro producto, dos veces
-        $other = $this->getRandomProduct();
-        $this->assertTrue($other->save(), 'Error creating other Producto');
-        StockMovementManager::rebuild($other->idproducto);
-        StockMovementManager::rebuild($other->idproducto);
-        $this->assertEquals(1, $this->countWorkMovements($work), 'Movement duplicated by rebuilding another product');
+        // comprobamos que se ha restado el stock
+        $stock->load($stock->id());
+        $this->assertEquals(7, $stock->cantidad);
 
-        // reconstruimos el stock del propio producto: se regenera un solo movimiento
-        StockMovementManager::rebuild($product->idproducto);
-        $this->assertEquals(1, $this->countWorkMovements($work), 'Movement not regenerated once by own rebuild');
+        // comprobamos que hay un movimiento del trabajo
+        $movement = new MovimientoStock();
+        $where = [
+            Where::eq('referencia', $product->referencia),
+            Where::eq('codalmacen', $service->codalmacen),
+            Where::eq('docmodel', $work->modelClassName()),
+            Where::eq('docid', $work->id())
+        ];
+        $this->assertTrue($movement->loadWhere($where), 'No stock movement found for TrabajoAT');
 
-        $this->assertTrue($other->delete());
+        // eliminamos el trabajo
+        $this->assertTrue($work->delete(), 'Error deleting TrabajoAT with stock');
+
+        // comprobamos que ya no existe el movimiento del trabajo
+        $this->assertFalse($movement->loadWhere($where), 'Stock movement for TrabajoAT still exists after deletion');
+
+        // comprobamos que se ha devuelto el stock
+        $stock->load($stock->id());
+        $this->assertEquals(10, $stock->cantidad);
+
         $this->cleanUp($customer, $service, $product, $stock);
     }
 
-    /**
-     * Con la gestión de stock de Servicios desactivada, reconstruir el stock no genera movimientos de trabajos.
-     */
-    public function testRebuildDoesNotGenerateMovementsWhenStockManagementDisabled(): void
+    protected function cleanUp(Cliente $customer, ServicioAT $service, Producto $product, Stock $stock): void
     {
-        Tools::settingsSet('servicios', 'disablestockmanagement', true);
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
 
-        [$customer, $service, $product, $stock] = $this->createServiceWithStock();
+        $stock->reload();
+        if ($stock->exists()) {
+            $this->assertTrue($stock->delete());
+        }
 
-        $work = new TrabajoAT();
-        $work->idservicio = $service->idservicio;
-        $work->referencia = $product->referencia;
-        $work->cantidad = 1;
-        $work->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
-        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
-
-        // reconstruimos el stock del producto del trabajo y el de otro producto
-        $other = $this->getRandomProduct();
-        $this->assertTrue($other->save(), 'Error creating other Producto');
-        StockMovementManager::rebuild($product->idproducto);
-        StockMovementManager::rebuild($other->idproducto);
-        $this->assertEquals(0, $this->countWorkMovements($work), 'Movement generated with stock management disabled');
-
-        $this->assertTrue($other->delete());
-        $this->cleanUp($customer, $service, $product, $stock);
+        $this->assertTrue($product->delete());
     }
 
     /**
@@ -228,17 +308,20 @@ final class StockAvanzadoTest extends TestCase
         return [$customer, $service, $product, $stock];
     }
 
-    protected function cleanUp(Cliente $customer, ServicioAT $service, Producto $product, Stock $stock): void
+    /**
+     * Filtro de las reconstrucciones de movimientos pendientes de un producto en la cola de trabajos.
+     *
+     * @param Producto $product Producto a comprobar.
+     *
+     * @return Where[]
+     */
+    protected function rebuildEventsWhere(Producto $product): array
     {
-        $this->assertTrue($service->delete());
-        $this->assertTrue($customer->delete());
-
-        $stock->reload();
-        if ($stock->exists()) {
-            $this->assertTrue($stock->delete());
-        }
-
-        $this->assertTrue($product->delete());
+        return [
+            Where::eq('done', false),
+            Where::eq('name', 'Model.Producto.rebuildStockMovements'),
+            Where::eq('value', $product->idproducto)
+        ];
     }
 
     protected function tearDown(): void

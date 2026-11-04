@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Servicios;
 
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Lib\AjaxForms\SalesHeaderHTML;
+use FacturaScripts\Core\Migrations;
 use FacturaScripts\Core\Model\Role;
 use FacturaScripts\Core\Model\RoleAccess;
 use FacturaScripts\Core\Plugins;
@@ -109,6 +110,9 @@ final class Init extends InitClass
         $this->setupSettings();
         $this->createRoleForPlugin();
         $this->updateEmailNotifications();
+
+        // migraciones de datos
+        Migrations::runPluginMigration(new Migration\RebuildDuplicatedWorkMovements());
     }
 
     private function createRoleForPlugin(): void
