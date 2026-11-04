@@ -106,12 +106,12 @@ class NewServicioAT extends Controller
 
         $this->codeModel = new CodeModel();
         CodeModel::setLimit(10000);
-        $this->codalmacen = $this->request->get('codalmacen', $this->user->codalmacen);
-        $this->codcliente = $this->request->get('codcliente');
-        $this->idmaquina = $this->request->get('idmaquina');
+        $this->codalmacen = $this->request->queryOrInput('codalmacen', $this->user->codalmacen);
+        $this->codcliente = $this->request->queryOrInput('codcliente');
+        $this->idmaquina = $this->request->queryOrInput('idmaquina');
 
-        $action = $this->request->get('action');
-        $ajax = $this->request->get('ajax', false);
+        $action = $this->request->queryOrInput('action');
+        $ajax = $this->request->queryOrInput('ajax', false);
 
         if ($ajax) {
             $this->setTemplate(false);
@@ -207,7 +207,7 @@ class NewServicioAT extends Controller
 
         $list = [];
         $customer = new Cliente();
-        $term = $this->request->get('term');
+        $term = $this->request->queryOrInput('term');
         foreach ($customer->codeModelSearch($term, '', $where) as $item) {
             $list[$item->code] = $item->code . ' | ' . Tools::fixHtml($item->description);
         }
@@ -226,7 +226,7 @@ class NewServicioAT extends Controller
         $orderBy = ['nombre' => 'ASC'];
 
         $customer = new Cliente();
-        if (false === $customer->load($this->request->get('codcliente'))) {
+        if (false === $customer->load($this->request->queryOrInput('codcliente'))) {
             Tools::log()->error('customer-not-found');
             return [
                 'renderCustomerMachines' => false,
@@ -280,15 +280,15 @@ class NewServicioAT extends Controller
             return ['saveNewCustomer' => false];
         }
 
-        $name = trim($this->request->get('name', ''));
+        $name = trim($this->request->input('name', ''));
         if ($name === '') {
             Tools::log()->warning('invalid-request');
             return ['saveNewCustomer' => false];
         }
 
         // si el cifnif ya existe en otro cliente avisamos, pero permitimos crearlo igualmente
-        $cifnif = trim($this->request->get('cifnif', ''));
-        $confirmed = $this->request->get('cifnif_confirmed', '0') === '1';
+        $cifnif = trim($this->request->input('cifnif', ''));
+        $confirmed = $this->request->input('cifnif_confirmed', '0') === '1';
         if ($cifnif !== '' && false === $confirmed) {
             $duplicated = $this->findCustomersByCifnif($cifnif);
             if (false === empty($duplicated)) {
@@ -307,9 +307,9 @@ class NewServicioAT extends Controller
         $customer = new Cliente();
         $customer->nombre = $name;
         $customer->cifnif = $cifnif;
-        $customer->email = $this->request->get('email');
-        $customer->telefono1 = $this->request->get('phone1');
-        $customer->telefono2 = $this->request->get('phone2');
+        $customer->email = $this->request->input('email');
+        $customer->telefono1 = $this->request->input('phone1');
+        $customer->telefono2 = $this->request->input('phone2');
 
         $resultExtension = $this->pipe('saveNewCustomer', $customer);
         if ($resultExtension instanceof Cliente) {
@@ -326,11 +326,11 @@ class NewServicioAT extends Controller
 
             // modificamos la dirección
             foreach ($customer->getAddresses() as $address) {
-                $address->direccion = $this->request->get('address');
-                $address->codpostal = $this->request->get('zip');
-                $address->ciudad = $this->request->get('city');
-                $address->provincia = $this->request->get('province');
-                $address->codpais = $this->request->get('country');
+                $address->direccion = $this->request->input('address');
+                $address->codpostal = $this->request->input('zip');
+                $address->ciudad = $this->request->input('city');
+                $address->provincia = $this->request->input('province');
+                $address->codpais = $this->request->input('country');
                 if (false === $address->save()) {
                     $this->dataBase->rollback();
                     Tools::log()->error('save-error');
@@ -372,13 +372,13 @@ class NewServicioAT extends Controller
         }
 
         $machine = new MaquinaAT();
-        $machine->activo = (bool)$this->request->get('active', true);
-        $machine->codcliente = $this->request->get('codcliente');
-        $machine->nombre = $this->request->get('name');
-        $machine->numserie = $this->request->get('serial_number');
-        $machine->descripcion = $this->request->get('description');
+        $machine->activo = (bool)$this->request->input('active', true);
+        $machine->codcliente = $this->request->queryOrInput('codcliente');
+        $machine->nombre = $this->request->input('name');
+        $machine->numserie = $this->request->input('serial_number');
+        $machine->descripcion = $this->request->input('description');
 
-        $machine->codfabricante = $this->request->get('manufacturer');
+        $machine->codfabricante = $this->request->input('manufacturer');
         if (empty($machine->codfabricante)) {
             $machine->codfabricante = null;
         }
@@ -413,11 +413,11 @@ class NewServicioAT extends Controller
         }
 
         $service = new ServicioAT();
-        $service->codalmacen = $this->request->get('codalmacen');
-        $service->codcliente = $this->request->get('codcliente');
+        $service->codalmacen = $this->request->queryOrInput('codalmacen');
+        $service->codcliente = $this->request->queryOrInput('codcliente');
 
-        if ($this->request->get('idmaquina')) {
-            $service->idmaquina = $this->request->get('idmaquina');
+        if ($this->request->queryOrInput('idmaquina')) {
+            $service->idmaquina = $this->request->queryOrInput('idmaquina');
         }
 
         if (empty($service->codalmacen)) {

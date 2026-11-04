@@ -46,6 +46,6 @@ class EditServicioATLog extends EditController
     protected function createViews()
     {
         parent::createViews();
-        $this->setSettings($this->getMainViewName(), 'btnNew', false);
+        $this->mainTab()->setSettings('btnNew', false);
     }
 }

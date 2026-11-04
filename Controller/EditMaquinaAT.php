@@ -71,11 +71,9 @@ class EditMaquinaAT extends EditController
      */
     protected function loadData($viewName, $view)
     {
-        $mainViewName = $this->getMainViewName();
-
         switch ($viewName) {
             case 'ListServicioAT':
-                $idmaquina = $this->getViewModelValue($mainViewName, 'idmaquina');
+                $idmaquina = $this->mainTabModelValue('idmaquina');
                 $where = [Where::eq('idmaquina|idmaquina2|idmaquina3|idmaquina4', $idmaquina)];
                 $view->loadData('', $where);
                 break;

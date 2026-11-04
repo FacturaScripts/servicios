@@ -64,11 +64,11 @@ class MAILserviciosExport extends PDFserviciosExport
         $this->sendParams['modelClassName'] = $model->modelClassName();
 
         if (false === array_key_exists('modelCode', $this->sendParams)) {
-            $this->sendParams['modelCode'] = $model->primaryColumnValue();
+            $this->sendParams['modelCode'] = $model->id();
         } elseif (false === array_key_exists('modelCodes', $this->sendParams)) {
-            $this->sendParams['modelCodes'] = $model->primaryColumnValue();
+            $this->sendParams['modelCodes'] = $model->id();
         } else {
-            $this->sendParams['modelCodes'] .= ',' . $model->primaryColumnValue();
+            $this->sendParams['modelCodes'] .= ',' . $model->id();
         }
 
         return parent::addModelPage($model, $columns, $title);

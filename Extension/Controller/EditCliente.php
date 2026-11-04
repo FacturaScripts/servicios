@@ -93,7 +93,7 @@ class EditCliente
             switch ($viewName) {
                 case 'ListMaquinaAT':
                 case 'ListServicioAT':
-                    $codcliente = $this->getViewModelValue($this->getMainViewName(), 'codcliente');
+                    $codcliente = $this->mainTabModelValue('codcliente');
                     $where = [Where::eq('codcliente', $codcliente)];
                     $view->loadData('', $where);
                     break;

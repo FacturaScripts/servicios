@@ -74,8 +74,7 @@ class EditCategoriaAT extends EditController
     {
         switch ($viewName) {
             case self::VIEW_CHECKS:
-                $mnv = $this->getMainViewName();
-                $idcategory = $this->getViewModelValue($mnv, 'id');
+                $idcategory = $this->mainTabModelValue('id');
                 $where = [ Where::eq('idcategory', $idcategory) ];
                 $view->loadData('', $where, ['priority' => 'DESC']);
                 break;

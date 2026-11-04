@@ -34,7 +34,6 @@ use FacturaScripts\Dinamic\Model\ServicioAT;
 use FacturaScripts\Dinamic\Model\TipoAT;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
 use FacturaScripts\Dinamic\Model\User;
-use Google\Service\Connectors\Tool;
 
 /**
  * Description of EditServicioAT
@@ -89,11 +88,25 @@ class EditServicioAT extends EditController
         if (false === $this->permissions->allowUpdate) {
             Tools::log()->warning('not-allowed-modify');
             return true;
+        } elseif (false === $this->validateFormToken()) {
+            return true;
         }
 
         $model = new TrabajoAT();
-        $code = $this->request->request->get('code', '');
+        $code = $this->request->input('code', '');
         if (false === $model->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return true;
+        }
+
+        // comprobamos que el usuario puede modificar el servicio del trabajo
+        $service = new ServicioAT();
+        if (
+            false === $service->load($model->idservicio)
+            || false === $this->checkOwnerData($service)
+            || false === $service->editable
+        ) {
+            Tools::log()->warning('not-allowed-modify');
             return true;
         }
 
@@ -173,7 +186,7 @@ class EditServicioAT extends EditController
             ->setSettings('btnNew', false)
             ->setSettings('checkBoxes', false);
 
-        $this->addButton($viewName, [
+        $this->tab($viewName)->addButton([
             'action' => 'make-delivery-note',
             'color' => 'warning',
             'confirm' => true,
@@ -196,7 +209,7 @@ class EditServicioAT extends EditController
             ->setSettings('btnNew', false)
             ->setSettings('checkBoxes', false);
 
-        $this->addButton($viewName, [
+        $this->tab($viewName)->addButton([
             'action' => 'make-estimation',
             'color' => 'warning',
             'confirm' => true,
@@ -219,7 +232,7 @@ class EditServicioAT extends EditController
             ->setSettings('btnNew', false)
             ->setSettings('checkBoxes', false);
 
-        $this->addButton($viewName, [
+        $this->tab($viewName)->addButton([
             'action' => 'make-invoice',
             'color' => 'warning',
             'confirm' => true,
@@ -260,27 +273,28 @@ class EditServicioAT extends EditController
         }
 
         $diff = strtotime($end) - strtotime($start);
-        $result = ceil($diff / 86400);
+        $result = (int)ceil($diff / 86400);
         if ($increment) {
             ++$result;
         }
         return $result;
     }
 
-    protected function disableAllColumns(string $mainViewName, string $exclude = ''): void
+    protected function disableAllColumns(string $viewName, string $exclude = ''): void
     {
         // si no existe la vista, salimos
-        if (!isset($this->views[$mainViewName])) {
+        if (false === array_key_exists($viewName, $this->views)) {
             return;
         }
 
-        foreach ($this->views[$mainViewName]->getColumns() as $group) {
+        $view = $this->tab($viewName);
+        foreach ($view->getColumns() as $group) {
             foreach ($group->columns as $col) {
                 if ($col->name === $exclude || $col->display === 'none') {
                     continue;
                 }
 
-                $this->views[$mainViewName]->disableColumn($col->name, false, 'true');
+                $view->disableColumn($col->name, false, 'true');
             }
         }
     }
@@ -302,6 +316,7 @@ class EditServicioAT extends EditController
             'make-delivery-note' => $this->makeDeliveryNoteAction(),
             'make-estimation' => $this->makeEstimationAction(),
             'make-invoice' => $this->makeInvoiceAction(),
+            'sort-files' => $this->sortFilesAction(),
             'unlink-file' => $this->unlinkFileAction(),
             default => parent::execPreviousAction($action),
         };
@@ -316,8 +331,8 @@ class EditServicioAT extends EditController
      */
     protected function loadData($viewName, $view)
     {
-        $mainViewName = $this->getMainViewName();
-        $idservicio = $this->getViewModelValue($mainViewName, 'idservicio');
+        $mainViewName = $this->mainTabName();
+        $idservicio = $this->mainTabModelValue('idservicio');
 
         switch ($viewName) {
             case $mainViewName:
@@ -340,9 +355,10 @@ class EditServicioAT extends EditController
                     $this->disableAllColumns('EditTrabajoAT');
 
                     // disable buttons
-                    $this->setSettings('EditTrabajoAT', 'btnDelete', false);
-                    $this->setSettings('EditTrabajoAT', 'btnNew', false);
-                    $this->setSettings('EditTrabajoAT', 'btnSave', false);
+                    $this->tab('EditTrabajoAT')
+                        ->setSettings('btnDelete', false)
+                        ->setSettings('btnNew', false)
+                        ->setSettings('btnSave', false);
                 }
 
                 // si no hay tipo, ocultamos el campo
@@ -351,7 +367,7 @@ class EditServicioAT extends EditController
                     $view->disableColumn('type');
                 }
 
-                $this->addButton($viewName, [
+                $this->tab($viewName)->addButton([
                     'action' => 'CopyModel?model=' . $this->getModelClassName() . '&code=' . $view->model->id(),
                     'icon' => 'fa-solid fa-cut',
                     'label' => 'copy',
@@ -376,9 +392,9 @@ class EditServicioAT extends EditController
                 // Remove checks if the service has no categories and checks.
                 if (
                     $viewName === 'EditServicioCheckAT'
-                    && isset($this->views['EditServicioCategoriaAT'])
-                    && $this->views['EditServicioCategoriaAT']->count === 0
-                    && $this->views['EditServicioCheckAT']->count === 0
+                    && array_key_exists('EditServicioCategoriaAT', $this->views)
+                    && $this->tab('EditServicioCategoriaAT')->count === 0
+                    && $view->count === 0
                 ) {
                     unset($this->views['EditServicioCheckAT']);
                 }
@@ -391,9 +407,9 @@ class EditServicioAT extends EditController
                 $this->loadStatusWorkValues($viewName, $view);
                 $this->loadUserValues($viewName, 'user');
                 $this->loadAgentValues($viewName, 'agent');
-                
+
                 if ($view->count > 0) {
-                    $this->addButton('EditTrabajoAT', [
+                    $this->tab($viewName)->addButton([
                         'action' => 'auto-quantity',
                         'icon' => 'fa-solid fa-calculator',
                         'label' => 'calculate-hours'
@@ -401,8 +417,8 @@ class EditServicioAT extends EditController
                 }
 
                 if (false === $view->model->exists()) {
-                    $view->model->codagente = $this->getViewModelValue($mainViewName, 'codagente');
-                    $view->model->nick = $this->getViewModelValue($mainViewName, 'nick');
+                    $view->model->codagente = $this->mainTabModelValue('codagente');
+                    $view->model->nick = $this->mainTabModelValue('nick');
                 }
 
                 break;
@@ -426,7 +442,7 @@ class EditServicioAT extends EditController
         $customValues = [];
         foreach (Agente::all() as $agent) {
             $customValues[] = [
-                'value' => $agent->codagente, 
+                'value' => $agent->codagente,
                 'title' => $agent->nombre,
                 'group' => empty($agent->fechabaja) ? Tools::trans('enabled') : Tools::trans('disabled')
             ];
@@ -437,7 +453,7 @@ class EditServicioAT extends EditController
 
     protected function loadStatusWorkValues(string $viewName, BaseView $view): void
     {
-        $column = $this->views[$viewName]->columnForName('action');
+        $column = $this->tab($viewName)->columnForName('action');
         if ($column && $column->widget->getType() === 'select') {
             $statuses = [];
             foreach ($view->model->getAvailableStatus() as $key => $value) {
@@ -458,7 +474,7 @@ class EditServicioAT extends EditController
         $customValues = [];
         foreach (User::all() as $user) {
             $customValues[] = [
-                'value' => $user->nick, 
+                'value' => $user->nick,
                 'title' => $user->nick,
                 'group' => $user->enabled ? Tools::trans('enabled') : Tools::trans('disabled')
             ];
@@ -477,7 +493,7 @@ class EditServicioAT extends EditController
         $customValues = [];
         foreach (Almacen::all() as $warehouse) {
             $customValues[] = [
-                'value' => $warehouse->codalmacen, 
+                'value' => $warehouse->codalmacen,
                 'title' => $warehouse->nombre,
                 'group' => $warehouse->activo ? Tools::trans('enabled') : Tools::trans('disabled')
             ];
@@ -488,14 +504,8 @@ class EditServicioAT extends EditController
 
     protected function makeDeliveryNoteAction(): bool
     {
-        if (false === $this->permissions->allowUpdate) {
-            Tools::log()->warning('not-allowed-modify');
-            return true;
-        }
-
-        $service = new ServicioAT();
-        $code = $this->request->get('code', '');
-        if (false === $service->load($code) || false === $service->editable) {
+        $service = $this->loadServiceToGenerate();
+        if (null === $service) {
             return true;
         }
 
@@ -510,14 +520,8 @@ class EditServicioAT extends EditController
 
     protected function makeEstimationAction(): bool
     {
-        if (false === $this->permissions->allowUpdate) {
-            Tools::log()->warning('not-allowed-modify');
-            return true;
-        }
-
-        $service = new ServicioAT();
-        $code = $this->request->get('code', '');
-        if (false === $service->load($code) || false === $service->editable) {
+        $service = $this->loadServiceToGenerate();
+        if (null === $service) {
             return true;
         }
 
@@ -532,14 +536,8 @@ class EditServicioAT extends EditController
 
     protected function makeInvoiceAction(): bool
     {
-        if (false === $this->permissions->allowUpdate) {
-            Tools::log()->warning('not-allowed-modify');
-            return true;
-        }
-
-        $service = new ServicioAT();
-        $code = $this->request->get('code', '');
-        if (false === $service->load($code) || false === $service->editable) {
+        $service = $this->loadServiceToGenerate();
+        if (null === $service) {
             return true;
         }
 
@@ -550,6 +548,36 @@ class EditServicioAT extends EditController
 
         Tools::log()->notice('record-updated-correctly');
         return true;
+    }
+
+    /**
+     * Comprueba permisos y token, y devuelve el servicio sobre el que generar
+     * el documento, o null si no se puede continuar.
+     *
+     * @return ServicioAT|null
+     */
+    protected function loadServiceToGenerate(): ?ServicioAT
+    {
+        if (false === $this->permissions->allowUpdate) {
+            Tools::log()->warning('not-allowed-modify');
+            return null;
+        } elseif (false === $this->validateFormToken()) {
+            return null;
+        }
+
+        $service = new ServicioAT();
+        $code = $this->request->queryOrInput('code', '');
+        if (false === $service->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return null;
+        }
+
+        if (false === $this->checkOwnerData($service) || false === $service->editable) {
+            Tools::log()->warning('not-allowed-modify');
+            return null;
+        }
+
+        return $service;
     }
 
     /**
