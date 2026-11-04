@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2020-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2020-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -101,16 +101,27 @@ class EditCliente
         };
     }
 
+    /**
+     * Añade a la fila 'status' de la vista una opción de color por cada estado que tenga color.
+     * Si la vista no tiene fila 'status' (por ejemplo, porque otro plugin ha cambiado su XMLView), no hace nada.
+     *
+     * @return Closure
+     */
     protected function setServicesColors(): Closure
     {
         return function (string $viewName) {
+            $row = $this->views[$viewName]->getRow('status');
+            if (empty($row)) {
+                return;
+            }
+
             // asignamos colores
             foreach (EstadoAT::all() as $estado) {
                 if (empty($estado->color)) {
                     continue;
                 }
 
-                $this->views[$viewName]->getRow('status')->options[] = [
+                $row->options[] = [
                     'tag' => 'option',
                     'children' => [],
                     'color' => $estado->color,
