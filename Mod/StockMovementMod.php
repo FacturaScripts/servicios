@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Servicios plugin for FacturaScripts
- * Copyright (C) 2022-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2022-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -77,18 +77,13 @@ class StockMovementMod implements StockMovementModInterface
 
     /**
      * Crea el movimiento de stock de un trabajo, salvo que su estado no afecte al stock,
-     * el producto no controle stock, la gestión de stock de Servicios esté desactivada
-     * o el trabajo ya tenga su movimiento.
+     * el producto no controle stock o el trabajo ya tenga su movimiento.
+     * La gestión de stock de Servicios desactivada ya la descarta run().
      *
      * @param TrabajoAT $trabajo Trabajo del que se genera el movimiento.
      */
     private function generateMovement(TrabajoAT $trabajo): void
     {
-        // si la gestión de stock en servicios está desactivada, no generamos movimientos
-        if (Tools::settings('servicios', 'disablestockmanagement', false)) {
-            return;
-        }
-
         $estados = [TrabajoAT::STATUS_NONE, TrabajoAT::STATUS_MAKE_INVOICE, TrabajoAT::STATUS_MAKE_DELIVERY_NOTE];
         if (empty($trabajo->referencia) || empty($trabajo->cantidad) || false === in_array($trabajo->estado, $estados)) {
             return;
