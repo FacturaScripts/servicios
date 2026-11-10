@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace FacturaScripts\Plugins\Servicios\Controller;
+namespace FacturaScripts\Plugins\Servicios\Controller\Informes;
 
 use DateTime;
 use FacturaScripts\Core\DataSrc\Empresas;
@@ -26,6 +26,9 @@ use FacturaScripts\Dinamic\Model\Empresa;
 
 /**
  * Informe de servicios: abiertos totales, del último mes, del último año y desglose por estado.
+ *
+ * Controlador condicional: al estar en Controller/Informes solo se despliega
+ * en Dinamic/Controller cuando el plugin Informes está activado.
  *
  * @author Esteban Sánchez Martínez <esteban@factura.city>
  */
