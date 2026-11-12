@@ -321,6 +321,13 @@ class ServiceToInvoice
             $saveLine = true;
         }
 
+        if ($saveLine) {
+            $trabajo = $service->getTrabajos()[0];
+            if ($trabajo) {
+                $newLine->idtrabajo = $trabajo->idtrabajo;
+            }            
+        }
+
         $pipe = new self();
         $pipeLine = $pipe->pipe('lineService', $service, $newLine);
         if ($pipeLine) {
@@ -345,6 +352,10 @@ class ServiceToInvoice
 
         if ($work->descripcion) {
             $newLine->descripcion = $work->descripcion;
+        }
+
+        if ($work->idtrabajo) {
+            $newLine->idtrabajo = $work->idtrabajo;
         }
 
         $work->estado = $estado;
