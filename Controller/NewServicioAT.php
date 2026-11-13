@@ -225,9 +225,10 @@ class NewServicioAT extends Controller
         $html = '';
         $orderBy = ['nombre' => 'ASC'];
 
+        $codcliente = $this->request->queryOrInput('codcliente');
         $customer = new Cliente();
-        if (false === $customer->load($this->request->queryOrInput('codcliente'))) {
-            Tools::log()->error('customer-not-found');
+        if (false === $customer->load($codcliente)) {
+            Tools::log()->error('customer-not-found', ['%customer%' => $codcliente]);
             return [
                 'renderCustomerMachines' => false,
                 'html' => ''

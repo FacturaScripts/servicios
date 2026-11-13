@@ -181,7 +181,7 @@ class ServicioAT extends ModelClass
         // añadimos el cambio al log
         $messageLog = Tools::trans('deleted-service');
         if (false === $this->log($messageLog)) {
-            Tools::log()->error('record-save-error', ['%modelo%' => 'ServicioATLog']);
+            Tools::log()->error('record-save-error');
         }
 
         return true;
@@ -517,12 +517,12 @@ class ServicioAT extends ModelClass
             $this->notifyCustomer('new-service-customer');
         }
 
+        // el registro se guarda en el historial del propio servicio, por eso no se envía su número
         $message = Tools::trans('new-service-created', [
-            '%number%' => $this->id(),
             '%status%' => $this->getStatus()->nombre
         ]);
         if (false === $this->log($message)) {
-            Tools::log()->error('record-save-error', ['%modelo%' => 'ServicioATLog']);
+            Tools::log()->error('record-save-error');
         }
 
         parent::onInsert();
