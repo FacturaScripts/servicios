@@ -218,9 +218,9 @@ class TrabajoAT extends ModelClass
 
         $log = new ServicioATLog();
         $log->idservicio = $this->idservicio;
+        // el registro se guarda en el historial del propio servicio, por eso no se envía su número
         $log->message = Tools::trans('new-work-created', [
-            '%key%' => $this->id(),
-            '%service-key%' => $this->idservicio
+            '%key%' => $this->id()
         ]);
         $log->context = $this;
         $log->save();

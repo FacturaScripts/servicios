@@ -225,9 +225,10 @@ class NewServicioAT extends Controller
         $html = '';
         $orderBy = ['nombre' => 'ASC'];
 
+        $codcliente = $this->request->queryOrInput('codcliente');
         $customer = new Cliente();
-        if (false === $customer->load($this->request->queryOrInput('codcliente'))) {
-            Tools::log()->error('customer-not-found');
+        if (false === $customer->load($codcliente)) {
+            Tools::log()->error('customer-not-found', ['%customer%' => $codcliente]);
             return [
                 'renderCustomerMachines' => false,
                 'html' => ''
@@ -320,7 +321,7 @@ class NewServicioAT extends Controller
         try {
             if (false === $customer->save()) {
                 $this->dataBase->rollback();
-                Tools::log()->error('save-error');
+                Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('customer'))]);
                 return ['saveNewCustomer' => false];
             }
 
@@ -333,7 +334,7 @@ class NewServicioAT extends Controller
                 $address->codpais = $this->request->input('country');
                 if (false === $address->save()) {
                     $this->dataBase->rollback();
-                    Tools::log()->error('save-error');
+                    Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('address'))]);
                     return ['saveNewCustomer' => false];
                 }
                 break;
@@ -389,7 +390,7 @@ class NewServicioAT extends Controller
         }
 
         if (false === $machine->save()) {
-            Tools::log()->error('save-error');
+            Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('machine'))]);
             return ['saveNewMachine' => false];
         }
 
@@ -430,7 +431,7 @@ class NewServicioAT extends Controller
         }
 
         if (false === $service->save()) {
-            Tools::log()->error('save-error');
+            Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('service'))]);
             return ['saveNewService' => false];
         }
 
