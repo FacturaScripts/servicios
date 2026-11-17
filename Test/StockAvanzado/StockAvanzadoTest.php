@@ -249,17 +249,21 @@ final class StockAvanzadoTest extends TestCase
         $this->cleanUp($customer, $service, $product, $stock);
     }
 
+    /**
+     * Elimina los datos creados por el test. El stock no se borra a mano: el core no permite eliminar un stock
+     * con cantidad, así que se elimina en cascada al borrar el producto.
+     *
+     * @param Cliente $customer Cliente del servicio.
+     * @param ServicioAT $service Servicio a eliminar.
+     * @param Producto $product Producto a eliminar.
+     * @param Stock $stock Stock del producto, que debe desaparecer con él.
+     */
     protected function cleanUp(Cliente $customer, ServicioAT $service, Producto $product, Stock $stock): void
     {
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
-
-        $stock->reload();
-        if ($stock->exists()) {
-            $this->assertTrue($stock->delete());
-        }
-
         $this->assertTrue($product->delete());
+        $this->assertFalse($stock->exists(), 'Stock not removed when deleting the product');
     }
 
     /**
