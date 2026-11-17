@@ -220,14 +220,30 @@ class NewServicioAT extends Controller
         $this->pipeFalse('load');
     }
 
+    /**
+     * Devuelve el HTML con las máquinas activas del cliente recibido en codcliente.
+     * Si no llega cliente o no existe, registra el error y no renderiza nada.
+     *
+     * @return array
+     */
     protected function renderCustomerMachinesAction(): array
     {
         $html = '';
         $orderBy = ['nombre' => 'ASC'];
 
+        $codcliente = $this->request->queryOrInput('codcliente');
+        if (empty($codcliente)) {
+            Tools::log()->error('select-customer');
+            return [
+                'renderCustomerMachines' => false,
+                'html' => ''
+            ];
+        }
+
         $customer = new Cliente();
-        if (false === $customer->load($this->request->queryOrInput('codcliente'))) {
-            Tools::log()->error('customer-not-found');
+        if (false === $customer->load($codcliente)) {
+            // escapamos el código: llega de la URL y el mensaje se pinta como HTML en el toast
+            Tools::log()->error('customer-not-found', ['%customer%' => Tools::noHtml($codcliente)]);
             return [
                 'renderCustomerMachines' => false,
                 'html' => ''
@@ -320,7 +336,7 @@ class NewServicioAT extends Controller
         try {
             if (false === $customer->save()) {
                 $this->dataBase->rollback();
-                Tools::log()->error('save-error');
+                Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('customer'))]);
                 return ['saveNewCustomer' => false];
             }
 
@@ -333,7 +349,7 @@ class NewServicioAT extends Controller
                 $address->codpais = $this->request->input('country');
                 if (false === $address->save()) {
                     $this->dataBase->rollback();
-                    Tools::log()->error('save-error');
+                    Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('address'))]);
                     return ['saveNewCustomer' => false];
                 }
                 break;
@@ -389,7 +405,7 @@ class NewServicioAT extends Controller
         }
 
         if (false === $machine->save()) {
-            Tools::log()->error('save-error');
+            Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('machine'))]);
             return ['saveNewMachine' => false];
         }
 
@@ -430,7 +446,7 @@ class NewServicioAT extends Controller
         }
 
         if (false === $service->save()) {
-            Tools::log()->error('save-error');
+            Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('service'))]);
             return ['saveNewService' => false];
         }
 

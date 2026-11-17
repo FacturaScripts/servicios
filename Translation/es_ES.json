@@ -67,6 +67,7 @@
     "print-services": "Imprimir servicios",
     "print-solution": "Imprimir solución",
     "print-ticket-desc": "Está configuración solo se aplicará a los tickets de servicio. Necesario tener el plugin Tickets instalado.",
+    "select-customer": "Selecciona un cliente",
     "services-by-agent": "Por agente",
     "services-by-assigned": "Por asignado",
     "services-by-client": "Por cliente",
