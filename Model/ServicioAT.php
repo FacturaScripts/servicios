@@ -181,7 +181,7 @@ class ServicioAT extends ModelClass
         // añadimos el cambio al log
         $messageLog = Tools::trans('deleted-service');
         if (false === $this->log($messageLog)) {
-            Tools::log()->error('record-save-error');
+            Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('history'))]);
         }
 
         return true;
@@ -522,7 +522,7 @@ class ServicioAT extends ModelClass
             '%status%' => $this->getStatus()->nombre
         ]);
         if (false === $this->log($message)) {
-            Tools::log()->error('record-save-error');
+            Tools::log()->error('save-error', ['%model%' => mb_strtolower(Tools::trans('history'))]);
         }
 
         parent::onInsert();

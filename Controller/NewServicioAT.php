@@ -220,15 +220,30 @@ class NewServicioAT extends Controller
         $this->pipeFalse('load');
     }
 
+    /**
+     * Devuelve el HTML con las máquinas activas del cliente recibido en codcliente.
+     * Si no llega cliente o no existe, registra el error y no renderiza nada.
+     *
+     * @return array
+     */
     protected function renderCustomerMachinesAction(): array
     {
         $html = '';
         $orderBy = ['nombre' => 'ASC'];
 
         $codcliente = $this->request->queryOrInput('codcliente');
+        if (empty($codcliente)) {
+            Tools::log()->error('select-customer');
+            return [
+                'renderCustomerMachines' => false,
+                'html' => ''
+            ];
+        }
+
         $customer = new Cliente();
         if (false === $customer->load($codcliente)) {
-            Tools::log()->error('customer-not-found', ['%customer%' => $codcliente]);
+            // escapamos el código: llega de la URL y el mensaje se pinta como HTML en el toast
+            Tools::log()->error('customer-not-found', ['%customer%' => Tools::noHtml($codcliente)]);
             return [
                 'renderCustomerMachines' => false,
                 'html' => ''
