@@ -20,6 +20,7 @@
 namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Lib\BusinessDocumentGenerator;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\ServicioAT;
@@ -40,12 +41,14 @@ final class TrabajoAtTest extends TestCase
     use RandomDataTrait;
 
     /**
-     * Carga los modelos del core para que sus tablas existan antes de los tests:
+     * Establece los ajustes por defecto (almacén, empresa...) para poder ejecutar estos tests de forma aislada
+     * y carga los modelos del core para que sus tablas existan antes de los tests:
      * no se pueden crear tablas dentro de una transacción
      * (por ejemplo, productos_imagenes al borrar un producto).
      */
     public static function setUpBeforeClass(): void
     {
+        self::setDefaultSettings();
         self::loadCoreModels();
     }
 
@@ -97,11 +100,8 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($product->delete());
     }
 
-    public function testEscapeHtml(): void
+    public function testCreateDeliveryNote(): void
     {
-        $html = '<br/>';
-        $escaped = Tools::noHtml($html);
-
         // creamos un cliente
         $customer = $this->getRandomCustomer();
         $this->assertTrue($customer->save());
@@ -114,18 +114,154 @@ final class TrabajoAtTest extends TestCase
         $service->idempresa = Tools::settings('default', 'idempresa');
         $this->assertTrue($service->save(), 'Error creating ServicioAT');
 
-        // creamos un trabajo
-        $work = new TrabajoAT();
-        $work->idservicio = $service->idservicio;
-        $work->descripcion = $html;
-        $work->observaciones = $html;
-        $this->assertTrue($work->save(), 'Error creating TrabajoAT with HTML');
+        // creamos un trabajo con estado hacer albarán
+        $work1 = new TrabajoAT();
+        $work1->idservicio = $service->idservicio;
+        $work1->descripcion = 'Test work 1';
+        $work1->cantidad = 3;
+        $work1->precio = 5;
+        $work1->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
+        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with delivery note');
 
-        // comprobamos que se ha escapado
-        $this->assertEquals($escaped, $work->descripcion);
-        $this->assertEquals($escaped, $work->observaciones);
+        // creamos otro trabajo con estado hacer albarán
+        $work2 = new TrabajoAT();
+        $work2->idservicio = $service->idservicio;
+        $work2->descripcion = 'Test work 2';
+        $work2->cantidad = 2;
+        $work2->precio = 10;
+        $work2->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
+        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with delivery note');
+
+        // generamos el albarán
+        ServiceToInvoice::clear();
+        $done = ServiceToInvoice::deliveryNote($service);
+        $this->assertTrue($done, 'Error generating delivery note');
+
+        // comprobamos que se ha generado el albarán correctamente
+        $generated = ServiceToInvoice::generated();
+        $this->assertCount(1, $generated, 'Error generating delivery note');
+        $this->assertEquals($service->codcliente, $generated[0]->codcliente, 'Error generating delivery note');
+        $this->assertEquals(35, $generated[0]->neto, 'Error generating delivery note');
+
+        // comprobamos las líneas
+        $lines = $generated[0]->getLines();
+        $this->assertCount(2, $lines, 'Error generating delivery note');
+        $this->assertEquals($work1->descripcion, $lines[0]->descripcion, 'Error generating delivery note');
+        $this->assertEquals($work1->cantidad, $lines[0]->cantidad, 'Error generating delivery note');
+        $this->assertEquals($work1->precio, $lines[0]->pvpunitario, 'Error generating delivery note');
+        $this->assertEquals($work1->idtrabajo, $lines[0]->idtrabajo, 'Error saving idtrabajo in delivery note line');
+        $this->assertEquals($work2->descripcion, $lines[1]->descripcion, 'Error generating delivery note');
+        $this->assertEquals($work2->cantidad, $lines[1]->cantidad, 'Error generating delivery note');
+        $this->assertEquals($work2->precio, $lines[1]->pvpunitario, 'Error generating delivery note');
+        $this->assertEquals($work2->idtrabajo, $lines[1]->idtrabajo, 'Error saving idtrabajo in delivery note line');
 
         // eliminamos
+        $this->assertTrue($generated[0]->delete());
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testCreateEstimation(): void
+    {
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un trabajo con estado hacer presupuesto
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->descripcion = 'Test work';
+        $work->cantidad = 2;
+        $work->precio = 10;
+        $work->estado = TrabajoAT::STATUS_MAKE_ESTIMATION;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with estimation');
+
+        // generamos el presupuesto
+        ServiceToInvoice::clear();
+        $done = ServiceToInvoice::estimation($service);
+        $this->assertTrue($done, 'Error generating estimation');
+
+        // comprobamos que se ha generado el presupuesto correctamente
+        $generated = ServiceToInvoice::generated();
+        $this->assertCount(1, $generated, 'Error generating estimation');
+        $this->assertEquals($service->codcliente, $generated[0]->codcliente, 'Error generating estimation');
+        $this->assertEquals(20, $generated[0]->neto, 'Error generating estimation');
+
+        // comprobamos las líneas
+        $lines = $generated[0]->getLines();
+        $this->assertCount(1, $lines, 'Error generating estimation');
+        $this->assertEquals($work->descripcion, $lines[0]->descripcion, 'Error generating estimation');
+        $this->assertEquals($work->cantidad, $lines[0]->cantidad, 'Error generating estimation');
+        $this->assertEquals($work->precio, $lines[0]->pvpunitario, 'Error generating estimation');
+        $this->assertEquals($work->idtrabajo, $lines[0]->idtrabajo, 'Error saving idtrabajo in estimation line');
+
+        // eliminamos
+        $this->assertTrue($generated[0]->delete());
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testCreateInvoice(): void
+    {
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un trabajo con estado hacer factura
+        $work1 = new TrabajoAT();
+        $work1->idservicio = $service->idservicio;
+        $work1->descripcion = 'Test work 1';
+        $work1->cantidad = 3;
+        $work1->precio = 6;
+        $work1->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with invoice');
+
+        // creamos un trabajo con estado no hacer nada
+        $work2 = new TrabajoAT();
+        $work2->idservicio = $service->idservicio;
+        $work2->descripcion = 'Test work 2';
+        $work2->cantidad = 2;
+        $work2->precio = 10;
+        $work2->estado = TrabajoAT::STATUS_NONE;
+        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with invoice');
+
+        // generamos la factura
+        ServiceToInvoice::clear();
+        $done = ServiceToInvoice::invoice($service);
+        $this->assertTrue($done, 'Error generating invoice');
+
+        // comprobamos que se ha generado la factura correctamente
+        $generated = ServiceToInvoice::generated();
+        $this->assertCount(1, $generated, 'Error generating invoice');
+        $this->assertEquals($service->codcliente, $generated[0]->codcliente, 'Error generating invoice');
+        $this->assertEquals(18, $generated[0]->neto, 'Error generating invoice');
+
+        // comprobamos las líneas
+        $lines = $generated[0]->getLines();
+        $this->assertCount(1, $lines, 'Error generating invoice');
+        $this->assertEquals($work1->descripcion, $lines[0]->descripcion, 'Error generating invoice');
+        $this->assertEquals($work1->cantidad, $lines[0]->cantidad, 'Error generating invoice');
+        $this->assertEquals($work1->precio, $lines[0]->pvpunitario, 'Error generating invoice');
+        $this->assertEquals($work1->idtrabajo, $lines[0]->idtrabajo, 'Error saving idtrabajo in invoice line');
+
+        // eliminamos
+        $this->assertTrue($generated[0]->delete());
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
     }
@@ -167,6 +303,140 @@ final class TrabajoAtTest extends TestCase
 
         // comprobamos que se ha asignado el nuevo estado por defecto
         $this->assertEquals(TrabajoAT::STATUS_NONE, $work2->estado);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testEscapeHtml(): void
+    {
+        $html = '<br/>';
+        $escaped = Tools::noHtml($html);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un trabajo
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->descripcion = $html;
+        $work->observaciones = $html;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with HTML');
+
+        // comprobamos que se ha escapado
+        $this->assertEquals($escaped, $work->descripcion);
+        $this->assertEquals($escaped, $work->observaciones);
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testServiceLineHasNoWork(): void
+    {
+        // activamos la opción de añadir la descripción del servicio al documento
+        Tools::settingsSet('servicios', 'document_description', true);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un trabajo ya facturado
+        $work1 = new TrabajoAT();
+        $work1->idservicio = $service->idservicio;
+        $work1->descripcion = 'Test work 1';
+        $work1->cantidad = 1;
+        $work1->precio = 10;
+        $work1->estado = TrabajoAT::STATUS_INVOICED;
+        $this->assertTrue($work1->save(), 'Error creating invoiced TrabajoAT');
+
+        // creamos un trabajo pendiente de facturar
+        $work2 = new TrabajoAT();
+        $work2->idservicio = $service->idservicio;
+        $work2->descripcion = 'Test work 2';
+        $work2->cantidad = 2;
+        $work2->precio = 5;
+        $work2->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work2->save(), 'Error creating TrabajoAT to invoice');
+
+        // generamos la factura
+        ServiceToInvoice::clear();
+        $this->assertTrue(ServiceToInvoice::invoice($service), 'Error generating invoice');
+        $generated = ServiceToInvoice::generated();
+        $this->assertCount(1, $generated, 'Error generating invoice');
+
+        // la línea del servicio no pertenece a ningún trabajo y la del trabajo lleva su idtrabajo
+        $lines = $generated[0]->getLines();
+        $this->assertCount(2, $lines, 'Error generating invoice with service line');
+        $serviceLines = 0;
+        foreach ($lines as $line) {
+            if ($line->descripcion === $work2->descripcion) {
+                $this->assertEquals($work2->idtrabajo, $line->idtrabajo, 'Error saving idtrabajo in work line');
+                continue;
+            }
+
+            $serviceLines++;
+            $this->assertNull($line->idtrabajo, 'The service line must not be linked to a work');
+        }
+        $this->assertEquals(1, $serviceLines, 'Service line not found');
+
+        // eliminamos
+        Tools::settingsSet('servicios', 'document_description', false);
+        $this->assertTrue($generated[0]->delete());
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+    }
+
+    public function testUpdateOnDelete(): void
+    {
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save());
+
+        // creamos un trabajo
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->descripcion = 'Test work';
+        $work->cantidad = 1;
+        $work->precio = 10;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT');
+
+        // comprobamos que se ha actualizado el neto del servicio
+        $service->load($service->id());
+        $this->assertEquals(10, $service->neto);
+
+        // eliminamos el trabajo
+        $this->assertTrue($work->delete());
+
+        // comprobamos que se ha actualizado el neto del servicio
+        $service->load($service->id());
+        $this->assertEquals(0, $service->neto);
 
         // eliminamos
         $this->assertTrue($service->delete());
@@ -252,6 +522,74 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
         $this->assertTrue($product->delete());
+    }
+
+    public function testUpdateStockChangeReference(): void
+    {
+        // activamos la opción de restar stock
+        Tools::settingsSet('servicios', 'disablestockmanagement', false);
+
+        // creamos un cliente
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save());
+
+        // creamos un servicio
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->descripcion = 'Test service';
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'Error creating ServicioAT');
+
+        // creamos un producto que controla stock
+        $product1 = $this->getRandomProduct();
+        $product1->precio = 17;
+        $product1->nostock = false;
+        $product1->ventasinstock = false;
+        $this->assertTrue($product1->save(), 'Error creating Producto 1');
+
+        // creamos un producto que no controla stock
+        $product2 = $this->getRandomProduct();
+        $product2->precio = 5;
+        $product2->nostock = true;
+        $this->assertTrue($product2->save(), 'Error creating Producto 2');
+
+        // añadimos stock al primer producto
+        $stock = new Stock();
+        $stock->referencia = $product1->referencia;
+        $stock->codalmacen = Tools::settings('default', 'codalmacen');
+        $stock->cantidad = 10;
+        $this->assertTrue($stock->save(), 'Error creating Stock');
+
+        // creamos un trabajo con el primer producto
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->referencia = $product1->referencia;
+        $work->cantidad = 2;
+        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
+        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
+
+        // comprobamos que se ha restado el stock
+        $stock->load($stock->id());
+        $this->assertEquals(8, $stock->cantidad);
+
+        // cambiamos al producto que no controla stock
+        $work->referencia = $product2->referencia;
+        $this->assertTrue($work->save(), 'Error changing TrabajoAT reference');
+
+        // comprobamos que se ha devuelto el stock del primer producto
+        $stock->load($stock->id());
+        $this->assertEquals(10, $stock->cantidad);
+
+        // comprobamos que no se ha creado stock del segundo producto
+        $stock2 = new Stock();
+        $this->assertFalse($stock2->loadWhereEq('referencia', $product2->referencia));
+
+        // eliminamos
+        $this->assertTrue($service->delete());
+        $this->assertTrue($customer->delete());
+        $this->assertTrue($product1->delete());
+        $this->assertTrue($product2->delete());
     }
 
     public function testUpdateStockWithNullValues(): void
@@ -340,75 +678,7 @@ final class TrabajoAtTest extends TestCase
         $this->assertTrue($product->delete());
     }
 
-    public function testUpdateStockChangeReference(): void
-    {
-        // activamos la opción de restar stock
-        Tools::settingsSet('servicios', 'disablestockmanagement', false);
-
-        // creamos un cliente
-        $customer = $this->getRandomCustomer();
-        $this->assertTrue($customer->save());
-
-        // creamos un servicio
-        $service = new ServicioAT();
-        $service->codalmacen = Tools::settings('default', 'codalmacen');
-        $service->codcliente = $customer->codcliente;
-        $service->descripcion = 'Test service';
-        $service->idempresa = Tools::settings('default', 'idempresa');
-        $this->assertTrue($service->save(), 'Error creating ServicioAT');
-
-        // creamos un producto que controla stock
-        $product1 = $this->getRandomProduct();
-        $product1->precio = 17;
-        $product1->nostock = false;
-        $product1->ventasinstock = false;
-        $this->assertTrue($product1->save(), 'Error creating Producto 1');
-
-        // creamos un producto que no controla stock
-        $product2 = $this->getRandomProduct();
-        $product2->precio = 5;
-        $product2->nostock = true;
-        $this->assertTrue($product2->save(), 'Error creating Producto 2');
-
-        // añadimos stock al primer producto
-        $stock = new Stock();
-        $stock->referencia = $product1->referencia;
-        $stock->codalmacen = Tools::settings('default', 'codalmacen');
-        $stock->cantidad = 10;
-        $this->assertTrue($stock->save(), 'Error creating Stock');
-
-        // creamos un trabajo con el primer producto
-        $work = new TrabajoAT();
-        $work->idservicio = $service->idservicio;
-        $work->referencia = $product1->referencia;
-        $work->cantidad = 2;
-        $work->estado = TrabajoAT::STATUS_MAKE_INVOICE;
-        $this->assertTrue($work->save(), 'Error creating TrabajoAT with stock');
-
-        // comprobamos que se ha restado el stock
-        $stock->load($stock->id());
-        $this->assertEquals(8, $stock->cantidad);
-
-        // cambiamos al producto que no controla stock
-        $work->referencia = $product2->referencia;
-        $this->assertTrue($work->save(), 'Error changing TrabajoAT reference');
-
-        // comprobamos que se ha devuelto el stock del primer producto
-        $stock->load($stock->id());
-        $this->assertEquals(10, $stock->cantidad);
-
-        // comprobamos que no se ha creado stock del segundo producto
-        $stock2 = new Stock();
-        $this->assertFalse($stock2->loadWhereEq('referencia', $product2->referencia));
-
-        // eliminamos
-        $this->assertTrue($service->delete());
-        $this->assertTrue($customer->delete());
-        $this->assertTrue($product1->delete());
-        $this->assertTrue($product2->delete());
-    }
-
-    public function testCreateEstimation(): void
+    public function testWorkIdKeptOnDocumentConversion(): void
     {
         // creamos un cliente
         $customer = $this->getRandomCustomer();
@@ -431,179 +701,32 @@ final class TrabajoAtTest extends TestCase
         $work->estado = TrabajoAT::STATUS_MAKE_ESTIMATION;
         $this->assertTrue($work->save(), 'Error creating TrabajoAT with estimation');
 
-        // generamos el presupuesto
+        // generamos el presupuesto desde el servicio
         ServiceToInvoice::clear();
-        $done = ServiceToInvoice::estimation($service);
-        $this->assertTrue($done, 'Error generating estimation');
+        $this->assertTrue(ServiceToInvoice::estimation($service), 'Error generating estimation');
+        $docs = ServiceToInvoice::generated();
+        $this->assertCount(1, $docs, 'Error generating estimation');
 
-        // comprobamos que se ha generado el presupuesto correctamente
-        $generated = ServiceToInvoice::generated();
-        $this->assertCount(1, $generated, 'Error generating estimation');
-        $this->assertEquals($service->codcliente, $generated[0]->codcliente, 'Error generating estimation');
-        $this->assertEquals(20, $generated[0]->neto, 'Error generating estimation');
+        // convertimos el presupuesto en pedido, el pedido en albarán y el albarán en factura,
+        // comprobando que todas las líneas conservan el idtrabajo
+        foreach (['PedidoCliente', 'AlbaranCliente', 'FacturaCliente'] as $newClass) {
+            $prototype = end($docs);
+            $generator = new BusinessDocumentGenerator();
+            $this->assertTrue($generator->generate($prototype, $newClass), 'Error generating ' . $newClass);
 
-        // comprobamos las líneas
-        $lines = $generated[0]->getLines();
-        $this->assertCount(1, $lines, 'Error generating estimation');
-        $this->assertEquals($work->descripcion, $lines[0]->descripcion, 'Error generating estimation');
-        $this->assertEquals($work->cantidad, $lines[0]->cantidad, 'Error generating estimation');
-        $this->assertEquals($work->precio, $lines[0]->pvpunitario, 'Error generating estimation');
+            $newDocs = $generator->getLastDocs();
+            $this->assertCount(1, $newDocs, 'Error generating ' . $newClass);
+            $docs[] = $newDocs[0];
 
-        // eliminamos
-        $this->assertTrue($generated[0]->delete());
-        $this->assertTrue($service->delete());
-        $this->assertTrue($customer->delete());
-    }
+            $lines = $newDocs[0]->getLines();
+            $this->assertCount(1, $lines, 'Error generating lines of ' . $newClass);
+            $this->assertEquals($work->idtrabajo, $lines[0]->idtrabajo, 'Error keeping idtrabajo in ' . $newClass);
+        }
 
-    public function testCreateDeliveryNote(): void
-    {
-        // creamos un cliente
-        $customer = $this->getRandomCustomer();
-        $this->assertTrue($customer->save());
-
-        // creamos un servicio
-        $service = new ServicioAT();
-        $service->codalmacen = Tools::settings('default', 'codalmacen');
-        $service->codcliente = $customer->codcliente;
-        $service->descripcion = 'Test service';
-        $service->idempresa = Tools::settings('default', 'idempresa');
-        $this->assertTrue($service->save(), 'Error creating ServicioAT');
-
-        // creamos un trabajo con estado hacer albarán
-        $work1 = new TrabajoAT();
-        $work1->idservicio = $service->idservicio;
-        $work1->descripcion = 'Test work 1';
-        $work1->cantidad = 3;
-        $work1->precio = 5;
-        $work1->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
-        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with delivery note');
-
-        // creamos otro trabajo con estado hacer albarán
-        $work2 = new TrabajoAT();
-        $work2->idservicio = $service->idservicio;
-        $work2->descripcion = 'Test work 2';
-        $work2->cantidad = 2;
-        $work2->precio = 10;
-        $work2->estado = TrabajoAT::STATUS_MAKE_DELIVERY_NOTE;
-        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with delivery note');
-
-        // generamos el albarán
-        ServiceToInvoice::clear();
-        $done = ServiceToInvoice::deliveryNote($service);
-        $this->assertTrue($done, 'Error generating delivery note');
-
-        // comprobamos que se ha generado el albarán correctamente
-        $generated = ServiceToInvoice::generated();
-        $this->assertCount(1, $generated, 'Error generating delivery note');
-        $this->assertEquals($service->codcliente, $generated[0]->codcliente, 'Error generating delivery note');
-        $this->assertEquals(35, $generated[0]->neto, 'Error generating delivery note');
-
-        // comprobamos las líneas
-        $lines = $generated[0]->getLines();
-        $this->assertCount(2, $lines, 'Error generating delivery note');
-        $this->assertEquals($work1->descripcion, $lines[0]->descripcion, 'Error generating delivery note');
-        $this->assertEquals($work1->cantidad, $lines[0]->cantidad, 'Error generating delivery note');
-        $this->assertEquals($work1->precio, $lines[0]->pvpunitario, 'Error generating delivery note');
-        $this->assertEquals($work2->descripcion, $lines[1]->descripcion, 'Error generating delivery note');
-        $this->assertEquals($work2->cantidad, $lines[1]->cantidad, 'Error generating delivery note');
-        $this->assertEquals($work2->precio, $lines[1]->pvpunitario, 'Error generating delivery note');
-
-        // eliminamos
-        $this->assertTrue($generated[0]->delete());
-        $this->assertTrue($service->delete());
-        $this->assertTrue($customer->delete());
-    }
-
-    public function testCreateInvoice(): void
-    {
-        // creamos un cliente
-        $customer = $this->getRandomCustomer();
-        $this->assertTrue($customer->save());
-
-        // creamos un servicio
-        $service = new ServicioAT();
-        $service->codalmacen = Tools::settings('default', 'codalmacen');
-        $service->codcliente = $customer->codcliente;
-        $service->descripcion = 'Test service';
-        $service->idempresa = Tools::settings('default', 'idempresa');
-        $this->assertTrue($service->save(), 'Error creating ServicioAT');
-
-        // creamos un trabajo con estado hacer factura
-        $work1 = new TrabajoAT();
-        $work1->idservicio = $service->idservicio;
-        $work1->descripcion = 'Test work 1';
-        $work1->cantidad = 3;
-        $work1->precio = 6;
-        $work1->estado = TrabajoAT::STATUS_MAKE_INVOICE;
-        $this->assertTrue($work1->save(), 'Error creating TrabajoAT with invoice');
-
-        // creamos un trabajo con estado no hacer nada
-        $work2 = new TrabajoAT();
-        $work2->idservicio = $service->idservicio;
-        $work2->descripcion = 'Test work 2';
-        $work2->cantidad = 2;
-        $work2->precio = 10;
-        $work2->estado = TrabajoAT::STATUS_NONE;
-        $this->assertTrue($work2->save(), 'Error creating TrabajoAT with invoice');
-
-        // generamos la factura
-        ServiceToInvoice::clear();
-        $done = ServiceToInvoice::invoice($service);
-        $this->assertTrue($done, 'Error generating invoice');
-
-        // comprobamos que se ha generado la factura correctamente
-        $generated = ServiceToInvoice::generated();
-        $this->assertCount(1, $generated, 'Error generating invoice');
-        $this->assertEquals($service->codcliente, $generated[0]->codcliente, 'Error generating invoice');
-        $this->assertEquals(18, $generated[0]->neto, 'Error generating invoice');
-
-        // comprobamos las líneas
-        $lines = $generated[0]->getLines();
-        $this->assertCount(1, $lines, 'Error generating invoice');
-        $this->assertEquals($work1->descripcion, $lines[0]->descripcion, 'Error generating invoice');
-        $this->assertEquals($work1->cantidad, $lines[0]->cantidad, 'Error generating invoice');
-        $this->assertEquals($work1->precio, $lines[0]->pvpunitario, 'Error generating invoice');
-
-        // eliminamos
-        $this->assertTrue($generated[0]->delete());
-        $this->assertTrue($service->delete());
-        $this->assertTrue($customer->delete());
-    }
-
-    public function testUpdateOnDelete(): void
-    {
-        // creamos un cliente
-        $customer = $this->getRandomCustomer();
-        $this->assertTrue($customer->save());
-
-        // creamos un servicio
-        $service = new ServicioAT();
-        $service->codalmacen = Tools::settings('default', 'codalmacen');
-        $service->codcliente = $customer->codcliente;
-        $service->descripcion = 'Test';
-        $service->idempresa = Tools::settings('default', 'idempresa');
-        $this->assertTrue($service->save());
-
-        // creamos un trabajo
-        $work = new TrabajoAT();
-        $work->idservicio = $service->idservicio;
-        $work->descripcion = 'Test work';
-        $work->cantidad = 1;
-        $work->precio = 10;
-        $this->assertTrue($work->save(), 'Error creating TrabajoAT');
-
-        // comprobamos que se ha actualizado el neto del servicio
-        $service->load($service->id());
-        $this->assertEquals(10, $service->neto);
-
-        // eliminamos el trabajo
-        $this->assertTrue($work->delete());
-
-        // comprobamos que se ha actualizado el neto del servicio
-        $service->load($service->id());
-        $this->assertEquals(0, $service->neto);
-
-        // eliminamos
+        // eliminamos los documentos en orden inverso
+        foreach (array_reverse($docs) as $doc) {
+            $this->assertTrue($doc->delete(), 'Error deleting ' . $doc->modelClassName());
+        }
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
     }
