@@ -1,15 +1,57 @@
 name: Tests del Plugin FacturaScripts
 
+# Los tests solo se lanzan si el commit o la PR cambia algo que pueda alterar el
+# comportamiento del plugin. Si TODOS los archivos cambiados están en
+# paths-ignore, el workflow no se ejecuta y no consume minutos.
+# Es una lista de exclusiones: cualquier otro archivo (PHP, Table, XMLView, View,
+# Data, Test, composer.json...) sigue lanzando los tests.
 on:
   push:
-    branches: [ master, main ]
+    branches:
+      - master
+      - main
+    paths-ignore: &ignored-paths
+      # traducciones: se descargan de facturascripts.com y no cambian el código
+      - 'Translation/**'
+      # JS, CSS, imágenes y fuentes: phpunit no los usa
+      - 'Assets/**'
+      # documentación
+      - '**.md'
+      - 'Doc/**'
+      - 'COPYING'
+      - 'LICENSE'
+      # configuración de los asistentes de IA (Claude Code, Codex...)
+      - '.claude/**'
+      - '.agents/**'
+      - '.codex/**'
+      # datos del plugin (versión, descripción...), npm, git y empaquetado
+      - 'facturascripts.ini'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.gitignore'
+      - '.zipignore'
+      # workflows que no afectan a los tests
+      - '.github/workflows/release.yml'
   pull_request:
-    branches: [ master, main ]
+    branches:
+      - master
+      - main
+    paths-ignore: *ignored-paths
+  # permite lanzarlo a mano desde la pestaña Actions cuando se quiera forzar
+  workflow_dispatch:
+
+# Si llega un commit nuevo a la misma rama o PR, se cancela la ejecución
+# anterior, que ya no sirve, en lugar de dejar que termine.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   tests:
     name: Tests en ${{ matrix.database }} con PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
+    # un job colgado no puede consumir las 6 horas por defecto
+    timeout-minutes: 30
 
     strategy:
       fail-fast: false
