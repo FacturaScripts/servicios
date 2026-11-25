@@ -92,6 +92,33 @@ class TrabajoAT extends ModelClass
     /** @var string Mensaje para el log del servicio al actualizar el trabajo. */
     protected $messageLog = 'updated-model';
 
+    /**
+     * Calcula las horas trabajadas: los días entre fechainicio y fechafin por 24 más la
+     * diferencia entre horainicio y horafin. Es el cálculo del botón de calcular horas de
+     * la ficha del servicio y del endpoint calcularHorasTrabajoAT de la API.
+     *
+     * @return float horas trabajadas (0 si faltan las fechas y las horas de fin).
+     */
+    public function calculateHours(): float
+    {
+        $days = 0;
+        if (false === empty($this->fechainicio) && false === empty($this->fechafin)) {
+            $diff = strtotime($this->fechafin) - strtotime($this->fechainicio);
+            $days = (int)ceil($diff / 86400);
+        }
+
+        $hours = 0.0;
+        if (false === empty($this->horainicio) && false === empty($this->horafin)) {
+            $start = date_parse_from_format('H:i:s', $this->horainicio);
+            $end = date_parse_from_format('H:i:s', $this->horafin);
+            $ini = ($start['hour'] * 3600) + ($start['minute'] * 60) + $start['second'];
+            $fin = ($end['hour'] * 3600) + ($end['minute'] * 60) + $end['second'];
+            $hours = round(($fin - $ini) / 3600, 4);
+        }
+
+        return ($days * 24) + $hours;
+    }
+
     public function clear(): void
     {
         parent::clear();
@@ -180,23 +207,30 @@ class TrabajoAT extends ModelClass
         return empty($this->idservicio) ? parent::url($type, $list) : $this->getServicio()->url();
     }
 
+    /**
+     * Prepara el mensaje del historial del servicio al cambiar la cantidad del trabajo.
+     */
     protected function onChangeCantidad(): void
     {
         // añadimos el cambio al log
         $this->messageLog = Tools::trans('changed-quantity-work-to', [
-            '%reference%' => $this->referencia,
+            // sin referencia, el marcador quedaba sin sustituir en el historial
+            '%reference%' => $this->referencia ?: (string)$this->descripcion,
             '%oldQuantity%' => $this->getOriginal('cantidad'),
             '%newQuantity%' => $this->cantidad,
             '%work%' => $this->idtrabajo
         ]);
     }
 
+    /**
+     * Prepara el mensaje del historial del servicio al cambiar la referencia del trabajo.
+     */
     protected function onChangeReferencia(): void
     {
         // añadimos el cambio al log
         $this->messageLog = Tools::trans('changed-referencia-work-to', [
-            '%oldReference%' => $this->getOriginal('referencia'),
-            '%newReference%' => $this->referencia,
+            '%oldReference%' => $this->getOriginal('referencia') ?: '-',
+            '%newReference%' => $this->referencia ?: '-',
             '%work%' => $this->idtrabajo
         ]);
     }

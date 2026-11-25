@@ -110,9 +110,7 @@ class EditServicioAT extends EditController
             return true;
         }
 
-        $days = $this->daysBetween($model->fechainicio, $model->fechafin);
-        $hours = $this->TimeDifferenceInHours($model->horainicio, $model->horafin);
-        $model->cantidad = ($days * 24) + $hours;
+        $model->cantidad = $model->calculateHours();
         if ($model->save()) {
             Tools::log()->notice('record-updated-correctly');
             return true;

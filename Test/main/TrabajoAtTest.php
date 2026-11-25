@@ -22,8 +22,10 @@ namespace FacturaScripts\Test\Plugins;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Lib\BusinessDocumentGenerator;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\ServiceToInvoice;
 use FacturaScripts\Dinamic\Model\ServicioAT;
+use FacturaScripts\Dinamic\Model\ServicioATLog;
 use FacturaScripts\Dinamic\Model\Stock;
 use FacturaScripts\Dinamic\Model\TrabajoAT;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
@@ -50,6 +52,31 @@ final class TrabajoAtTest extends TestCase
     {
         self::setDefaultSettings();
         self::loadCoreModels();
+    }
+
+    /**
+     * calculateHours() suma los días entre las fechas (por 24) y la diferencia de horas.
+     */
+    public function testCalculateHours(): void
+    {
+        // el mismo día: solo cuenta la diferencia de horas
+        $work = new TrabajoAT();
+        $work->fechainicio = '2026-01-01';
+        $work->fechafin = '2026-01-01';
+        $work->horainicio = '09:00:00';
+        $work->horafin = '12:15:00';
+        $this->assertEquals(3.25, $work->calculateHours(), 'same-day-hours');
+
+        // de un día para otro: 24 horas más la diferencia
+        $work->fechafin = '2026-01-02';
+        $work->horainicio = '08:00:00';
+        $work->horafin = '10:30:00';
+        $this->assertEquals(26.5, $work->calculateHours(), 'next-day-hours');
+
+        // sin fecha ni hora de fin no hay horas
+        $work->fechafin = null;
+        $work->horafin = null;
+        $this->assertEquals(0.0, $work->calculateHours(), 'no-end-hours');
     }
 
     public function testCreate(): void
@@ -340,6 +367,42 @@ final class TrabajoAtTest extends TestCase
         // eliminamos
         $this->assertTrue($service->delete());
         $this->assertTrue($customer->delete());
+    }
+
+    /**
+     * Al cambiar la cantidad de un trabajo sin referencia, el historial nombra el trabajo por su
+     * descripción y no deja el marcador %reference% sin sustituir.
+     */
+    public function testQuantityLogWithoutReference(): void
+    {
+        $customer = $this->getRandomCustomer();
+        $this->assertTrue($customer->save(), 'customer-cant-save');
+
+        $service = new ServicioAT();
+        $service->codalmacen = Tools::settings('default', 'codalmacen');
+        $service->codcliente = $customer->codcliente;
+        $service->idempresa = Tools::settings('default', 'idempresa');
+        $this->assertTrue($service->save(), 'service-cant-save');
+
+        $work = new TrabajoAT();
+        $work->idservicio = $service->idservicio;
+        $work->descripcion = 'Trabajo sin referencia';
+        $work->estado = TrabajoAT::STATUS_NONE;
+        $this->assertTrue($work->save(), 'work-cant-save');
+
+        $work->cantidad = 3;
+        $this->assertTrue($work->save(), 'work-cant-update');
+
+        $log = new ServicioATLog();
+        $where = [Where::eq('idservicio', $service->idservicio)];
+        $this->assertTrue($log->loadWhere($where, ['id' => 'DESC']), 'log-not-found');
+        $this->assertStringNotContainsString('%reference%', $log->message);
+        $this->assertStringContainsString('Trabajo sin referencia', $log->message);
+
+        // limpiamos
+        $this->assertTrue($service->delete(), 'service-cant-delete');
+        $this->assertTrue($customer->getDefaultAddress()->delete(), 'address-cant-delete');
+        $this->assertTrue($customer->delete(), 'customer-cant-delete');
     }
 
     public function testServiceLineHasNoWork(): void

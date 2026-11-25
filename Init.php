@@ -20,6 +20,8 @@
 namespace FacturaScripts\Plugins\Servicios;
 
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Controller\ApiRoot;
+use FacturaScripts\Core\Kernel;
 use FacturaScripts\Core\Lib\AjaxForms\SalesHeaderHTML;
 use FacturaScripts\Core\Migrations;
 use FacturaScripts\Core\Model\Role;
@@ -48,6 +50,12 @@ final class Init extends InitClass
 
     public function init(): void
     {
+        // endpoints de la API para generar documentos de un servicio y calcular las horas de un trabajo
+        Kernel::addRoute('/api/3/generarDocumentoServicioAT', 'ApiServiciosAT', -1);
+        Kernel::addRoute('/api/3/calcularHorasTrabajoAT', 'ApiServiciosAT', -1);
+        ApiRoot::addCustomResource('generarDocumentoServicioAT');
+        ApiRoot::addCustomResource('calcularHorasTrabajoAT');
+
         // extensions
         $this->loadExtension(new Extension\Controller\CopyModel());
         $this->loadExtension(new Extension\Controller\EditCliente());
